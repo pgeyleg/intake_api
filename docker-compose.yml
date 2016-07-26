@@ -1,0 +1,19 @@
+db:
+  image: postgres:9.5.3
+  ports:
+    - "5432:5432"
+  environment:
+    POSTGRES_PASSWORD: casebook_api
+    POSTGRES_DB: casebook_api_development
+api:
+  build: .
+  command: puma
+  ports:
+    - "3000:3000"
+  environment:
+    RAILS_ENV: development
+  links:
+    - db
+  volumes:
+    - .:/casebook_api
+
