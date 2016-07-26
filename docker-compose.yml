@@ -7,7 +7,7 @@ db:
     POSTGRES_DB: casebook_api_development
 api:
   build: .
-  command: puma
+  command: ./script/start
   ports:
     - "3000:3000"
   environment:
@@ -16,4 +16,12 @@ api:
     - db
   volumes:
     - .:/casebook_api
+  volumes_from:
+    - rubygems_container
+rubygems_container:
+  image: busybox
+  container_name: rubygems_container
+  volumes:
+      - /ruby_gems
+
 
