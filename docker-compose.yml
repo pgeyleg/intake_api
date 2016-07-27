@@ -1,27 +1,29 @@
-db:
-  image: postgres:9.5.3
-  ports:
-    - "5432:5432"
-  environment:
-    POSTGRES_PASSWORD: casebook_api
-    POSTGRES_DB: casebook_api_development
-api:
-  build: .
-  command: ./script/start
-  ports:
-    - "3000:3000"
-  environment:
-    RAILS_ENV: development
-  links:
-    - db
-  volumes:
-    - .:/casebook_api
-  volumes_from:
-    - rubygems_container
-rubygems_container:
-  image: busybox
-  container_name: rubygems_container
-  volumes:
-      - /ruby_gems
+version: '2'
+services:
+  db:
+    image: postgres:9.5.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: casebook_api
+      POSTGRES_DB: casebook_api_development
+  api:
+    build: .
+    command: ./script/start
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+    links:
+      - db
+    volumes:
+      - .:/casebook_api
+    volumes_from:
+      - rubygems_container
+  rubygems_container:
+    image: busybox
+    container_name: rubygems_container
+    volumes:
+        - /ruby_gems
 
 
