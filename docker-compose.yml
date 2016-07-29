@@ -18,12 +18,7 @@ services:
       - db
     volumes:
       - .:/casebook_api
-    volumes_from:
-      - rubygems_container
-  rubygems_container:
-    image: busybox
-    container_name: rubygems_container
-    volumes:
-        - /ruby_gems
-
+      - casebook_api_rubygems:/ruby_gems
+volumes:
+  casebook_api_rubygems:
 
