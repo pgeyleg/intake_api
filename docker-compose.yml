@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: casebook_api_development
   api:
     build: .
-    command: ./script/start
+    command: ./bin/docker_start
     ports:
       - "3000:3000"
     environment:
