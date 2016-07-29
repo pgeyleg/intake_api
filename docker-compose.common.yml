@@ -1,0 +1,20 @@
+version: '2'
+services:
+  db:
+    image: postgres:9.5.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: casebook_api
+      POSTGRES_DB: casebook_api_development
+  api:
+    build: .
+    command: ./bin/docker_start
+    ports:
+      - "3001:3000"
+    environment:
+      RAILS_ENV: development
+    volumes:
+      - .:/casebook_api
+      - casebook_api_rubygems:/ruby_gems
+
