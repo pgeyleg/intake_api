@@ -20,9 +20,10 @@ default: &default
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: db
-  username: postgres
-  password: casebook_api
+  host: <%= ENV['PG_HOST'] ? ENV['PG_HOST'] : 'localhost' %>
+  port: <%= ENV['PG_PORT'] ? ENV['PG_PORT'] : 5432 %>
+  username: <%= ENV['PG_USER'] ? ENV['PG_USER'] : 'casebook' %>
+  password:
 
 development:
   <<: *default

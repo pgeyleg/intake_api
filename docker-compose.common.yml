@@ -5,7 +5,6 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: casebook_api
       POSTGRES_DB: casebook_api_development
   api:
     build: .
@@ -14,6 +13,8 @@ services:
       - "3001:3000"
     environment:
       RAILS_ENV: development
+      PG_HOST: db
+      PG_USER: postgres
     volumes:
       - .:/casebook_api
       - casebook_api_rubygems:/ruby_gems
