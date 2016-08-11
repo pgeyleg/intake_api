@@ -28,7 +28,13 @@ module Api
       private
 
       def person_params
-        params.require(:person).permit(:first_name, :last_name)
+        params.require(:person).permit(
+          :first_name,
+          :last_name,
+          :gender,
+          :date_of_birth,
+          :ssn
+        )
       end
     end
   end

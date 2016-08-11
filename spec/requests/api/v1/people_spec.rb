@@ -4,7 +4,15 @@ require 'rails_helper'
 describe 'People API' do
   describe 'POST /api/v1/people' do
     it 'creates a person' do
-      params = { person: { first_name: 'Walter', last_name: 'White' } }
+      params = {
+        person: {
+          first_name: 'Walter',
+          last_name: 'White',
+          gender: 'female',
+          date_of_birth: '1990-03-30',
+          ssn: '345-12-2345'
+        }
+      }
       post '/api/v1/people', params
 
       expect(response.status).to eq(201)
@@ -12,6 +20,9 @@ describe 'People API' do
       expect(body['id']).to_not eq nil
       expect(body['first_name']).to eq('Walter')
       expect(body['last_name']).to eq('White')
+      expect(body['gender']).to eq('female')
+      expect(body['date_of_birth']).to eq('1990-03-30')
+      expect(body['ssn']).to eq('345-12-2345')
     end
   end
 
