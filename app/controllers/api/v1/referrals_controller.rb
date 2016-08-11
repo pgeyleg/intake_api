@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Api
   module V1
-    class ReferralsController < ApplicationController
+    class ReferralsController < ApplicationController # :nodoc:
       def create
         referral = Referral.create(referral_params)
         render json: referral, status: :created

@@ -1,4 +1,6 @@
-class CreatePeopleTable < ActiveRecord::Migration[5.0]
+# frozen_string_literal: true
+
+class CreatePeopleTable < ActiveRecord::Migration[5.0] # :nodoc:
   def change
     create_table :people do |t|
       t.string :first_name
