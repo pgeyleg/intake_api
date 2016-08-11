@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'Referral API' do
@@ -13,4 +14,3 @@ describe 'Referral API' do
     end
   end
 end
-

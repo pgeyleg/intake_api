@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe 'People API' do
@@ -21,7 +22,7 @@ describe 'People API' do
       get "/api/v1/people/#{person.id}"
 
       expect(response.status).to eq(200)
-      body = (JSON.parse(response.body))
+      body = JSON.parse(response.body)
       expect(body['first_name']).to eq('Walter')
       expect(body['last_name']).to eq('White')
     end
@@ -34,7 +35,7 @@ describe 'People API' do
       put "/api/v1/people/#{person.id}", person: { first_name: 'Jesse' }
 
       expect(response.status).to eq(200)
-      body = (JSON.parse(response.body))
+      body = JSON.parse(response.body)
       expect(body['first_name']).to eq('Jesse')
       expect(body['last_name']).to eq('White')
     end

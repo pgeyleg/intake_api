@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module Api
   module V1
-    class PeopleController < ApplicationController
+    class PeopleController < ApplicationController # :nodoc:
       def create
         person = Person.create(person_params)
         render json: person, status: :created
