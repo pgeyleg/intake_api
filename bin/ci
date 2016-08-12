@@ -3,6 +3,9 @@
 
 require_relative 'util'
 
+puts '== Sleeping 3 seconds to wait for db initialization =='
+sleep 3
+
 system! 'bin/setup'
 
 puts "\n== Running test=="
