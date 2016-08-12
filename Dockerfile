@@ -7,4 +7,4 @@ WORKDIR $APP_HOME
 ADD . $APP_HOME
 
 ENV BUNDLE_PATH /ruby_gems
-
+RUN bundle config build.nokogiri --use-system-libraries
