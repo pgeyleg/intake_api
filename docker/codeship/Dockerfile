@@ -12,7 +12,4 @@ RUN bundle config build.nokogiri --use-system-libraries
 COPY Gemfile Gemfile.lock ./
 RUN bundle install -j24
 
-COPY package.json ./
-RUN npm install --spin=false
-
 COPY . ./
