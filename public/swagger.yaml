@@ -1,0 +1,119 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1"
+  title: Casebook Mock API
+  description: Mock API used for development of Accelerator and California Intake project
+
+host: 192.168.99.103:3001
+basePath: /api/v1
+schemes: ["http", "https"]
+consumes: ["application/json"]
+produces: ["application/json"]
+
+definitions:
+  Person:
+    type: object
+    properties:
+      first_name:
+        type: string
+      last_name:
+        type: string
+      gender:
+        type: string
+      date_of_birth:
+        type: string
+        format: date
+      ssn:
+        type: string
+      address:
+        $ref: "#/definitions/Address"
+  Address:
+    type: object
+    properties:
+      street_address:
+        type: string
+      city:
+        type: string
+      state:
+        type: string
+      zip:
+        type: integer
+        format: int32
+  Referral:
+    type: object
+    properties:
+      reference:
+        type: string
+
+
+paths:
+  /people/{id}:
+    get:
+      description: Gets `Person` object for the id.
+      tags: ["people", "person"]
+      parameters:
+      - name: id
+        in: path
+        description: id of the person
+        required: true
+        type: number
+        format: int64
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/Person"
+
+  /people:
+    post:
+      summary: Creates a `Person` object.
+      operationId: createPerson
+      parameters:
+      - name: body
+        in: body
+        description: Person to create
+        required: true
+        schema:
+          "$ref": "#/definitions/Person"
+      responses:
+        201:
+          description: Successful creation
+          schema:
+            title: Person
+            allOf:
+            - $ref: '#/definitions/Person'
+            properties:
+              id:
+                type: integer
+                format: int64
+
+  /referrals:
+    post:
+      description: Creates a new referral
+      parameters:
+        -
+          name: body
+          in: body
+          description: Referral parameters
+          required: true
+          schema:
+            title: Referral Reference
+            properties:
+              reference:
+                type: string
+      responses:
+        200:
+          description: Successful creation
+          schema:
+            title: Referral
+            allOf:
+            - $ref: "#/definitions/Referral"
+            properties:
+              id:
+                type: integer
+                format: int64

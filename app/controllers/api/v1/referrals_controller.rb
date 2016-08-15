@@ -11,7 +11,7 @@ module Api
       private
 
       def referral_params
-        params.require(:referral).permit(:reference)
+        params.permit(:reference)
       end
     end
   end
