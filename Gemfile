@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
+gem 'rack-cors'
 gem 'rails', '~> 5.0.0'
 
 group :development, :test do
