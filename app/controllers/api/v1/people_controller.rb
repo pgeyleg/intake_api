@@ -4,9 +4,7 @@ module Api
   module V1
     class PeopleController < ApplicationController # :nodoc:
       def create
-        if address_params
-          address = Address.new(address_params)
-        end
+        address = Address.new(address_params) if address_params
         person = Person.create(person_params.merge(address: address))
         render json: person, status: :created
       end
@@ -46,7 +44,7 @@ module Api
           :last_name,
           :gender,
           :date_of_birth,
-          :ssn,
+          :ssn
         )
       end
     end

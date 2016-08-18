@@ -1,4 +1,5 @@
-class CreateAddress < ActiveRecord::Migration[5.0]
+# frozen_string_literal: true
+class CreateAddress < ActiveRecord::Migration[5.0] # :nodoc:
   def change
     create_table :addresses do |t|
       t.string :street_address

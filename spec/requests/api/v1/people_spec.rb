@@ -14,7 +14,7 @@ describe 'People API' do
           street_address: '123 fake st',
           city: 'Fake City',
           state: 'NY',
-          zip: '10010',
+          zip: '10010'
         }
       }
       post '/api/v1/people', params
@@ -32,7 +32,7 @@ describe 'People API' do
       expect(address['street_address']).to eq('123 fake st')
       expect(address['city']).to eq('Fake City')
       expect(address['state']).to eq('NY')
-      expect(address['zip']).to eq(10010)
+      expect(address['zip']).to eq(10_010)
     end
   end
 
