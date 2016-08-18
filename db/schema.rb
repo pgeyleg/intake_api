@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,20 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_160_808_213_209) do
+ActiveRecord::Schema.define(version: 20160817211617) do
+
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'people', force: :cascade do |t|
-    t.string   'first_name'
-    t.string   'last_name'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "addresses", force: :cascade do |t|
+    t.string   "street_address"
+    t.string   "city"
+    t.string   "state"
+    t.integer  "zip"
+    t.integer  "person_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
-  create_table 'referrals', force: :cascade do |t|
-    t.string   'reference'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "people", force: :cascade do |t|
+    t.string   "first_name"
+    t.string   "last_name"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "gender"
+    t.string   "ssn"
+    t.date     "date_of_birth"
   end
+
+  create_table "referrals", force: :cascade do |t|
+    t.string   "reference"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
 end
