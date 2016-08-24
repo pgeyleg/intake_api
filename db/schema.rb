@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160817211617) do
+ActiveRecord::Schema.define(version: 20160824142845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,8 +37,18 @@ ActiveRecord::Schema.define(version: 20160817211617) do
 
   create_table "referrals", force: :cascade do |t|
     t.string   "reference"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "city"
+    t.datetime "ended_at"
+    t.date     "incident_date"
+    t.string   "location_type"
+    t.string   "method_of_referral"
+    t.string   "name"
+    t.datetime "started_at"
+    t.string   "state"
+    t.string   "street_address"
+    t.integer  "zip"
   end
 
 end
