@@ -35,20 +35,25 @@ ActiveRecord::Schema.define(version: 20160824142845) do
     t.date     "date_of_birth"
   end
 
+  create_table "referral_addresses", force: :cascade do |t|
+    t.integer  "referral_id"
+    t.integer  "address_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["address_id"], name: "index_referral_addresses_on_address_id", using: :btree
+    t.index ["referral_id"], name: "index_referral_addresses_on_referral_id", using: :btree
+  end
+
   create_table "referrals", force: :cascade do |t|
     t.string   "reference"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
-    t.string   "city"
     t.datetime "ended_at"
     t.date     "incident_date"
     t.string   "location_type"
     t.string   "method_of_referral"
     t.string   "name"
     t.datetime "started_at"
-    t.string   "state"
-    t.string   "street_address"
-    t.integer  "zip"
   end
 
 end
