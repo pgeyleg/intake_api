@@ -26,13 +26,12 @@ describe 'Referral API' do
         reference: '123ABC',
         ended_at: '2016-08-03T01:00:00.000Z',
         started_at: '2016-08-03T01:00:00.000Z',
-        referral_address: include(
-          address: include(
-            street_address: nil,
-            city: nil,
-            state: nil,
-            zip: nil
-          )
+        address: include(
+          street_address: nil,
+          city: nil,
+          state: nil,
+          zip: nil,
+          person_id: nil
         )
       )
       expect(body['id']).to_not eq nil
@@ -74,16 +73,13 @@ describe 'Referral API' do
         reference: '123ABC',
         ended_at: '2016-08-03T01:00:00.000Z',
         started_at: '2016-08-03T01:00:00.000Z',
-        referral_address: include(
-          id: address.id,
-          address: include(
-            id: address.address_id,
-            street_address: '123 Fake St',
-            city: 'Fake City',
-            state: 'NY',
-            zip: 10_010,
-            person_id: nil
-          )
+        address: include(
+          id: address.address_id,
+          street_address: '123 Fake St',
+          city: 'Fake City',
+          state: 'NY',
+          zip: 10_010,
+          person_id: nil
         )
       )
     end
@@ -113,15 +109,12 @@ describe 'Referral API' do
 
       updated_params = {
         name: 'Some new name',
-        referral_address_attributes: {
-          id: address.id,
-          address_attributes: {
-            id: address.address_id,
-            street_address: '123 Real St',
-            city: 'Fake City',
-            state: 'CA',
-            zip: '10010'
-          }
+        address: {
+          id: address.address_id,
+          street_address: '123 Real St',
+          city: 'Fake City',
+          state: 'CA',
+          zip: '10010'
         }
       }
 
@@ -138,16 +131,13 @@ describe 'Referral API' do
         name: 'Some new name',
         reference: '123ABC',
         started_at: '2016-08-03T01:00:00.000Z',
-        referral_address: include(
-          id: address.id,
-          address: include(
-            id: address.address_id,
-            street_address: '123 Real St',
-            city: 'Fake City',
-            state: 'CA',
-            zip: 10_010,
-            person_id: nil
-          )
+        address: include(
+          id: address.address_id,
+          street_address: '123 Real St',
+          city: 'Fake City',
+          state: 'CA',
+          zip: 10_010,
+          person_id: nil
         )
       )
       expect(Address.count).to eq 1

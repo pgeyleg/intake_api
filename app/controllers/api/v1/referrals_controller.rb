@@ -8,29 +8,30 @@ module Api
         @referral.build_referral_address
         @referral.referral_address.build_address
         @referral.save!
-        render json: referral_json, status: :created
+        render json: ReferralSerializer.new(@referral), status: :created
       end
 
       def show
-        @referral = Referral.find(params[:id])
-        render json: referral_json, status: :ok
+        @referral = Referral.find(referral_params[:id])
+        render json: ReferralSerializer.new(@referral), status: :ok
       end
 
       def update
-        @referral = Referral.find(params[:id])
-        @referral.update!(referral_params)
-        render json: referral_json, status: :ok
+        @referral = Referral.find(referral_params[:id])
+        @referral.assign_attributes(referral_params)
+        @referral.address.assign_attributes(address_params)
+        @referral.save!
+        render json: ReferralSerializer.new(@referral), status: :ok
       end
 
       private
 
-      def referral_json
-        @referral.as_json(
-          include: {
-            referral_address: {
-              include: :address, only: [:id, :address]
-            }
-          }
+      def address_params
+        params.require(:address).permit(
+          :street_address,
+          :city,
+          :state,
+          :zip
         )
       end
 
@@ -43,17 +44,7 @@ module Api
           :method_of_referral,
           :name,
           :reference,
-          :started_at,
-          referral_address_attributes: [
-            :id,
-            address_attributes: [
-              :id,
-              :street_address,
-              :city,
-              :state,
-              :zip
-            ]
-          ]
+          :started_at
         )
       end
     end
