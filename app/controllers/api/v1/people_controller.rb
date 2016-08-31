@@ -29,8 +29,7 @@ module Api
       private
 
       def address_params
-        address_attrs = params[:address]
-        address_attrs && address_attrs.permit(
+        params.require(:address).permit(
           :street_address,
           :city,
           :state,
