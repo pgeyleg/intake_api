@@ -92,6 +92,23 @@ paths:
                 type: integer
                 format: int64
 
+  /referrals/{id}:
+    get:
+      description: Gets `Referral` object for the id.
+      tags: ["referrals", "referral"]
+      parameters:
+      - name: id
+        in: path
+        description: id of the referral
+        required: true
+        type: number
+        format: int64
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/Referral"
+
   /referrals:
     post:
       description: Creates a new referral
