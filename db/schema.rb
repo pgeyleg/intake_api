@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 20160906201325) do
     t.string   "method_of_referral"
     t.string   "name"
     t.datetime "started_at"
+    t.string   "response_time"
     t.string   "incident_county"
   end
 

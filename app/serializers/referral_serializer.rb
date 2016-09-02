@@ -8,6 +8,7 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     :method_of_referral,
     :name,
     :reference,
+    :response_time,
     :started_at
 
   has_one :address

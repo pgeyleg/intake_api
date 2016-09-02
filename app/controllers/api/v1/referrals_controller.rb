@@ -45,6 +45,7 @@ module Api
           :method_of_referral,
           :name,
           :reference,
+          :response_time,
           :started_at
         )
       end
