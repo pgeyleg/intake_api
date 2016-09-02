@@ -4,7 +4,7 @@ require 'rails_helper'
 describe 'People API' do
   describe 'POST /api/v1/people' do
     it 'creates a person' do
-      params = {
+      person_params = {
         first_name: 'Walter',
         last_name: 'White',
         gender: 'female',
@@ -17,7 +17,7 @@ describe 'People API' do
           zip: '10010'
         }
       }
-      post '/api/v1/people', params
+      post '/api/v1/people', params: person_params
 
       expect(response.status).to eq(201)
       body = JSON.parse(response.body)
@@ -53,7 +53,7 @@ describe 'People API' do
     it 'updates attributes of a person' do
       person = Person.create(first_name: 'Walter', last_name: 'White')
 
-      put "/api/v1/people/#{person.id}", first_name: 'Jesse'
+      put "/api/v1/people/#{person.id}", params: { first_name: 'Jesse' }
 
       expect(response.status).to eq(200)
       body = JSON.parse(response.body)
