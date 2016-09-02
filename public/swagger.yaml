@@ -47,9 +47,28 @@ definitions:
   Referral:
     type: object
     properties:
+      id:
+        type: integer
+        format: int64
       reference:
         type: string
-
+      ended_at:
+        type: string
+        format: date-time
+      incident_date:
+        type: string
+        format: date
+      location_type:
+        type: string
+      method_of_referral:
+        type: string
+      name:
+        type: string
+      started_at:
+        type: string
+        format: date-time
+      address:
+        $ref: "#/definitions/Address"
 
 paths:
   /people/{id}:
@@ -92,12 +111,29 @@ paths:
                 type: integer
                 format: int64
 
+  /referrals/{id}:
+    get:
+      description: Gets `Referral` object for the id.
+      tags: ["referrals", "referral"]
+      parameters:
+      - name: id
+        in: path
+        description: id of the referral
+        required: true
+        type: number
+        format: int64
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/Referral"
+
   /referrals:
     post:
       description: Creates a new referral
+      tags: ["referrals", "referral"]
       parameters:
-        -
-          name: body
+        - name: body
           in: body
           description: Referral parameters
           required: true
@@ -117,3 +153,26 @@ paths:
               id:
                 type: integer
                 format: int64
+
+  /referrals/{id}:
+    put:
+      description: Updates a `Referral` object
+      tags: ["referrals", "referral"]
+      parameters:
+        - name: id
+          in: path
+          description: id of the referral
+          required: true
+          type: number
+          format: int64
+        - name: body
+          in: body
+          description: Referral parameters
+          required: true
+          schema:
+            $ref: "#/definitions/Referral"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/Referral"

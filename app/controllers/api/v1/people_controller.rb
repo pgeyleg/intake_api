@@ -4,9 +4,11 @@ module Api
   module V1
     class PeopleController < ApplicationController # :nodoc:
       def create
-        address = Address.new(address_params) if address_params
-        person = Person.create(person_params.merge(address: address))
-        render json: person, status: :created
+        @person = Person.new(person_params)
+        @person.build_person_address
+        @person.person_address.build_address(address_params)
+        @person.save!
+        render json: @person, status: :created
       end
 
       def update
@@ -29,8 +31,7 @@ module Api
       private
 
       def address_params
-        address_attrs = params[:address]
-        address_attrs && address_attrs.permit(
+        params.require(:address).permit(
           :street_address,
           :city,
           :state,
