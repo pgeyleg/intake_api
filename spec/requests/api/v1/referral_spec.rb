@@ -86,7 +86,6 @@ describe 'Referral API' do
   end
 
   describe 'PUT /api/v1/referrals/:id' do
-    before { Address.destroy_all }
     it 'updates attributes of a referral' do
       referral = Referral.create(
         ended_at: '2016-08-03T01:00:00.000Z',
@@ -118,7 +117,9 @@ describe 'Referral API' do
         }
       }
 
-      put "/api/v1/referrals/#{referral.id}", params: updated_params
+      expect do
+        put "/api/v1/referrals/#{referral.id}", params: updated_params
+      end.to change(Address, :count).by(0)
 
       expect(response.status).to eq(200)
       body = JSON.parse(response.body).with_indifferent_access
@@ -140,7 +141,6 @@ describe 'Referral API' do
           person_id: nil
         )
       )
-      expect(Address.count).to eq 1
     end
   end
 end
