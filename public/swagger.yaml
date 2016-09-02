@@ -95,6 +95,7 @@ paths:
   /referrals:
     post:
       description: Creates a new referral
+      tags: ["referrals", "referral"]
       parameters:
         -
           name: body
