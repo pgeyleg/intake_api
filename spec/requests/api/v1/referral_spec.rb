@@ -30,8 +30,7 @@ describe 'Referral API' do
           street_address: nil,
           city: nil,
           state: nil,
-          zip: nil,
-          person_id: nil
+          zip: nil
         )
       )
       expect(body['id']).to_not eq nil
@@ -78,8 +77,7 @@ describe 'Referral API' do
           street_address: '123 Fake St',
           city: 'Fake City',
           state: 'NY',
-          zip: 10_010,
-          person_id: nil
+          zip: 10_010
         )
       )
     end
@@ -137,8 +135,7 @@ describe 'Referral API' do
           street_address: '123 Real St',
           city: 'Fake City',
           state: 'CA',
-          zip: 10_010,
-          person_id: nil
+          zip: 10_010
         )
       )
     end
