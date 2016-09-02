@@ -46,6 +46,7 @@ module Api
           :name,
           :reference,
           :response_time,
+          :screening_decision,
           :started_at
         )
       end

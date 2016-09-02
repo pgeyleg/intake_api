@@ -68,6 +68,8 @@ definitions:
         type: string
       response_time:
         type: string
+      screening_decision:
+        type: string
       started_at:
         type: string
         format: date-time

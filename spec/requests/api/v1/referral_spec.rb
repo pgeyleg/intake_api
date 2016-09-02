@@ -13,6 +13,7 @@ describe 'Referral API' do
         name: 'The Rocky Horror Show',
         reference: '123ABC',
         response_time: 'immediate',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z'
       }
 
@@ -29,6 +30,7 @@ describe 'Referral API' do
         name: 'The Rocky Horror Show',
         reference: '123ABC',
         response_time: 'immediate',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
         address: include(
           street_address: nil,
@@ -52,6 +54,7 @@ describe 'Referral API' do
         name: 'The Rocky Horror Show',
         reference: '123ABC',
         response_time: 'immediate',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z'
       )
 
@@ -79,6 +82,7 @@ describe 'Referral API' do
         name: 'The Rocky Horror Show',
         reference: '123ABC',
         response_time: 'immediate',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
         address: include(
           id: address.address_id,
@@ -102,6 +106,7 @@ describe 'Referral API' do
         name: 'The Rocky Horror Show',
         reference: '123ABC',
         response_time: 'within_twenty_four_hours',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z'
       )
       address = ReferralAddress.create(
@@ -118,6 +123,7 @@ describe 'Referral API' do
         name: 'Some new name',
         incident_county: 'mendocino',
         response_time: 'immediate',
+        screening_decision: 'evaluate_out',
         address: {
           id: address.address_id,
           street_address: '123 Real St',
@@ -143,6 +149,7 @@ describe 'Referral API' do
         name: 'Some new name',
         reference: '123ABC',
         response_time: 'immediate',
+        screening_decision: 'evaluate_out',
         started_at: '2016-08-03T01:00:00.000Z',
         address: include(
           id: address.address_id,

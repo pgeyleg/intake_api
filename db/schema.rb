@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 20160906201325) do
     t.string   "name"
     t.datetime "started_at"
     t.string   "response_time"
+    t.string   "screening_decision"
     t.string   "incident_county"
   end
 
