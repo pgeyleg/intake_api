@@ -6,6 +6,7 @@ describe 'Referral API' do
     it 'creates a referral' do
       referral_params = {
         ended_at: '2016-08-03T01:00:00.000Z',
+        incident_county: 'sacramento',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',
@@ -19,6 +20,7 @@ describe 'Referral API' do
       expect(response.status).to eq(201)
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
+        incident_county: 'sacramento',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',
@@ -41,6 +43,7 @@ describe 'Referral API' do
     it 'returns a JSON representation of the referral' do
       referral = Referral.create(
         ended_at: '2016-08-03T01:00:00.000Z',
+        incident_county: 'sacramento',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',
@@ -65,6 +68,7 @@ describe 'Referral API' do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
         id: referral.id,
+        incident_county: 'sacramento',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',
@@ -87,6 +91,7 @@ describe 'Referral API' do
     it 'updates attributes of a referral' do
       referral = Referral.create(
         ended_at: '2016-08-03T01:00:00.000Z',
+        incident_county: 'sacramento',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',
@@ -106,6 +111,7 @@ describe 'Referral API' do
 
       updated_params = {
         name: 'Some new name',
+        incident_county: 'mendocino',
         address: {
           id: address.address_id,
           street_address: '123 Real St',
@@ -124,6 +130,7 @@ describe 'Referral API' do
       expect(body).to include(
         ended_at: '2016-08-03T01:00:00.000Z',
         id: referral.id,
+        incident_county: 'mendocino',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',

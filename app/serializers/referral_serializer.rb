@@ -2,6 +2,7 @@
 class ReferralSerializer < ActiveModel::Serializer # :nodoc:
   attributes :id,
     :ended_at,
+    :incident_county,
     :incident_date,
     :location_type,
     :method_of_referral,

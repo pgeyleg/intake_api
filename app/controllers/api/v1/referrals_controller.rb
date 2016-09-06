@@ -39,6 +39,7 @@ module Api
         params.permit(
           :ended_at,
           :id,
+          :incident_county,
           :incident_date,
           :location_type,
           :method_of_referral,
