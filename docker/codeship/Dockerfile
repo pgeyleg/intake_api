@@ -8,3 +8,8 @@ ADD . $APP_HOME
 
 ENV BUNDLE_PATH /ruby_gems
 RUN bundle config build.nokogiri --use-system-libraries
+
+COPY Gemfile Gemfile.lock ./
+RUN bundle install -j24
+
+COPY . ./

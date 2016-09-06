@@ -1,0 +1,13 @@
+api:
+  build: .
+  dockerfile: docker/codeship/Dockerfile
+  environment:
+    RAILS_ENV: test
+    PG_HOST: db
+    PG_USER: postgres
+  links:
+    - db
+db:
+  image: postgres:9.5.3
+  environment:
+    POSTGRES_DB: casebook_api_development
