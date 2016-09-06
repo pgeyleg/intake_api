@@ -55,6 +55,8 @@ definitions:
       ended_at:
         type: string
         format: date-time
+      incident_county:
+        type: string
       incident_date:
         type: string
         format: date
