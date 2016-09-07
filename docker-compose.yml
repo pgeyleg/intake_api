@@ -10,6 +10,8 @@ services:
       service: api
     links:
       - db
+    ports:
+      - "3001:3000"
 volumes:
   casebook_api_rubygems:
 
