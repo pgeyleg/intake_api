@@ -12,6 +12,8 @@ describe 'Referral API' do
         method_of_referral: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
+        response_time: 'immediate',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z'
       }
 
@@ -21,12 +23,14 @@ describe 'Referral API' do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
         incident_county: 'sacramento',
+        ended_at: '2016-08-03T01:00:00.000Z',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
-        ended_at: '2016-08-03T01:00:00.000Z',
+        response_time: 'immediate',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
         address: include(
           street_address: nil,
@@ -49,6 +53,8 @@ describe 'Referral API' do
         method_of_referral: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
+        response_time: 'immediate',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z'
       )
 
@@ -69,12 +75,14 @@ describe 'Referral API' do
       expect(body).to include(
         id: referral.id,
         incident_county: 'sacramento',
+        ended_at: '2016-08-03T01:00:00.000Z',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
-        ended_at: '2016-08-03T01:00:00.000Z',
+        response_time: 'immediate',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
         address: include(
           id: address.address_id,
@@ -97,6 +105,8 @@ describe 'Referral API' do
         method_of_referral: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
+        response_time: 'within_twenty_four_hours',
+        screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z'
       )
       address = ReferralAddress.create(
@@ -112,6 +122,8 @@ describe 'Referral API' do
       updated_params = {
         name: 'Some new name',
         incident_county: 'mendocino',
+        response_time: 'immediate',
+        screening_decision: 'evaluate_out',
         address: {
           id: address.address_id,
           street_address: '123 Real St',
@@ -128,14 +140,16 @@ describe 'Referral API' do
       expect(response.status).to eq(200)
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
-        ended_at: '2016-08-03T01:00:00.000Z',
         id: referral.id,
+        ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'mendocino',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         method_of_referral: 'Phone',
         name: 'Some new name',
         reference: '123ABC',
+        response_time: 'immediate',
+        screening_decision: 'evaluate_out',
         started_at: '2016-08-03T01:00:00.000Z',
         address: include(
           id: address.address_id,
