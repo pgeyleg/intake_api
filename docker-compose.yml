@@ -10,8 +10,26 @@ services:
       service: api
     links:
       - db
+      - redis
     ports:
       - "3001:3000"
+    environment:
+      REDIS_URL: 'redis://redis:6379/0'
+  redis:
+    image: 'redis:3.2-alpine'
+    command: redis-server
+    ports:
+      - '6379:6379'
+  sidekiq:
+    extends:
+      file: ./docker-compose.common.yml
+      service: api
+    command: bundle exec sidekiq
+    links:
+      - db
+      - redis
+    environment:
+      REDIS_URL: 'redis://redis:6379/0'
 volumes:
   casebook_api_rubygems:
 
