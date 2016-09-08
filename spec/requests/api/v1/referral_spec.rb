@@ -160,5 +160,54 @@ describe 'Referral API' do
         )
       )
     end
+
+    describe 'GET /api/v1/referrals' do
+      before { Referral.destroy_all }
+      it 'returns a JSON representation of all referrals' do
+        Referral.create(reference: 'ABCDEF',
+                        name: 'Little Shop Of Horrors',
+                        response_time: 'immediate',
+                        screening_decision: 'evaluate_out')
+        Referral.create(reference: 'HIJKLM',
+                        name: 'The Shining',
+                        response_time: 'within_twenty_four_hours',
+                        screening_decision: 'accept_for_investigation')
+        Referral.create(reference: 'NOPQRS',
+                        name: 'It Follows',
+                        response_time: 'more_than_twenty_four_hours',
+                        screening_decision: 'referral_to_other_agency')
+
+        get '/api/v1/referrals'
+
+        expect(response.status).to eq(200)
+        body = JSON.parse(response.body)
+        expect(body).to include(
+          include(
+            {
+              reference: 'ABCDEF',
+              name: 'Little Shop Of Horrors',
+              response_time: 'immediate',
+              screening_decision: 'evaluate_out'
+            }.with_indifferent_access
+          ),
+          include(
+            {
+              reference: 'HIJKLM',
+              name: 'The Shining',
+              response_time: 'within_twenty_four_hours',
+              screening_decision: 'accept_for_investigation'
+            }.with_indifferent_access
+          ),
+          include(
+            {
+              reference: 'NOPQRS',
+              name: 'It Follows',
+              response_time: 'more_than_twenty_four_hours',
+              screening_decision: 'referral_to_other_agency'
+            }.with_indifferent_access
+          )
+        )
+      end
+    end
   end
 end

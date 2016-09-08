@@ -24,6 +24,11 @@ module Api
         render json: ReferralSerializer.new(@referral), status: :ok
       end
 
+      def index
+        @referrals = Referral.all
+        render json: @referrals, status: :ok
+      end
+
       private
 
       def address_params
