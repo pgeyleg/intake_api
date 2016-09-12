@@ -5,8 +5,13 @@ class PeopleRepo
   include Elasticsearch::Persistence::Repository
 
   def initialize(options = {})
-    index  options[:index] || 'people'
-    client Elasticsearch::Client.new(host: ENV['ELASTICSEARCH_URL'])
+    index options[:index] || 'people'
+    es_host = if Rails.env.test?
+                ENV['TEST_ELASTICSEARCH_URL']
+              else
+                ENV['ELASTICSEARCH_URL']
+              end
+    client Elasticsearch::Client.new(host: es_host)
   end
 
   klass Person
