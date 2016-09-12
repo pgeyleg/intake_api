@@ -2,6 +2,7 @@
 source 'https://rubygems.org'
 
 gem 'active_model_serializers'
+gem 'elasticsearch-persistence'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rack-cors'
