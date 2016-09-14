@@ -28,7 +28,7 @@ services:
     extends:
       file: ./docker-compose.common.yml
       service: api
-    command: bundle exec sidekiq
+    command: ./bin/sidekiq_start
     links:
       - db
       - redis
