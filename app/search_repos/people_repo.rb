@@ -17,12 +17,14 @@ class PeopleRepo
   klass Person
 
   settings do
-    mapping do
+    mappings dynamic: 'strict' do
       indexes :first_name
       indexes :last_name
       indexes :gender
       indexes :ssn
       indexes :date_of_birth
+      indexes :created_at
+      indexes :updated_at
     end
   end
 
