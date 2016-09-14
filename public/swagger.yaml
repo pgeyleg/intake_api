@@ -133,6 +133,27 @@ paths:
           description: Successful response
           schema:
             $ref: "#/definitions/Referral"
+    put:
+      description: Updates a `Referral` object
+      tags: ["referrals", "referral"]
+      parameters:
+        - name: id
+          in: path
+          description: id of the referral
+          required: true
+          type: number
+          format: int64
+        - name: body
+          in: body
+          description: Referral parameters
+          required: true
+          schema:
+            $ref: "#/definitions/Referral"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/Referral"
 
   /referrals:
     post:
@@ -159,26 +180,14 @@ paths:
               id:
                 type: integer
                 format: int64
-
-  /referrals/{id}:
-    put:
-      description: Updates a `Referral` object
+    get:
+      description: Gets all referrals
       tags: ["referrals", "referral"]
-      parameters:
-        - name: id
-          in: path
-          description: id of the referral
-          required: true
-          type: number
-          format: int64
-        - name: body
-          in: body
-          description: Referral parameters
-          required: true
-          schema:
-            $ref: "#/definitions/Referral"
       responses:
         200:
-          description: Successful response
+          description: Referral response
           schema:
-            $ref: "#/definitions/Referral"
+            type: array
+            items:
+              $ref: '#/definitions/Referral'
+
