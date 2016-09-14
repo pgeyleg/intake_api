@@ -8,6 +8,7 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     :location_type,
     :method_of_referral,
     :name,
+    :narrative,
     :reference,
     :response_time,
     :screening_decision,

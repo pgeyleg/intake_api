@@ -73,6 +73,8 @@ definitions:
       started_at:
         type: string
         format: date-time
+      narrative:
+        type: string
       address:
         $ref: "#/definitions/Address"
 

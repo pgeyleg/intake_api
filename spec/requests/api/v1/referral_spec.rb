@@ -14,7 +14,8 @@ describe 'Referral API' do
         reference: '123ABC',
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
-        started_at: '2016-08-03T01:00:00.000Z'
+        started_at: '2016-08-03T01:00:00.000Z',
+        narrative: 'Narrative 123 test'
       }
 
       post '/api/v1/referrals', params: referral_params
@@ -32,6 +33,7 @@ describe 'Referral API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
+        narrative: 'Narrative 123 test',
         address: include(
           street_address: nil,
           city: nil,
@@ -55,7 +57,8 @@ describe 'Referral API' do
         reference: '123ABC',
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
-        started_at: '2016-08-03T01:00:00.000Z'
+        started_at: '2016-08-03T01:00:00.000Z',
+        narrative: 'Narrative 123 test'
       )
 
       address = ReferralAddress.create(
@@ -84,6 +87,7 @@ describe 'Referral API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
+        narrative: 'Narrative 123 test',
         address: include(
           id: address.address_id,
           street_address: '123 Fake St',
@@ -107,7 +111,8 @@ describe 'Referral API' do
         reference: '123ABC',
         response_time: 'within_twenty_four_hours',
         screening_decision: 'referral_to_other_agency',
-        started_at: '2016-08-03T01:00:00.000Z'
+        started_at: '2016-08-03T01:00:00.000Z',
+        narrative: 'Narrative 123 test',
       )
       address = ReferralAddress.create(
         referral: referral,
@@ -124,6 +129,7 @@ describe 'Referral API' do
         incident_county: 'mendocino',
         response_time: 'immediate',
         screening_decision: 'evaluate_out',
+        narrative: 'Updated Narrative',
         address: {
           id: address.address_id,
           street_address: '123 Real St',
@@ -151,6 +157,7 @@ describe 'Referral API' do
         response_time: 'immediate',
         screening_decision: 'evaluate_out',
         started_at: '2016-08-03T01:00:00.000Z',
+        narrative: 'Updated Narrative',
         address: include(
           id: address.address_id,
           street_address: '123 Real St',
