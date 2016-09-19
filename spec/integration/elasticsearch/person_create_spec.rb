@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 require 'rails_helper'
+require 'sidekiq/api'
 
 describe 'Person Active Record and Elastic Search integration' do
   it 'should enqueue a person indexer job', truncation: true do
-    require 'sidekiq/api'
     sidekiq_queue = Sidekiq::Queue.new
     sidekiq_queue.clear
 
@@ -18,7 +18,6 @@ describe 'Person Active Record and Elastic Search integration' do
   end
 
   it 'creates a person document in ES with inline sidekiq', truncation: true do
-    require 'sidekiq/api'
     require 'sidekiq/testing'
     Sidekiq::Testing.inline!
 
