@@ -25,6 +25,7 @@ describe 'Person Active Record and Elastic Search integration' do
     sidekiq_queue.clear
 
     expect(sidekiq_queue.size).to eq(0)
+    PeopleRepo.create_index! force: true
 
     person = Person.create(first_name: 'Bart', last_name: 'Simpson')
 
