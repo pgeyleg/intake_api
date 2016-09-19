@@ -11,10 +11,15 @@ services:
     links:
       - db
       - redis
+      - elasticsearch
+      - test_elasticsearch
     ports:
       - "3001:3000"
     environment:
-      REDIS_URL: 'redis://redis:6379/0'
+      REDIS_DATABASE: 'redis://redis:6379/0'
+      TEST_REDIS_DATABASE: 'redis://redis:6379/1'
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      TEST_ELASTICSEARCH_URL: 'http://test_elasticsearch:9200'
   redis:
     image: 'redis:3.2-alpine'
     command: redis-server
@@ -24,12 +29,21 @@ services:
     extends:
       file: ./docker-compose.common.yml
       service: api
-    command: bundle exec sidekiq
+    command: ./bin/sidekiq_start
     links:
       - db
       - redis
+      - elasticsearch
+      - test_elasticsearch
     environment:
-      REDIS_URL: 'redis://redis:6379/0'
+      REDIS_DATABASE: 'redis://redis:6379/0'
+      TEST_REDIS_DATABASE: 'redis://redis:6379/1'
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      TEST_ELASTICSEARCH_URL: 'http://test_elasticsearch:9200'
+  elasticsearch:
+    image: 'elasticsearch:2.4'
+  test_elasticsearch:
+    image: 'elasticsearch:2.4'
 volumes:
   casebook_api_rubygems:
 
