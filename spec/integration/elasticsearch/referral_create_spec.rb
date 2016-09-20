@@ -10,7 +10,7 @@ describe 'Referral Active Record and Elastic Search integration' do
     sidekiq_queue.clear
     expect(sidekiq_queue.size).to eq(0)
 
-    referral = Referral.create()
+    referral = Referral.create
     expect(sidekiq_queue.size).to eq(1)
 
     job_data = sidekiq_queue.first.item
