@@ -20,6 +20,7 @@ module Api
         @referral = Referral.find(referral_params[:id])
         @referral.assign_attributes(referral_params)
         @referral.address.assign_attributes(address_params)
+        @referral.involved_person_ids = params[:involved_person_ids]
         @referral.save!
         render json: ReferralSerializer.new(@referral), status: :ok
       end

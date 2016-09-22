@@ -71,6 +71,17 @@ describe 'Referral API' do
         )
       )
 
+      referral_person = ReferralPerson.create(
+        referral: referral,
+        person: Person.create(
+          first_name: 'Bart',
+          last_name: 'Simpson',
+          gender: 'male',
+          ssn: '123-23-1234',
+          date_of_birth: Date.today
+        )
+      )
+
       get "/api/v1/referrals/#{referral.id}"
 
       expect(response.status).to eq(200)
@@ -96,6 +107,16 @@ describe 'Referral API' do
           zip: 10_010
         )
       )
+
+      involved_person = body[:involved_people].first
+      expect(involved_person).to include(
+        id: referral_person.person.id,
+        first_name: 'Bart',
+        last_name: 'Simpson',
+        gender: 'male',
+        ssn: '123-23-1234',
+        date_of_birth: Date.today.to_s
+      )
     end
   end
 
@@ -112,7 +133,7 @@ describe 'Referral API' do
         response_time: 'within_twenty_four_hours',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        narrative: 'Narrative 123 test',
+        narrative: 'Narrative 123 test'
       )
       address = ReferralAddress.create(
         referral: referral,
@@ -123,6 +144,8 @@ describe 'Referral API' do
           zip: '10010'
         )
       )
+      bart = Person.create(first_name: 'Bart', last_name: 'Simpson')
+      lisa = Person.create(first_name: 'Lisa', last_name: 'Simpson')
 
       updated_params = {
         name: 'Some new name',
@@ -136,7 +159,8 @@ describe 'Referral API' do
           city: 'Fake City',
           state: 'CA',
           zip: '10010'
-        }
+        },
+        involved_person_ids: [bart.id, lisa.id]
       }
 
       expect do
@@ -165,6 +189,16 @@ describe 'Referral API' do
           state: 'CA',
           zip: 10_010
         )
+      )
+
+      involved_people = body[:involved_people]
+      expect(involved_people.first).to include(
+        first_name: 'Bart',
+        last_name: 'Simpson'
+      )
+      expect(involved_people.last).to include(
+        first_name: 'Lisa',
+        last_name: 'Simpson'
       )
     end
 

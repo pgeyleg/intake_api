@@ -75,8 +75,29 @@ definitions:
         format: date-time
       narrative:
         type: string
+  ReferralRequest:
+    allOf:
+      - $ref: "#/definitions/Referral"
+    properties:
       address:
         $ref: "#/definitions/Address"
+      involved_person_ids:
+        type: array
+        items:
+          properties:
+            id:
+              type: integer
+
+  ReferralResponse:
+    allOf:
+      - $ref: "#/definitions/Referral"
+    properties:
+      address:
+        $ref: "#/definitions/Address"
+      involved_people:
+        type: array
+        items:
+          $ref: "#/definitions/Person"
 
 paths:
   /people/{id}:
@@ -134,7 +155,7 @@ paths:
         200:
           description: Successful response
           schema:
-            $ref: "#/definitions/Referral"
+            $ref: "#/definitions/ReferralResponse"
     put:
       description: Updates a `Referral` object
       tags: ["referrals", "referral"]
@@ -150,12 +171,12 @@ paths:
           description: Referral parameters
           required: true
           schema:
-            $ref: "#/definitions/Referral"
+            $ref: "#/definitions/ReferralRequest"
       responses:
         200:
           description: Successful response
           schema:
-            $ref: "#/definitions/Referral"
+            $ref: "#/definitions/ReferralResponse"
 
   /referrals:
     post:
@@ -177,7 +198,7 @@ paths:
           schema:
             title: Referral
             allOf:
-            - $ref: "#/definitions/Referral"
+            - $ref: "#/definitions/ReferralResponse"
             properties:
               id:
                 type: integer
@@ -192,4 +213,3 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Referral'
-

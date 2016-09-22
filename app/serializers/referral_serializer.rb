@@ -15,4 +15,5 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     :started_at
 
   has_one :address
+  has_many :involved_people, serializer: PersonSerializer
 end
