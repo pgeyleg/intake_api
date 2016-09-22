@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 namespace :search do
   desc 'migrate'
   task migrate: :environment do
