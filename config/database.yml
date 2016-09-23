@@ -1,12 +1,20 @@
 default: &default
   adapter: postgresql
   encoding: unicode
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: <%= ENV['PG_HOST'] ? ENV['PG_HOST'] : 'localhost' %>
-  port: <%= ENV['PG_PORT'] ? ENV['PG_PORT'] : 5432 %>
-  username: <%= ENV['PG_USER'] ? ENV['PG_USER'] : 'casebook' %>
-  password: <%= ENV['PG_PASSWORD'] %>
-  database: <%= ENV['DATABASE_NAME'] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
+  host: <%= ENV.fetch('PG_HOST', 'localhost') %>
+  port: <%= ENV.fetch('PG_PORT', 5432) %>
+  username: <%= ENV.fetch('PG_USER', 'casebook') %>
+  password: <%= ENV.fetch('PG_PASSWORD', '') %>
+
+development:
+  <<: *default
+  database: casebook_api_development
+
+test:
+  <<: *default
+  database: casebook_api_test
 
 production:
   <<: *default
+  database: <%= ENV.fetch('DATABASE_NAME', 'casebook_api_production') %>
