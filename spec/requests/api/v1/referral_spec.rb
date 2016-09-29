@@ -105,17 +105,15 @@ describe 'Referral API' do
           city: 'Fake City',
           state: 'NY',
           zip: 10_010
+        ),
+        involved_people: include(
+          id: referral_person.person.id,
+          first_name: 'Bart',
+          last_name: 'Simpson',
+          gender: 'male',
+          ssn: '123-23-1234',
+          date_of_birth: Date.today.to_s
         )
-      )
-
-      involved_person = body[:involved_people].first
-      expect(involved_person).to include(
-        id: referral_person.person.id,
-        first_name: 'Bart',
-        last_name: 'Simpson',
-        gender: 'male',
-        ssn: '123-23-1234',
-        date_of_birth: Date.today.to_s
       )
     end
   end
@@ -188,17 +186,17 @@ describe 'Referral API' do
           city: 'Fake City',
           state: 'CA',
           zip: 10_010
-        )
-      )
-
-      involved_people = body[:involved_people]
-      expect(involved_people.first).to include(
-        first_name: 'Bart',
-        last_name: 'Simpson'
-      )
-      expect(involved_people.last).to include(
-        first_name: 'Lisa',
-        last_name: 'Simpson'
+        ),
+        involved_people: [
+          include(
+            first_name: 'Bart',
+            last_name: 'Simpson'
+          ),
+          include(
+            first_name: 'Lisa',
+            last_name: 'Simpson'
+          )
+        ]
       )
     end
 
