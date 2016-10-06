@@ -24,11 +24,6 @@ module Api
         render json: ReferralSerializer.new(@referral), status: :ok
       end
 
-      def index
-        @referrals = Referral.all
-        render json: @referrals, status: :ok
-      end
-
       private
 
       def address_params
@@ -54,7 +49,7 @@ module Api
           :response_time,
           :screening_decision,
           :started_at,
-          { :involved_person_ids => [] }
+          involved_person_ids: []
         )
       end
     end

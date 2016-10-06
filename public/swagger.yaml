@@ -203,13 +203,3 @@ paths:
               id:
                 type: integer
                 format: int64
-    get:
-      description: Gets all referrals
-      tags: ["referrals", "referral"]
-      responses:
-        200:
-          description: Referral response
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Referral'

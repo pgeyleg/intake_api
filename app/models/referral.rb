@@ -8,4 +8,10 @@ class Referral < ActiveRecord::Base
   has_many :involved_people, through: :referral_people, source: :person
 
   accepts_nested_attributes_for :address
+
+  after_commit :index_async
+
+  def index_async
+    ReferralIndexer.perform_async(id)
+  end
 end
