@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'Referral API' do
-  describe 'POST /api/v1/referrals' do
-    it 'creates a referral' do
-      referral_params = {
+describe 'Screening API' do
+  describe 'POST /api/v1/screenings' do
+    it 'creates a screening' do
+      screening_params = {
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
@@ -18,7 +18,7 @@ describe 'Referral API' do
         narrative: 'Narrative 123 test'
       }
 
-      post '/api/v1/referrals', params: referral_params
+      post '/api/v1/screenings', params: screening_params
 
       expect(response.status).to eq(201)
       body = JSON.parse(response.body).with_indifferent_access
@@ -45,9 +45,9 @@ describe 'Referral API' do
     end
   end
 
-  describe 'GET /api/v1/referrals/:id' do
-    it 'returns a JSON representation of the referral' do
-      referral = Referral.create(
+  describe 'GET /api/v1/screenings/:id' do
+    it 'returns a JSON representation of the screening' do
+      screening = Screening.create(
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
@@ -62,7 +62,7 @@ describe 'Referral API' do
       )
 
       address = ReferralAddress.create(
-        referral: referral,
+        screening: screening,
         address: Address.create(
           street_address: '123 Fake St',
           city: 'Fake City',
@@ -71,8 +71,8 @@ describe 'Referral API' do
         )
       )
 
-      referral_person = ReferralPerson.create(
-        referral: referral,
+      screening_person = ReferralPerson.create(
+        screening: screening,
         person: Person.create(
           first_name: 'Bart',
           last_name: 'Simpson',
@@ -82,12 +82,12 @@ describe 'Referral API' do
         )
       )
 
-      get "/api/v1/referrals/#{referral.id}"
+      get "/api/v1/screenings/#{screening.id}"
 
       expect(response.status).to eq(200)
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
-        id: referral.id,
+        id: screening.id,
         incident_county: 'sacramento',
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_date: '2016-08-02',
@@ -107,7 +107,7 @@ describe 'Referral API' do
           zip: 10_010
         ),
         involved_people: include(
-          id: referral_person.person.id,
+          id: screening_person.person.id,
           first_name: 'Bart',
           last_name: 'Simpson',
           gender: 'male',
@@ -118,9 +118,9 @@ describe 'Referral API' do
     end
   end
 
-  describe 'PUT /api/v1/referrals/:id' do
-    it 'updates attributes of a referral' do
-      referral = Referral.create(
+  describe 'PUT /api/v1/screenings/:id' do
+    it 'updates attributes of a screening' do
+      screening = Screening.create(
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
@@ -134,7 +134,7 @@ describe 'Referral API' do
         narrative: 'Narrative 123 test'
       )
       address = ReferralAddress.create(
-        referral: referral,
+        screening: screening,
         address: Address.create(
           street_address: '123 Fake St',
           city: 'Fake City',
@@ -162,13 +162,13 @@ describe 'Referral API' do
       }
 
       expect do
-        put "/api/v1/referrals/#{referral.id}", params: updated_params
+        put "/api/v1/screenings/#{screening.id}", params: updated_params
       end.to change(Address, :count).by(0)
 
       expect(response.status).to eq(200)
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
-        id: referral.id,
+        id: screening.id,
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'mendocino',
         incident_date: '2016-08-02',

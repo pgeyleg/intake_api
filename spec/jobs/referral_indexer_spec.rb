@@ -2,21 +2,21 @@
 require 'rails_helper'
 
 describe ReferralIndexer do
-  it 'indexes the Referral data in elastic search when referral is found' do
-    referral = double(:referral, id: 1)
-    allow(Referral).to receive(:find)
-      .with(referral.id)
-      .and_return(referral)
-    expect(ReferralsRepo).to receive(:save).with(referral)
-    described_class.new.perform(referral.id)
+  it 'indexes the Screening data in elastic search when screening is found' do
+    screening = double(:screening, id: 1)
+    allow(Screening).to receive(:find)
+      .with(screening.id)
+      .and_return(screening)
+    expect(ReferralsRepo).to receive(:save).with(screening)
+    described_class.new.perform(screening.id)
   end
 
-  it 'deletes Referral data from elastic search when referral is not found' do
-    referral = double(:referral, id: 1)
-    allow(Referral).to receive(:find)
-      .with(referral.id)
+  it 'deletes Screening data from elastic search when screening is not found' do
+    screening = double(:screening, id: 1)
+    allow(Screening).to receive(:find)
+      .with(screening.id)
       .and_raise(ActiveRecord::RecordNotFound)
-    expect(ReferralsRepo).to receive(:delete).with(referral.id)
-    described_class.new.perform(referral.id)
+    expect(ReferralsRepo).to receive(:delete).with(screening.id)
+    described_class.new.perform(screening.id)
   end
 end

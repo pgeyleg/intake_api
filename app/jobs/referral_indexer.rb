@@ -3,10 +3,10 @@
 class ReferralIndexer
   include Sidekiq::Worker
 
-  def perform(referral_id)
-    referral = Referral.find(referral_id)
-    ReferralsRepo.save(referral)
+  def perform(screening_id)
+    screening = Screening.find(screening_id)
+    ReferralsRepo.save(screening)
   rescue ActiveRecord::RecordNotFound
-    ReferralsRepo.delete(referral_id)
+    ReferralsRepo.delete(screening_id)
   end
 end

@@ -44,7 +44,7 @@ definitions:
       zip:
         type: integer
         format: int32
-  Referral:
+  Screening:
     type: object
     properties:
       id:
@@ -75,9 +75,9 @@ definitions:
         format: date-time
       narrative:
         type: string
-  ReferralRequest:
+  ScreeningRequest:
     allOf:
-      - $ref: "#/definitions/Referral"
+      - $ref: "#/definitions/Screening"
     properties:
       address:
         $ref: "#/definitions/Address"
@@ -88,9 +88,9 @@ definitions:
             id:
               type: integer
 
-  ReferralResponse:
+  ScreeningResponse:
     allOf:
-      - $ref: "#/definitions/Referral"
+      - $ref: "#/definitions/Screening"
     properties:
       address:
         $ref: "#/definitions/Address"
@@ -140,14 +140,14 @@ paths:
                 type: integer
                 format: int64
 
-  /referrals/{id}:
+  /screenings/{id}:
     get:
-      description: Gets `Referral` object for the id.
-      tags: ["referrals", "referral"]
+      description: Gets `Screening` object for the id.
+      tags: ["screenings", "screening"]
       parameters:
       - name: id
         in: path
-        description: id of the referral
+        description: id of the screening
         required: true
         type: number
         format: int64
@@ -155,40 +155,40 @@ paths:
         200:
           description: Successful response
           schema:
-            $ref: "#/definitions/ReferralResponse"
+            $ref: "#/definitions/ScreeningResponse"
     put:
-      description: Updates a `Referral` object
-      tags: ["referrals", "referral"]
+      description: Updates a `Screening` object
+      tags: ["screenings", "screening"]
       parameters:
         - name: id
           in: path
-          description: id of the referral
+          description: id of the screening
           required: true
           type: number
           format: int64
         - name: body
           in: body
-          description: Referral parameters
+          description: Screening parameters
           required: true
           schema:
-            $ref: "#/definitions/ReferralRequest"
+            $ref: "#/definitions/ScreeningRequest"
       responses:
         200:
           description: Successful response
           schema:
-            $ref: "#/definitions/ReferralResponse"
+            $ref: "#/definitions/ScreeningResponse"
 
-  /referrals:
+  /screenings:
     post:
-      description: Creates a new referral
-      tags: ["referrals", "referral"]
+      description: Creates a new screening
+      tags: ["screenings", "screening"]
       parameters:
         - name: body
           in: body
-          description: Referral parameters
+          description: Screening parameters
           required: true
           schema:
-            title: Referral Reference
+            title: Screening Reference
             properties:
               reference:
                 type: string
@@ -196,9 +196,9 @@ paths:
         200:
           description: Successful creation
           schema:
-            title: Referral
+            title: Screening
             allOf:
-            - $ref: "#/definitions/ReferralResponse"
+            - $ref: "#/definitions/ScreeningResponse"
             properties:
               id:
                 type: integer

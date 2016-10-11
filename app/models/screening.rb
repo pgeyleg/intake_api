@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Referral model which represents the referral
-class Referral < ActiveRecord::Base
-  has_one :referral_address, inverse_of: :referral
+# Screening model which represents the screening
+class Screening < ActiveRecord::Base
+  has_one :referral_address, inverse_of: :screening
   has_one :address, through: :referral_address
   has_many :referral_people
   has_many :involved_people, through: :referral_people, source: :person

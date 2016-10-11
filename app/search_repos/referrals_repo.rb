@@ -14,7 +14,7 @@ class ReferralsRepo
     client Elasticsearch::Client.new(host: es_host)
   end
 
-  klass Referral
+  klass Screening
 
   settings do
     mappings dynamic: 'strict' do
