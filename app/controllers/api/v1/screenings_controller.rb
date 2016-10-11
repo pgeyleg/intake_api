@@ -5,8 +5,8 @@ module Api
     class ScreeningsController < ApplicationController # :nodoc:
       def create
         @screening = Screening.new(screening_params)
-        @screening.build_referral_address
-        @screening.referral_address.build_address
+        @screening.build_screening_address
+        @screening.screening_address.build_address
         @screening.save!
         render json: ReferralSerializer.new(@screening), status: :created
       end

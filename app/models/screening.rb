@@ -2,10 +2,10 @@
 
 # Screening model which represents the screening
 class Screening < ActiveRecord::Base
-  has_one :referral_address, inverse_of: :screening
-  has_one :address, through: :referral_address
-  has_many :referral_people
-  has_many :involved_people, through: :referral_people, source: :person
+  has_one :screening_address, inverse_of: :screening
+  has_one :address, through: :screening_address
+  has_many :screening_people
+  has_many :involved_people, through: :screening_people, source: :person
 
   accepts_nested_attributes_for :address
 

@@ -61,7 +61,7 @@ describe 'Screening API' do
         narrative: 'Narrative 123 test'
       )
 
-      address = ReferralAddress.create(
+      address = ScreeningAddress.create(
         screening: screening,
         address: Address.create(
           street_address: '123 Fake St',
@@ -71,7 +71,7 @@ describe 'Screening API' do
         )
       )
 
-      screening_person = ReferralPerson.create(
+      screening_person = ScreeningPerson.create(
         screening: screening,
         person: Person.create(
           first_name: 'Bart',
@@ -133,7 +133,7 @@ describe 'Screening API' do
         started_at: '2016-08-03T01:00:00.000Z',
         narrative: 'Narrative 123 test'
       )
-      address = ReferralAddress.create(
+      address = ScreeningAddress.create(
         screening: screening,
         address: Address.create(
           street_address: '123 Fake St',

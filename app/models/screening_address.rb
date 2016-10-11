@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Referral Address model which represents
+# Screening Address model which represents
 # the join model between screening and address
-class ReferralAddress < ActiveRecord::Base
+class ScreeningAddress < ActiveRecord::Base
   belongs_to :screening
   belongs_to :address
 end
