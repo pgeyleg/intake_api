@@ -1,12 +1,12 @@
 # frozen_string_literal: true
-# ReferralIndexer responsible for update the ES index
-class ReferralIndexer
+# ScreeningIndexer responsible for update the ES index
+class ScreeningIndexer
   include Sidekiq::Worker
 
   def perform(screening_id)
     screening = Screening.find(screening_id)
-    ReferralsRepo.save(screening)
+    ScreeningsRepo.save(screening)
   rescue ActiveRecord::RecordNotFound
-    ReferralsRepo.delete(screening_id)
+    ScreeningsRepo.delete(screening_id)
   end
 end

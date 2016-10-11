@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-# ReferralsRepo is the Repository object for accessing Referrals ES index
-class ReferralsRepo
+# ScreeningsRepo is the Repository object for accessing Screenings ES index
+class ScreeningsRepo
   include Elasticsearch::Persistence::Repository
 
   def initialize(options = {})
-    index options[:index] || 'referrals'
+    index options[:index] || 'screenings'
     es_host = if Rails.env.test?
                 ENV['TEST_ELASTICSEARCH_URL']
               else

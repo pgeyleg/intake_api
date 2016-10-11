@@ -12,6 +12,6 @@ class Screening < ActiveRecord::Base
   after_commit :index_async
 
   def index_async
-    ReferralIndexer.perform_async(id)
+    ScreeningIndexer.perform_async(id)
   end
 end

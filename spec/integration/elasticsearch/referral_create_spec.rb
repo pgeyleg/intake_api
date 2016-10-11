@@ -4,7 +4,7 @@ require 'sidekiq/api'
 require 'sidekiq/testing'
 
 describe 'Screening Active Record and Elastic Search integration' do
-  it 'should enqueue a referral indexer job', truncation: true do
+  it 'should enqueue a screening indexer job', truncation: true do
     Sidekiq::Testing.disable!
     sidekiq_queue = Sidekiq::Queue.new
     sidekiq_queue.clear
@@ -14,7 +14,7 @@ describe 'Screening Active Record and Elastic Search integration' do
     expect(sidekiq_queue.size).to eq(1)
 
     job_data = sidekiq_queue.first.item
-    expect(job_data['class']).to eq('ReferralIndexer')
+    expect(job_data['class']).to eq('ScreeningIndexer')
     expect(job_data['args'].first).to eq(screening.id)
   end
 
@@ -24,9 +24,9 @@ describe 'Screening Active Record and Elastic Search integration' do
       sidekiq_queue.clear
       expect(sidekiq_queue.size).to eq(0)
 
-      ReferralsRepo.create_index! force: true
+      ScreeningsRepo.create_index! force: true
       screening = Screening.create(reference: 'Bart')
-      screening_data_from_es = ReferralsRepo.find(screening.id)
+      screening_data_from_es = ScreeningsRepo.find(screening.id)
       expect(screening_data_from_es['reference']).to eq(screening.reference)
     end
   end
