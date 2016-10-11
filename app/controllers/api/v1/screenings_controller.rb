@@ -8,12 +8,12 @@ module Api
         @screening.build_screening_address
         @screening.screening_address.build_address
         @screening.save!
-        render json: ReferralSerializer.new(@screening), status: :created
+        render json: ScreeningSerializer.new(@screening), status: :created
       end
 
       def show
         @screening = Screening.find(screening_params[:id])
-        render json: ReferralSerializer.new(@screening), status: :ok
+        render json: ScreeningSerializer.new(@screening), status: :ok
       end
 
       def update
@@ -21,7 +21,7 @@ module Api
         @screening.assign_attributes(screening_params)
         @screening.address.assign_attributes(address_params)
         @screening.save!
-        render json: ReferralSerializer.new(@screening), status: :ok
+        render json: ScreeningSerializer.new(@screening), status: :ok
       end
 
       private

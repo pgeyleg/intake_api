@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class ReferralSerializer < ActiveModel::Serializer # :nodoc:
+class ScreeningSerializer < ActiveModel::Serializer # :nodoc:
   attributes :id,
     :created_at,
     :ended_at,
