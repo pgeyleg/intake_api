@@ -3,31 +3,31 @@ require 'rails_helper'
 require 'sidekiq/api'
 require 'sidekiq/testing'
 
-describe 'Referral Active Record and Elastic Search integration' do
-  it 'should enqueue a referral indexer job', truncation: true do
+describe 'Screening Active Record and Elastic Search integration' do
+  it 'should enqueue a screening indexer job', truncation: true do
     Sidekiq::Testing.disable!
     sidekiq_queue = Sidekiq::Queue.new
     sidekiq_queue.clear
     expect(sidekiq_queue.size).to eq(0)
 
-    referral = Referral.create
+    screening = Screening.create
     expect(sidekiq_queue.size).to eq(1)
 
     job_data = sidekiq_queue.first.item
-    expect(job_data['class']).to eq('ReferralIndexer')
-    expect(job_data['args'].first).to eq(referral.id)
+    expect(job_data['class']).to eq('ScreeningIndexer')
+    expect(job_data['args'].first).to eq(screening.id)
   end
 
-  it 'creates a referral document in ES with inline sidekiq', truncation: true do
+  it 'creates a screening document in ES with inline sidekiq', truncation: true do
     Sidekiq::Testing.inline! do
       sidekiq_queue = Sidekiq::Queue.new
       sidekiq_queue.clear
       expect(sidekiq_queue.size).to eq(0)
 
-      ReferralsRepo.create_index! force: true
-      referral = Referral.create(reference: 'Bart')
-      referral_data_from_es = ReferralsRepo.find(referral.id)
-      expect(referral_data_from_es['reference']).to eq(referral.reference)
+      ScreeningsRepo.create_index! force: true
+      screening = Screening.create(reference: 'Bart')
+      screening_data_from_es = ScreeningsRepo.find(screening.id)
+      expect(screening_data_from_es['reference']).to eq(screening.reference)
     end
   end
 end

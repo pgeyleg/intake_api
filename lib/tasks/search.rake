@@ -3,7 +3,7 @@ namespace :search do
   desc 'migrate'
   task migrate: :environment do
     PeopleRepo.create_index! force: true
-    ReferralsRepo.create_index! force: true
+    ScreeningsRepo.create_index! force: true
   end
 
   desc 'reindex'
@@ -12,8 +12,8 @@ namespace :search do
       PeopleRepo.save(person)
     end
 
-    Referral.find_each do |referral|
-      ReferralsRepo.save(referral)
+    Screening.find_each do |screening|
+      ScreeningsRepo.save(screening)
     end
   end
 end
