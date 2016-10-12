@@ -81,7 +81,7 @@ definitions:
     properties:
       address:
         $ref: "#/definitions/Address"
-      involved_person_ids:
+      participant_ids:
         type: array
         items:
           properties:
@@ -94,7 +94,7 @@ definitions:
     properties:
       address:
         $ref: "#/definitions/Address"
-      involved_people:
+      participants:
         type: array
         items:
           $ref: "#/definitions/Person"

@@ -106,7 +106,7 @@ describe 'Screening API' do
           state: 'NY',
           zip: 10_010
         ),
-        involved_people: include(
+        participants: include(
           id: screening_person.person.id,
           first_name: 'Bart',
           last_name: 'Simpson',
@@ -158,7 +158,7 @@ describe 'Screening API' do
           state: 'CA',
           zip: '10010'
         },
-        involved_person_ids: [bart.id, lisa.id]
+        participant_ids: [bart.id, lisa.id]
       }
 
       expect do
@@ -187,7 +187,7 @@ describe 'Screening API' do
           state: 'CA',
           zip: 10_010
         ),
-        involved_people: [
+        participants: [
           include(
             first_name: 'Bart',
             last_name: 'Simpson'

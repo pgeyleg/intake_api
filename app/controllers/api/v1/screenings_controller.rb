@@ -49,7 +49,7 @@ module Api
           :response_time,
           :screening_decision,
           :started_at,
-          involved_person_ids: []
+          participant_ids: []
         )
       end
     end
