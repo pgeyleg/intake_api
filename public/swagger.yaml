@@ -73,7 +73,7 @@ definitions:
       started_at:
         type: string
         format: date-time
-      narrative:
+      report_narrative:
         type: string
   ScreeningRequest:
     allOf:

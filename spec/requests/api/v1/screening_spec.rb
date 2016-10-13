@@ -15,7 +15,7 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        narrative: 'Narrative 123 test'
+        report_narrative: 'Narrative 123 test'
       }
 
       post '/api/v1/screenings', params: screening_params
@@ -33,7 +33,7 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        narrative: 'Narrative 123 test',
+        report_narrative: 'Narrative 123 test',
         address: include(
           street_address: nil,
           city: nil,
@@ -58,7 +58,7 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        narrative: 'Narrative 123 test'
+        report_narrative: 'Narrative 123 test'
       )
 
       address = ScreeningAddress.create(
@@ -98,7 +98,7 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        narrative: 'Narrative 123 test',
+        report_narrative: 'Narrative 123 test',
         address: include(
           id: address.address_id,
           street_address: '123 Fake St',
@@ -131,7 +131,7 @@ describe 'Screening API' do
         response_time: 'within_twenty_four_hours',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        narrative: 'Narrative 123 test'
+        report_narrative: 'Narrative 123 test'
       )
       address = ScreeningAddress.create(
         screening: screening,
@@ -150,7 +150,7 @@ describe 'Screening API' do
         incident_county: 'mendocino',
         response_time: 'immediate',
         screening_decision: 'evaluate_out',
-        narrative: 'Updated Narrative',
+        report_narrative: 'Updated Narrative',
         address: {
           id: address.address_id,
           street_address: '123 Real St',
@@ -179,7 +179,7 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'evaluate_out',
         started_at: '2016-08-03T01:00:00.000Z',
-        narrative: 'Updated Narrative',
+        report_narrative: 'Updated Narrative',
         address: include(
           id: address.address_id,
           street_address: '123 Real St',

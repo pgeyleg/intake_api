@@ -27,7 +27,7 @@ class ScreeningsRepo
       indexes :location_type
       indexes :communication_method
       indexes :name
-      indexes :narrative
+      indexes :report_narrative
       indexes :reference
       indexes :response_time
       indexes :screening_decision

@@ -44,7 +44,7 @@ module Api
           :location_type,
           :communication_method,
           :name,
-          :narrative,
+          :report_narrative,
           :reference,
           :response_time,
           :screening_decision,
