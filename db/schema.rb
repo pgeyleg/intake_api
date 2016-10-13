@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161011205146) do
+ActiveRecord::Schema.define(version: 20161013183454) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,12 +63,12 @@ ActiveRecord::Schema.define(version: 20161011205146) do
 
   create_table "screenings", force: :cascade do |t|
     t.string   "reference"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
     t.datetime "ended_at"
     t.date     "incident_date"
     t.string   "location_type"
-    t.string   "method_of_referral"
+    t.string   "communication_method"
     t.string   "name"
     t.datetime "started_at"
     t.string   "response_time"

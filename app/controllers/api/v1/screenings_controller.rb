@@ -42,7 +42,7 @@ module Api
           :incident_county,
           :incident_date,
           :location_type,
-          :method_of_referral,
+          :communication_method,
           :name,
           :narrative,
           :reference,

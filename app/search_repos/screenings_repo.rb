@@ -25,7 +25,7 @@ class ScreeningsRepo
       indexes :incident_county
       indexes :incident_date
       indexes :location_type
-      indexes :method_of_referral
+      indexes :communication_method
       indexes :name
       indexes :narrative
       indexes :reference

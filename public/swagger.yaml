@@ -62,7 +62,7 @@ definitions:
         format: date
       location_type:
         type: string
-      method_of_referral:
+      communication_method:
         type: string
       name:
         type: string
