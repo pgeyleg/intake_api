@@ -3,7 +3,10 @@ node {
     def branch = env.BRANCH_NAME ?: 'master'
 
     stage('Build') {
-        sh './bin/publish_image.sh'
+        withEnv(["DOCKER_USER=${DOCKER_USER}",
+                 "DOCKER_PASSWORD=${DOCKER_PASSWORD}"]) {
+            sh './bin/publish_image.sh'
+        }
     }
 
     stage('Deploy') {
