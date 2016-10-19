@@ -116,6 +116,27 @@ paths:
           description: Successful response
           schema:
             $ref: "#/definitions/Person"
+    put:
+      description: Updates a `Person` object.
+      tags: ["people", "person"]
+      parameters:
+      - name: id
+        in: path
+        description: id of the person
+        required: true
+        type: number
+        format: int64
+      - name: body
+        in: body
+        description: Person to update
+        required: true
+        schema:
+          "$ref": "#/definitions/Person"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: "#/definitions/Person"
 
   /people:
     post:
