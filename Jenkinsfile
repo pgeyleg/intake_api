@@ -1,10 +1,10 @@
 node {
     checkout scm
-    def branch = env.BRANCH_NAME ?: 'master'
 
-    stage('Build') {
+    stage('Publish') {
         withEnv(["DOCKER_USER=${DOCKER_USER}",
-                 "DOCKER_PASSWORD=${DOCKER_PASSWORD}"]) {
+                 "DOCKER_PASSWORD=${DOCKER_PASSWORD}",
+                 "FROM_JENKINS=yes"]) {
             sh './bin/publish_image.sh'
         }
     }
