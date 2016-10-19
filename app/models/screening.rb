@@ -9,9 +9,9 @@ class Screening < ActiveRecord::Base
 
   accepts_nested_attributes_for :address
 
-  after_commit :index_async
+  after_commit :reindex
 
-  def index_async
-    ScreeningIndexer.perform_async(id)
+  def reindex
+    ScreeningIndexer.perform(id)
   end
 end

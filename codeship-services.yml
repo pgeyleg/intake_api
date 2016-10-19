@@ -5,34 +5,13 @@ api:
     RAILS_ENV: test
     PG_HOST: db
     PG_USER: postgres
-    TEST_REDIS_DATABASE: 'redis://redis:6379/1'
     TEST_ELASTICSEARCH_URL: 'http://test_elasticsearch:9200'
   links:
     - db
-    - redis
     - test_elasticsearch
 db:
   image: postgres:9.5.3
   environment:
     POSTGRES_DB: casebook_api_development
-redis:
-  image: 'redis:3.2-alpine'
-  command: redis-server
-  ports:
-    - '6379:6379'
-sidekiq:
-  build: .
-  dockerfile: docker/codeship/Dockerfile
-  command: ./bin/sidekiq_start
-  links:
-    - db
-    - redis
-    - test_elasticsearch
-  environment:
-    RAILS_ENV: test
-    PG_HOST: db
-    PG_USER: postgres
-    TEST_REDIS_DATABASE: 'redis://redis:6379/1'
-    TEST_ELASTICSEARCH_URL: 'http://test_elasticsearch:9200'
 test_elasticsearch:
   image: 'elasticsearch:2.4'

@@ -6,9 +6,9 @@ class Person < ActiveRecord::Base
 
   accepts_nested_attributes_for :address
 
-  after_commit :index_async
+  after_commit :reindex
 
-  def index_async
-    PersonIndexer.perform_async(id)
+  def reindex
+    PersonIndexer.perform(id)
   end
 end

@@ -8,7 +8,7 @@ describe PersonIndexer do
       .with(person.id)
       .and_return(person)
     expect(PeopleRepo).to receive(:save).with(person)
-    described_class.new.perform(person.id)
+    described_class.perform(person.id)
   end
 
   it 'deletes the person data in elastic search when person is not found' do
@@ -17,6 +17,6 @@ describe PersonIndexer do
       .with(person.id)
       .and_raise(ActiveRecord::RecordNotFound)
     expect(PeopleRepo).to receive(:delete).with(person.id)
-    described_class.new.perform(person.id)
+    described_class.perform(person.id)
   end
 end

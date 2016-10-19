@@ -8,7 +8,7 @@ describe ScreeningIndexer do
       .with(screening.id)
       .and_return(screening)
     expect(ScreeningsRepo).to receive(:save).with(screening)
-    described_class.new.perform(screening.id)
+    described_class.perform(screening.id)
   end
 
   it 'deletes screening data from elastic search when screening is not found' do
@@ -17,6 +17,6 @@ describe ScreeningIndexer do
       .with(screening.id)
       .and_raise(ActiveRecord::RecordNotFound)
     expect(ScreeningsRepo).to receive(:delete).with(screening.id)
-    described_class.new.perform(screening.id)
+    described_class.perform(screening.id)
   end
 end
