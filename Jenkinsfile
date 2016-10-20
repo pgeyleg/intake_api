@@ -15,7 +15,7 @@ node {
         build job: DEPLOY_JOB, parameters: [[
             $class: 'StringParameterValue',
             name: 'IMAGE_TAG',
-            value: 'casecommons/intake_api_prototype:' + imageTag
+            value: 'cwds/intake_api_prototype:' + imageTag
         ]]
     }
 }
