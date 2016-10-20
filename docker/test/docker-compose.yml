@@ -1,0 +1,31 @@
+version: '2'
+services:
+  rspec_test:
+    build:
+      context: ../../
+      dockerfile: docker/test/Dockerfile
+    command:bin/ci
+  db:
+    extends:
+      file: ./docker-compose.common.yml
+      service: db
+  api:
+    extends:
+      file: ./docker-compose.common.yml
+      service: api
+    links:
+      - db
+      - elasticsearch
+      - test_elasticsearch
+    ports:
+      - "3001:3000"
+    environment:
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+      TEST_ELASTICSEARCH_URL: 'http://test_elasticsearch:9200'
+  elasticsearch:
+    image: 'elasticsearch:2.4'
+  test_elasticsearch:
+    image: 'elasticsearch:2.4'
+volumes:
+  casebook_api_rubygems:
+
