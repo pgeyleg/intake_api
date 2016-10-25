@@ -14,6 +14,7 @@ module Api
       def update
         person = Person.find(params[:id])
         person.update_attributes!(person_params)
+        person.address.update_attributes!(address_params)
         render json: person, status: :ok
       end
 
@@ -32,6 +33,7 @@ module Api
 
       def address_params
         params.require(:address).permit(
+          :id,
           :street_address,
           :city,
           :state,

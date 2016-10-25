@@ -51,14 +51,44 @@ describe 'People API' do
 
   describe 'PUT /api/v1/people/:id' do
     it 'updates attributes of a person' do
-      person = Person.create(first_name: 'Walter', last_name: 'White')
+      person = Person.new(first_name: 'Walter', last_name: 'White')
+      person.build_person_address
+      person.person_address.build_address
+      person.save!
 
-      put "/api/v1/people/#{person.id}", params: { first_name: 'Jesse' }
+      person_params = {
+        first_name: 'Jesse',
+        last_name: 'White',
+        gender: 'female',
+        date_of_birth: '1990-03-30',
+        ssn: '345-12-2345',
+        address: {
+          street_address: '123 fake st',
+          city: 'Fake City',
+          state: 'NY',
+          zip: '10010'
+        }
+      }.with_indifferent_access
+
+      put "/api/v1/people/#{person.id}", params: person_params
 
       expect(response.status).to eq(200)
-      body = JSON.parse(response.body)
-      expect(body['first_name']).to eq('Jesse')
-      expect(body['last_name']).to eq('White')
+      body = JSON.parse(response.body).with_indifferent_access
+      expect(body).to include(
+        id: person.id,
+        first_name: 'Jesse',
+        last_name: 'White',
+        gender: 'female',
+        date_of_birth: '1990-03-30',
+        ssn: '345-12-2345',
+        address: include(
+          street_address: '123 fake st',
+          state: 'NY',
+          city: 'Fake City',
+          zip: 10010,
+          id: person.address.id
+        )
+      )
     end
   end
 
