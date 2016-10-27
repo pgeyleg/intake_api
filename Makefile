@@ -14,12 +14,12 @@ test:
 	${INFO} "Pulling latest images..."
 	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) pull
 	${INFO} "Building images..."
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) build --pull db
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) build --pull test_elasticsearch
+	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) build --pull postgres
+	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) build --pull elasticsearch
 	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) build --pull rspec_test
 	${INFO} "Running tests..."
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) up -d db
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) up -d test_elasticsearch
+	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) up -d postgres
+	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) up -d elasticsearch
 	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) up rspec_test
 	@ docker cp $$(docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) ps -q rspec_test):/reports/. reports
 	${CHECK} $(TEST_PROJECT) $(TEST_COMPOSE_FILE) rspec_test

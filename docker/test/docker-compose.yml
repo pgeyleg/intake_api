@@ -1,9 +1,9 @@
 version: '2'
 
 services:
-  test_elasticsearch:
+  elasticsearch:
     image: 'elasticsearch:2.4'
-  db:
+  postgres:
     image: postgres:9.5.3
     ports:
       - "5432:5432"
@@ -16,11 +16,11 @@ services:
     command: bin/ci.rspec
     environment:
       RAILS_ENV: test
-      PG_HOST: db
+      PG_HOST: postgres
       PG_USER: postgres
       CI_REPORTS: /reports
       GENERATE_TEST_REPORTS: 'yes'
-      TEST_ELASTICSEARCH_URL: 'http://test_elasticsearch:9200'
+      TEST_ELASTICSEARCH_URL: 'http://elasticsearch:9200'
     links:
-      - db
-      - test_elasticsearch
+      - postgres
+      - elasticsearch
