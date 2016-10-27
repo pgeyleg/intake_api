@@ -13,7 +13,7 @@ services:
     build:
       context: ../../
       dockerfile: docker/test/Dockerfile
-    command: bin/ci.rspec
+    command: bin/ci
     environment:
       RAILS_ENV: test
       PG_HOST: postgres
