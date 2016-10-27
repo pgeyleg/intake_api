@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  elasticsearch:
+    image: 'elasticsearch:2.4'
+  postgres:
+    image: postgres:9.5.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: casebook_api_test
+  rspec_test:
+    build:
+      context: ../../
+      dockerfile: docker/test/Dockerfile
+    command: bin/ci
+    environment:
+      RAILS_ENV: test
+      PG_HOST: postgres
+      PG_USER: postgres
+      CI_REPORTS: /reports
+      GENERATE_TEST_REPORTS: 'yes'
+      TEST_ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+    links:
+      - postgres
+      - elasticsearch

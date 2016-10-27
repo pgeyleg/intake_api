@@ -6,3 +6,8 @@
 require_relative 'config/application'
 
 Rails.application.load_tasks
+
+if ENV['GENERATE_TEST_REPORTS'] == 'yes'
+  require 'ci/reporter/rake/rspec'
+  task spec: 'ci:setup:rspec'
+end

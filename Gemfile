@@ -26,6 +26,7 @@ group :development do
 end
 
 group :test do
+  gem 'ci_reporter_rspec'
   gem 'database_cleaner'
 end
 
