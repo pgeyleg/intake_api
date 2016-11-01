@@ -15,5 +15,5 @@ class ScreeningSerializer < ActiveModel::Serializer # :nodoc:
     :started_at
 
   has_one :address
-  has_many :participants, serializer: PersonSerializer
+  has_many :participants, serializer: ParticipantSerializer
 end

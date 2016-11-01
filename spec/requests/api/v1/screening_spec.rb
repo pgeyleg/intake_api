@@ -47,7 +47,7 @@ describe 'Screening API' do
 
   describe 'GET /api/v1/screenings/:id' do
     it 'returns a JSON representation of the screening' do
-      screening = Screening.create(
+      screening = Screening.create!(
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
@@ -61,9 +61,9 @@ describe 'Screening API' do
         report_narrative: 'Narrative 123 test'
       )
 
-      address = ScreeningAddress.create(
+      address = ScreeningAddress.create!(
         screening: screening,
-        address: Address.create(
+        address: Address.create!(
           street_address: '123 Fake St',
           city: 'Fake City',
           state: 'NY',
@@ -71,15 +71,15 @@ describe 'Screening API' do
         )
       )
 
-      screening_person = ScreeningPerson.create(
+      person = Person.create!(first_name: 'Bart', last_name: 'Simpson')
+      participant = Participant.create!(
+        person: person,
         screening: screening,
-        person: Person.create(
-          first_name: 'Bart',
-          last_name: 'Simpson',
-          gender: 'male',
-          ssn: '123-23-1234',
-          date_of_birth: Date.today
-        )
+        first_name: 'Bart',
+        last_name: 'Simpson',
+        gender: 'male',
+        ssn: '123-23-1234',
+        date_of_birth: Date.today
       )
 
       get "/api/v1/screenings/#{screening.id}"
@@ -98,29 +98,31 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test',
-        address: include(
-          id: address.address_id,
-          street_address: '123 Fake St',
-          city: 'Fake City',
-          state: 'NY',
-          zip: 10_010
-        ),
-        participants: include(
-          id: screening_person.person.id,
-          first_name: 'Bart',
-          last_name: 'Simpson',
-          gender: 'male',
-          ssn: '123-23-1234',
-          date_of_birth: Date.today.to_s
-        )
+        report_narrative: 'Narrative 123 test'
+      )
+      expect(body[:address]).to include(
+        id: address.address_id,
+        street_address: '123 Fake St',
+        city: 'Fake City',
+        state: 'NY',
+        zip: 10_010
+      )
+      expect(body[:participants]).to include(
+        id: participant.id,
+        person_id: person.id,
+        screening_id: screening.id,
+        first_name: 'Bart',
+        last_name: 'Simpson',
+        gender: 'male',
+        ssn: '123-23-1234',
+        date_of_birth: Date.today.to_s,
       )
     end
   end
 
   describe 'PUT /api/v1/screenings/:id' do
     it 'updates attributes of a screening' do
-      screening = Screening.create(
+      screening = Screening.create!(
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
@@ -133,17 +135,27 @@ describe 'Screening API' do
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test'
       )
-      address = ScreeningAddress.create(
+      address = ScreeningAddress.create!(
         screening: screening,
-        address: Address.create(
+        address: Address.create!(
           street_address: '123 Fake St',
           city: 'Fake City',
           state: 'NY',
           zip: '10010'
         )
       )
-      bart = Person.create(first_name: 'Bart', last_name: 'Simpson')
-      lisa = Person.create(first_name: 'Lisa', last_name: 'Simpson')
+      Participant.create!(
+        person: Person.create!(),
+        screening: screening,
+        first_name: 'Bart',
+        last_name: 'Simpson'
+      )
+      Participant.create!(
+        person: Person.create!(),
+        screening: screening,
+        first_name: 'Lisa',
+        last_name: 'Simpson'
+      )
 
       updated_params = {
         name: 'Some new name',
@@ -157,8 +169,7 @@ describe 'Screening API' do
           city: 'Fake City',
           state: 'CA',
           zip: '10010'
-        },
-        participant_ids: [bart.id, lisa.id]
+        }
       }
 
       expect do
