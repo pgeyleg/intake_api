@@ -85,7 +85,7 @@ describe 'People API' do
           street_address: '123 fake st',
           state: 'NY',
           city: 'Fake City',
-          zip: 10010,
+          zip: 10_010,
           id: person.address.id
         )
       )
