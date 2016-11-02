@@ -101,12 +101,6 @@ definitions:
     properties:
       address:
         $ref: "#/definitions/Address"
-      participant_ids:
-        type: array
-        items:
-          properties:
-            id:
-              type: integer
 
   ScreeningResponse:
     allOf:
@@ -117,7 +111,7 @@ definitions:
       participants:
         type: array
         items:
-          $ref: "#/definitions/Person"
+          $ref: "#/definitions/Participant"
 
 paths:
   /people/{id}:
