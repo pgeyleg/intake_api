@@ -115,7 +115,7 @@ describe 'Screening API' do
         last_name: 'Simpson',
         gender: 'male',
         ssn: '123-23-1234',
-        date_of_birth: Date.today.to_s,
+        date_of_birth: Date.today.to_s
       )
     end
   end
@@ -145,13 +145,13 @@ describe 'Screening API' do
         )
       )
       Participant.create!(
-        person: Person.create!(),
+        person: Person.create!,
         screening: screening,
         first_name: 'Bart',
         last_name: 'Simpson'
       )
       Participant.create!(
-        person: Person.create!(),
+        person: Person.create!,
         screening: screening,
         first_name: 'Lisa',
         last_name: 'Simpson'

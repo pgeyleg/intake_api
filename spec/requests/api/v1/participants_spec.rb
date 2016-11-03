@@ -11,7 +11,7 @@ describe 'Participants API' do
         last_name: 'White',
         gender: 'female',
         date_of_birth: '1990-03-30',
-        ssn: '345-12-2345',
+        ssn: '345-12-2345'
       }
 
       post '/api/v1/participants', params: participant_params
@@ -25,7 +25,7 @@ describe 'Participants API' do
         last_name: 'White',
         gender: 'female',
         date_of_birth: '1990-03-30',
-        ssn: '345-12-2345',
+        ssn: '345-12-2345'
       )
       expect(body['id']).to_not eq nil
     end
