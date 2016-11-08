@@ -4,9 +4,11 @@ require 'rails_helper'
 describe 'Participants API' do
   describe 'POST /api/v1/participants' do
     it 'creates a participant' do
+      person = Person.create!
+      screening = Screening.create!
       participant_params = {
-        person_id: nil,
-        screening_id: nil,
+        person_id: person.id,
+        screening_id: screening.id,
         first_name: 'Walter',
         last_name: 'White',
         gender: 'female',
@@ -19,8 +21,8 @@ describe 'Participants API' do
       expect(response.status).to eq(201)
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
-        person_id: nil,
-        screening_id: nil,
+        person_id: person.id,
+        screening_id: screening.id,
         first_name: 'Walter',
         last_name: 'White',
         gender: 'female',
