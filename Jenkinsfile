@@ -1,3 +1,5 @@
+import groovy.json.*
+
 node {
     checkout scm
     def branch = env.BRANCH_NAME ?: 'master'
@@ -20,6 +22,16 @@ node {
         }
 
         stage('Check Swagger') {
+            def HOSTNAME = 'https://ci.mycasebook.org'
+            def JOBNAME = 'tr_test_api(CI)'
+            def JOB_URL = "$HOSTNAME/job/$JOBNAME/lastSuccessfulBuild"
+            def text = "$JOB_URL/api/json".toURL().text
+            println JsonOutput.prettyPrint(text)
+            def json = new JsonSlurper().parseText(text)
+            json.artifacts.each{
+                println it
+            }
+
             def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD')
             def changedFiles = sh(
               script: "git diff --stat ${env.GIT_PREVIOUS_COMMIT} ${gitCommit} | grep '/|' | awk '{print \$1}'",
@@ -27,6 +39,7 @@ node {
             def environment = sh(
               script: "env",
               returnStdout: true)
+
             if(changedFiles.indexOf("swagger") != -1) {
                 emailext (
                     to: 'thomas.ramirez@osi.ca.gov',
