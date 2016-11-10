@@ -1,5 +1,3 @@
-import groovy.json.*
-
 node {
     checkout scm
     def branch = env.BRANCH_NAME ?: 'master'
@@ -22,19 +20,22 @@ node {
         }
 
         stage('Check Swagger') {
+            sh "echo Starting check"
             def HOSTNAME = 'https://ci.mycasebook.org'
             def JOBNAME = 'tr_test_api(CI)'
-            def JOB_URL = "$HOSTNAME/job/$JOBNAME/lastSuccessfulBuild"
-            def text = "$JOB_URL/api/json".toURL().text
-            println JsonOutput.prettyPrint(text)
-            def json = new JsonSlurper().parseText(text)
-            json.artifacts.each{
-                println it
-            }
+            sh "echo Start assembling JOB_URL"
+            def JOB_URL = "${HOSTNAME}/job/${JOBNAME}/lastSuccessfulBuild"
+            sh "echo Get text"
+            def text = "${JOB_URL}/api/json?depth=1".toURL().text
+            sh "echo Text = ${text}"
+
+            sh "echo About to get previous commit"
+            def gitPreviousCommit = sh(returnStdout: true, script: /curl ${text} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/)
+            sh "echo Just got previous commit"
 
             def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD')
             def changedFiles = sh(
-              script: "git diff --stat ${env.GIT_PREVIOUS_COMMIT} ${gitCommit} | grep '/|' | awk '{print \$1}'",
+              script: "git diff --stat ${gitPreviousCommit} ${gitCommit} | grep '/|' | awk '{print \$1}'",
               returnStdout: true)
             def environment = sh(
               script: "env",
@@ -79,7 +80,7 @@ node {
                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
         )
 
-        slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
+//        slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
     }
     finally {
         stage('Clean') {
