@@ -7,35 +7,28 @@ node {
     try {
         stage('Test') {
             curStage = 'Test'
-            sh 'make test'
+//            sh 'make test'
         }
     
         stage('Publish') {
             curStage = 'Publish'
-            withEnv(["DOCKER_USER=${DOCKER_USER}",
-                     "DOCKER_PASSWORD=${DOCKER_PASSWORD}",
-                     "FROM_JENKINS=yes"]) {
-                sh './bin/publish_image.sh'
-            }
+//            withEnv(["DOCKER_USER=${DOCKER_USER}",
+//                     "DOCKER_PASSWORD=${DOCKER_PASSWORD}",
+//                     "FROM_JENKINS=yes"]) {
+//                sh './bin/publish_image.sh'
+//            }
         }
 
         stage('Check Swagger') {
-            sh "echo Starting check"
             def HOSTNAME = 'https://ci.mycasebook.org'
-            def JOBNAME = 'tr_test_api(CI)'
-            sh "echo Start assembling JOB_URL"
-            def JOB_URL = "${HOSTNAME}/job/${JOBNAME}/lastSuccessfulBuild"
-            sh "echo Get text"
-            def text = "${JOB_URL}/api/json?depth=1".toURL().text
-            sh "echo Text = ${text}"
-
-            sh "echo About to get previous commit"
-            def gitPreviousCommit = sh(returnStdout: true, script: /curl ${text} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/)
-            sh "echo Just got previous commit"
+            def JOB_URL = "${HOSTNAME}/job/${env.JOB_NAME}/lastSuccessfulBuild/api/json?depth=1"
+            def gitPreviousCommit = sh(returnStdout: true, script: /curl $JOB_URL -u ${JENKINS_CREDENTIALS} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/)
 
             def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD')
+            sh "echo gitCommit ' ${gitCommit} '"
+            sh "echo gitPreviousCommit ' ${gitPreviousCommit} '"
             def changedFiles = sh(
-              script: "git diff --stat ${gitPreviousCommit} ${gitCommit} | grep '/|' | awk '{print \$1}'",
+              script: "git diff --stat ${gitPreviousCommit} ${gitCommit} | grep '\\|' | awk '{print \$1}'",
               returnStdout: true)
             def environment = sh(
               script: "env",
@@ -63,13 +56,13 @@ node {
 
         stage('Deploy') {
             curStage = 'Deploy'
-            sh "printf \$(git rev-parse --short HEAD) > tag.tmp"
-            def imageTag = readFile 'tag.tmp'
-            build job: DEPLOY_JOB, parameters: [[
-                $class: 'StringParameterValue',
-                name: 'IMAGE_TAG',
-                value: 'cwds/intake_api_prototype:' + imageTag
-            ]]
+//            sh "printf \$(git rev-parse --short HEAD) > tag.tmp"
+//            def imageTag = readFile 'tag.tmp'
+//            build job: DEPLOY_JOB, parameters: [[
+//                $class: 'StringParameterValue',
+//                name: 'IMAGE_TAG',
+//                value: 'cwds/intake_api_prototype:' + imageTag
+//            ]]
         }
     }
     catch (e) {
@@ -77,7 +70,8 @@ node {
             to: emailList,
             subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage ${curStage}",
             body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}':</p>
-                <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
+                <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>
+                <p>${e}</p>"""
         )
 
 //        slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
