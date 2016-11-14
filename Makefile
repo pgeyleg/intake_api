@@ -1,4 +1,5 @@
 # Variables
+PROJECT_NAME ?= intake_api_prototype
 TEST_PROJECT := api_prototype_test
 TEST_COMPOSE_FILE := docker/test/docker-compose.yml
 
@@ -28,6 +29,8 @@ test:
 clean:
 	${INFO} "Destroying test environment..."
 	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) down --volumes
+	${INFO} "Removing local images..."
+	@ docker images -q -f label=application=${PROJECT_NAME} | sort -u | xargs -I ARGS docker rmi -f ARGS
 	${INFO} "Clean complete"
 
 # Cosmetics

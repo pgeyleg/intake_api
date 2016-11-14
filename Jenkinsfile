@@ -42,7 +42,9 @@ node {
     }
     finally {
         stage('Clean') {
-            sh 'make clean'
+            retry(1) {
+                sh 'make clean'
+            }
         }
     }
 }
