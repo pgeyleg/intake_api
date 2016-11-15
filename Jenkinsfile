@@ -20,15 +20,12 @@ node {
         }
 
         stage('Check Swagger') {
-            def HOSTNAME = 'https://ci.mycasebook.org'
-            def JOB_URL = "${HOSTNAME}/job/${env.JOB_NAME}/lastSuccessfulBuild/api/json?depth=1"
-            def gitPreviousCommit = sh(returnStdout: true, script: /curl $JOB_URL -u ${JENKINS_CREDENTIALS} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/)
+            def JOB_URL = "${env.JOB_URL}/lastSuccessfulBuild/api/json?depth=1"
+            def gitPreviousCommit = sh(returnStdout: true, script: /curl $JOB_URL -u ${JENKINS_CREDENTIALS} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/).trim()
 
-            def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD')
-            sh "echo gitCommit ' ${gitCommit} '"
-            sh "echo gitPreviousCommit ' ${gitPreviousCommit} '"
+            def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
             def changedFiles = sh(
-              script: "git diff --stat ${gitPreviousCommit} ${gitCommit} | grep '\\|' | awk '{print \$1}'",
+              script: "git diff --stat ${gitPreviousCommit}..${gitCommit} | grep '\\|' | awk '{print \$1}'",
               returnStdout: true)
             def environment = sh(
               script: "env",
@@ -46,10 +43,8 @@ node {
                     to: 'thomas.ramirez@osi.ca.gov',
                     subject: "Swagger file not updated for Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                     body: """<p>changedFiles: ${changedFiles}</p>
-                        <p>GIT_PREVIOUS_COMMIT: ${env.GIT_PREVIOUS_COMMIT}</p>
-                        <p>GIT_COMMIT: ${gitCommit}</p>
-                        <p>GIT_AUTHOR_NAME: ${env.GIT_AUTHOR_NAME}</p>
-                        <p>GIT_URL: ${env.GIT_URL}</p>"""
+                        <p>GIT_PREVIOUS_COMMIT: ${gitPreviousCommit}</p>
+                        <p>GIT_COMMIT: ${gitCommit}</p>"""
                 )
             }
         }
@@ -71,7 +66,7 @@ node {
             subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage ${curStage}",
             body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}':</p>
                 <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>
-                <p>${e}</p>"""
+                <p>${e.toString()}</p>"""
         )
 
 //        slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
