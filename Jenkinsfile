@@ -3,6 +3,7 @@ node {
     def branch = env.BRANCH_NAME ?: 'master'
     def curStage = 'Start'
     def emailList = EMAIL_NOTIFICATION_LIST ?: 'thomas.ramirez@osi.ca.gov'
+    def swaggerEmailList = SWAGGER_NOTIFICATION_LIST ?: ''
 
     try {
         stage('Test') {
@@ -20,32 +21,29 @@ node {
         }
 
         stage('Check Swagger') {
-            def JOB_URL = "${env.JOB_URL}/lastSuccessfulBuild/api/json?depth=1"
-            def gitPreviousCommit = sh(returnStdout: true, script: /curl $JOB_URL -u ${JENKINS_CREDENTIALS} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/).trim()
+            if(SWAGGER_NOTIFICATION_LIST.length() > 0) {
+                sh "echo performing swagger check"
+                def JOB_URL = "${env.JOB_URL}/lastSuccessfulBuild/api/json?depth=1"
+                def gitPreviousCommit = sh(returnStdout: true, script: /curl $JOB_URL -u ${JENKINS_CREDENTIALS} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/).trim()
 
-            def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-            def changedFiles = sh(
-              script: "git diff --stat ${gitPreviousCommit}..${gitCommit} | grep '\\|' | awk '{print \$1}'",
-              returnStdout: true)
-            def environment = sh(
-              script: "env",
-              returnStdout: true)
+                def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                def changedFiles = sh(
+                  script: "git diff --stat ${gitPreviousCommit}..${gitCommit} | grep '\\|' | awk '{print \$1}'",
+                  returnStdout: true)
+                def environment = sh(
+                  script: "env",
+                  returnStdout: true)
 
-            if(changedFiles.indexOf("swagger") != -1) {
-                emailext (
-                    to: 'thomas.ramirez@osi.ca.gov',
-                    subject: "Swagger file updated for Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                    body: """<p>Notification: Swagger file updated</p>
+                if(changedFiles.indexOf("swagger") != -1) {
+                    emailext (
+                        to: 'thomas.ramirez@osi.ca.gov',
+                        subject: "Swagger file updated for Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+                        body: """<p>Notification: Swagger file updated</p>
                         <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
-                )
+                    )
+                }
             } else {
-                emailext (
-                    to: 'thomas.ramirez@osi.ca.gov',
-                    subject: "Swagger file not updated for Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-                    body: """<p>changedFiles: ${changedFiles}</p>
-                        <p>GIT_PREVIOUS_COMMIT: ${gitPreviousCommit}</p>
-                        <p>GIT_COMMIT: ${gitCommit}</p>"""
-                )
+                sh "echo skipped swagger check"
             }
         }
 
