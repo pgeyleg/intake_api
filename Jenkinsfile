@@ -8,21 +8,20 @@ node {
     try {
         stage('Test') {
             curStage = 'Test'
-//            sh 'make test'
+            sh 'make test'
         }
     
         stage('Publish') {
             curStage = 'Publish'
-//            withEnv(["DOCKER_USER=${DOCKER_USER}",
-//                     "DOCKER_PASSWORD=${DOCKER_PASSWORD}",
-//                     "FROM_JENKINS=yes"]) {
-//                sh './bin/publish_image.sh'
-//            }
+            withEnv(["DOCKER_USER=${DOCKER_USER}",
+                     "DOCKER_PASSWORD=${DOCKER_PASSWORD}",
+                     "FROM_JENKINS=yes"]) {
+                sh './bin/publish_image.sh'
+            }
         }
 
         stage('Check Swagger') {
             if(SWAGGER_NOTIFICATION_LIST.length() > 0) {
-                sh "echo performing swagger check"
                 def JOB_URL = "${env.JOB_URL}/lastSuccessfulBuild/api/json?depth=1"
                 def gitPreviousCommit = sh(returnStdout: true, script: /curl $JOB_URL -u ${JENKINS_CREDENTIALS} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/).trim()
 
@@ -42,20 +41,18 @@ node {
                         <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
                     )
                 }
-            } else {
-                sh "echo skipped swagger check"
             }
         }
 
         stage('Deploy') {
             curStage = 'Deploy'
-//            sh "printf \$(git rev-parse --short HEAD) > tag.tmp"
-//            def imageTag = readFile 'tag.tmp'
-//            build job: DEPLOY_JOB, parameters: [[
-//                $class: 'StringParameterValue',
-//                name: 'IMAGE_TAG',
-//                value: 'cwds/intake_api_prototype:' + imageTag
-//            ]]
+            sh "printf \$(git rev-parse --short HEAD) > tag.tmp"
+            def imageTag = readFile 'tag.tmp'
+            build job: DEPLOY_JOB, parameters: [[
+                $class: 'StringParameterValue',
+                name: 'IMAGE_TAG',
+                value: 'cwds/intake_api_prototype:' + imageTag
+            ]]
         }
     }
     catch (e) {
@@ -67,7 +64,7 @@ node {
                 <p>${e.toString()}</p>"""
         )
 
-//        slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
+        slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
     }
     finally {
         stage('Clean') {
