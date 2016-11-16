@@ -22,8 +22,13 @@ node {
 
         stage('Check Swagger') {
             if(SWAGGER_NOTIFICATION_LIST.length() > 0) {
-                def JOB_URL = "${env.JOB_URL}/lastSuccessfulBuild/api/json?depth=1"
-                def gitPreviousCommit = sh(returnStdout: true, script: /curl $JOB_URL -u ${JENKINS_CREDENTIALS} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/).trim()
+                def JOB_URL = "${env.JOB_URL}lastSuccessfulBuild/api/json?depth=1"
+                def gitPreviousCommit = ''
+
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'JENKINS_CREDENTIALS',
+                    usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                    gitPreviousCommit = sh(returnStdout: true, script: /curl $JOB_URL -u ${env.USERNAME}:${env.PASSWORD} | grep -o lastBuiltRevision[^,]* | head -1 | cut -d '"' -f 5/).trim()
+                }
 
                 def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                 def changedFiles = sh(
