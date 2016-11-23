@@ -7,6 +7,7 @@ describe 'Person Active Record and Elastic Search integration' do
     person = Person.create(first_name: 'Bart', last_name: 'Simpson')
     person_data_from_es = PeopleRepo.find(person.id)
     expect(person_data_from_es['first_name']).to eq(person.first_name)
+    expect(person_data_from_es['middle_name']).to eq(person.middle_name)
     expect(person_data_from_es['last_name']).to eq(person.last_name)
   end
 end
