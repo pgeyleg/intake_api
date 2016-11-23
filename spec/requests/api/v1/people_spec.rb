@@ -5,9 +5,11 @@ describe 'People API' do
   describe 'POST /api/v1/people' do
     it 'creates a person' do
       person_params = {
-        first_name: 'Walter',
-        last_name: 'White',
-        gender: 'female',
+        first_name: 'David',
+        middle_name: 'Jon',
+        last_name: 'Gilmour',
+        name_suffix: 'esq',
+        gender: 'male',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
         address: {
@@ -22,9 +24,11 @@ describe 'People API' do
       expect(response.status).to eq(201)
       body = JSON.parse(response.body)
       expect(body['id']).to_not eq nil
-      expect(body['first_name']).to eq('Walter')
-      expect(body['last_name']).to eq('White')
-      expect(body['gender']).to eq('female')
+      expect(body['first_name']).to eq('David')
+      expect(body['middle_name']).to eq('Jon')
+      expect(body['last_name']).to eq('Gilmour')
+      expect(body['name_suffix']).to eq('esq')
+      expect(body['gender']).to eq('male')
       expect(body['date_of_birth']).to eq('1990-03-30')
       expect(body['ssn']).to eq('345-12-2345')
 
@@ -57,8 +61,10 @@ describe 'People API' do
       person.save!
 
       person_params = {
-        first_name: 'Jesse',
-        last_name: 'White',
+        first_name: 'Deborah',
+        middle_name: 'Ann',
+        last_name: 'Harry',
+        name_suffix: 'md',
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
@@ -76,8 +82,10 @@ describe 'People API' do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
         id: person.id,
-        first_name: 'Jesse',
-        last_name: 'White',
+        first_name: 'Deborah',
+        middle_name: 'Ann',
+        last_name: 'Harry',
+        name_suffix: 'md',
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
