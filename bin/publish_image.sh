@@ -10,8 +10,9 @@ if [ "$FROM_JENKINS" != "yes" ]; then
   git pull --rebase
 fi
 
-docker build -f Dockerfile.production -t "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":"$SHA" .
+docker build -f Dockerfile.production -t "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":"$SHA" -t "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":latest .
 
 docker login --username="$DOCKER_USER" --password="$DOCKER_PASSWORD"
 docker push "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":"$SHA"
+docker push "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":latest
 docker logout
