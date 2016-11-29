@@ -13,6 +13,5 @@ fi
 docker build -f Dockerfile.production -t "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":"$SHA" -t "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":latest .
 
 docker login --username="$DOCKER_USER" --password="$DOCKER_PASSWORD"
-docker push "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":"$SHA"
-docker push "$DOCKER_ORGANIZATION"/"$DOCKER_REPO":latest
+docker push "$DOCKER_ORGANIZATION"/"$DOCKER_REPO"
 docker logout
