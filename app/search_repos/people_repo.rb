@@ -20,7 +20,9 @@ class PeopleRepo
     mappings dynamic: 'strict' do
       indexes :id
       indexes :first_name
+      indexes :middle_name
       indexes :last_name
+      indexes :name_suffix
       indexes :gender
       indexes :ssn
       indexes :date_of_birth

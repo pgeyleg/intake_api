@@ -31,6 +31,9 @@ definitions:
         type: string
       gender:
         type: string
+        enum:
+          - male
+          - female
       date_of_birth:
         type: string
         format: date
@@ -41,10 +44,27 @@ definitions:
     properties:
       first_name:
         type: string
+      middle_name:
+        type: string
       last_name:
         type: string
+      name_suffix:
+        type: string
+        enum:
+          - esq
+          - ii
+          - iii
+          - iv
+          - jr
+          - sr
+          - md
+          - phd
+          - jd
       gender:
         type: string
+        enum:
+          - male
+          - female
       date_of_birth:
         type: string
         format: date

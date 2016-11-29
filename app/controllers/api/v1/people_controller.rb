@@ -44,7 +44,9 @@ module Api
       def person_params
         params.permit(
           :first_name,
+          :middle_name,
           :last_name,
+          :name_suffix,
           :gender,
           :date_of_birth,
           :ssn
