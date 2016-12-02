@@ -21,6 +21,7 @@ node {
         }
 
         stage('Check Swagger') {
+            curStage = 'Check Swagger'
             if(SWAGGER_NOTIFICATION_LIST.length() > 0) {
                 def JOB_URL = "${env.JOB_URL}lastSuccessfulBuild/api/json?depth=1"
                 def gitPreviousCommit = ''
