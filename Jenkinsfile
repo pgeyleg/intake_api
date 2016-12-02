@@ -21,6 +21,7 @@ node {
         }
 
         stage('Check Swagger') {
+            curStage = 'Check Swagger'
             if(SWAGGER_NOTIFICATION_LIST.length() > 0) {
                 def JOB_URL = "${env.JOB_URL}lastSuccessfulBuild/api/json?depth=1"
                 def gitPreviousCommit = ''
@@ -34,13 +35,10 @@ node {
                 def changedFiles = sh(
                     script: "git diff --stat ${gitPreviousCommit}..${gitCommit} | grep '\\|' | awk '{print \$1}'",
                     returnStdout: true)
-                def environment = sh(
-                    script: "env",
-                    returnStdout: true)
 
                 if(changedFiles.indexOf("swagger") != -1) {
                     emailext (
-                        to: $SWAGGER_NOTIFICATION_LIST,
+                        to: swaggerEmailList,
                         subject: "Swagger file updated for Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
                         body: """<p>Notification: Swagger file updated</p>
                         <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
