@@ -59,6 +59,22 @@ ActiveRecord::Schema.define(version: 20161123203048) do
     t.index ["person_id"], name: "index_person_addresses_on_person_id", using: :btree
   end
 
+  create_table "person_phone_numbers", force: :cascade do |t|
+    t.integer  "person_id"
+    t.integer  "phone_number_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["person_id"], name: "index_person_phone_numbers_on_person_id", using: :btree
+    t.index ["phone_number_id"], name: "index_person_phone_numbers_on_phone_number_id", using: :btree
+  end
+
+  create_table "phone_numbers", force: :cascade do |t|
+    t.string   "phone_number"
+    t.string   "phone_number_type"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
   create_table "screening_addresses", force: :cascade do |t|
     t.integer  "screening_id"
     t.integer  "address_id"
