@@ -94,6 +94,23 @@ definitions:
       zip:
         type: integer
         format: int32
+
+  PhoneNumber:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      phone_number:
+        type: string
+      phone_number_type:
+        type: string
+        enum:
+          - Cell
+          - Work
+          - Home
+          - Other
+
   Screening:
     type: object
     properties:
@@ -132,6 +149,10 @@ definitions:
     properties:
       address:
         $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
 
   PersonUpdateRequest:
     allOf:
@@ -139,6 +160,10 @@ definitions:
     properties:
       address:
         $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
 
   PersonResponse:
     allOf:
@@ -146,6 +171,10 @@ definitions:
     properties:
       address:
         $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
 
   ScreeningRequest:
     allOf:
