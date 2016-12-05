@@ -17,6 +17,7 @@ group :development, :test do
   gem 'pry-theme'
   gem 'rspec-rails'
   gem 'rubocop'
+  gem 'timecop'
 end
 
 group :development do

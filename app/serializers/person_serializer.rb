@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class PersonSerializer < ActiveModel::Serializer # :nodoc:
   has_one :address
+  has_many :phone_numbers
   attributes :id,
     :first_name,
     :middle_name,
