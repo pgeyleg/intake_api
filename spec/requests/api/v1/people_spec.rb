@@ -4,9 +4,8 @@ require 'rails_helper'
 describe 'People API' do
   describe 'POST /api/v1/people' do
     before { Timecop.freeze('2016-12-03T22:08:38.204Z') }
-
-    it 'creates a person' do
-      person_params = {
+    let(:params) do
+      {
         first_name: 'David',
         middle_name: 'Jon',
         last_name: 'Gilmour',
@@ -24,17 +23,15 @@ describe 'People API' do
           { number: '917-901-8765', type: 'Home' },
           { number: '916-101-1234', type: 'Cell' }
         ],
-        languages: %w(
-          Hmong
-          Japanese
-          German
-        )
+        languages: %w(Hmong Japanese German)
       }
-      post '/api/v1/people', params: person_params
+    end
+    let(:body) { JSON.parse(response.body).with_indifferent_access }
 
+    it 'creates a person' do
+      post '/api/v1/people', params: params
       expect(response.status).to eq(201)
-      body = JSON.parse(response.body).with_indifferent_access
-      expect(body).to a_hash_including(
+      expect(body).to match a_hash_including(
         first_name: 'David',
         middle_name: 'Jon',
         last_name: 'Gilmour',
@@ -62,26 +59,21 @@ describe 'People API' do
             updated_at: '2016-12-03T22:08:38.204Z'
           )
         ),
-        languages: array_including(
-          'Hmong',
-          'Japanese',
-          'German'
-        )
+        languages: array_including('Hmong', 'Japanese', 'German')
       )
     end
   end
 
   describe 'GET /api/v1/people/:id' do
+    let(:person) { Person.create(first_name: 'Walter', last_name: 'White') }
+    let(:body) { JSON.parse(response.body).with_indifferent_access }
+
     it 'returns a JSON representation of the person' do
-      person = Person.create(first_name: 'Walter', last_name: 'White')
-
       get "/api/v1/people/#{person.id}"
-
       expect(response.status).to eq(200)
-      body = JSON.parse(response.body)
-      expect(body['first_name']).to eq('Walter')
-      expect(body['last_name']).to eq('White')
-      expect(body['phone_numbers']).to eq([])
+      expect(body[:first_name]).to eq('Walter')
+      expect(body[:last_name]).to eq('White')
+      expect(body[:phone_numbers]).to eq([])
     end
   end
 
@@ -101,15 +93,9 @@ describe 'People API' do
     let(:existing_phone_number) { person.phone_numbers.first }
     let(:created_at) { '2016-12-03T22:08:38.204Z' }
     let(:updated_at) { '2016-12-03T22:12:38.204Z' }
-
-    before do
-      Timecop.freeze(created_at)
-      person.save!
-      Timecop.freeze(updated_at)
-    end
-
-    it 'updates attributes of a person' do
-      person_params = {
+    let(:body) { JSON.parse(response.body).with_indifferent_access }
+    let(:params) do
+      {
         first_name: 'Deborah',
         middle_name: 'Ann',
         last_name: 'Harry',
@@ -133,13 +119,19 @@ describe 'People API' do
           type: 'Cell'
         }],
         languages: %w(Japanese English)
-      }.with_indifferent_access
+      }
+    end
 
-      put "/api/v1/people/#{person.id}", params: person_params
+    before do
+      Timecop.freeze(created_at)
+      person.save!
+      Timecop.freeze(updated_at)
+    end
 
+    it 'updates attributes of a person' do
+      put "/api/v1/people/#{person.id}", params: params
       expect(response.status).to eq(200)
-      body = JSON.parse(response.body).with_indifferent_access
-      expect(body).to a_hash_including(
+      expect(body).to match a_hash_including(
         id: person.id,
         first_name: 'Deborah',
         middle_name: 'Ann',
@@ -178,11 +170,10 @@ describe 'People API' do
   end
 
   describe 'DELETE /api/v1/people/:id' do
+    let(:person) { Person.create(first_name: 'Walter', last_name: 'White') }
+
     it 'deletes the person' do
-      person = Person.create(first_name: 'Walter', last_name: 'White')
-
       delete "/api/v1/people/#{person.id}"
-
       expect(response.status).to eq(204)
       expect(response.body).to be_empty
     end
