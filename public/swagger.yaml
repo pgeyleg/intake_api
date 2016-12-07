@@ -1,19 +1,18 @@
-# Example YAML to get you started quickly.
-# Be aware that YAML has indentation based scoping.
-# Code completion support is available so start typing for available options.
 swagger: '2.0'
-
-# This is your document metadata
 info:
-  version: "1"
+  version: '1'
   title: Casebook Mock API
   description: Mock API used for development of Accelerator and California Intake project
 
 host: 192.168.99.103:3001
 basePath: /api/v1
-schemes: ["http", "https"]
-consumes: ["application/json"]
-produces: ["application/json"]
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
 
 definitions:
   Participant:
@@ -39,7 +38,8 @@ definitions:
         format: date
       ssn:
         type: string
-  Person:
+
+  NewPerson:
     type: object
     properties:
       first_name:
@@ -70,8 +70,18 @@ definitions:
         format: date
       ssn:
         type: string
-      address:
-        $ref: "#/definitions/Address"
+
+  Person:
+    type: object
+    allOf:
+      - $ref: '#/definitions/NewPerson'
+    properties:
+      id:
+        type: integer
+        format: int64
+    required:
+      - id
+
   Address:
     type: object
     properties:
@@ -84,6 +94,23 @@ definitions:
       zip:
         type: integer
         format: int32
+
+  PhoneNumber:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      phone_number:
+        type: string
+      phone_number_type:
+        type: string
+        enum:
+          - Cell
+          - Work
+          - Home
+          - Other
+
   Screening:
     type: object
     properties:
@@ -115,29 +142,65 @@ definitions:
         format: date-time
       report_narrative:
         type: string
-  ScreeningRequest:
+
+  PersonCreateRequest:
     allOf:
-      - $ref: "#/definitions/Screening"
+      - $ref: '#/definitions/NewPerson'
     properties:
       address:
-        $ref: "#/definitions/Address"
+        $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
+
+  PersonUpdateRequest:
+    allOf:
+      - $ref: '#/definitions/Person'
+    properties:
+      address:
+        $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
+
+  PersonResponse:
+    allOf:
+      - $ref: '#/definitions/Person'
+    properties:
+      address:
+        $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
+
+  ScreeningRequest:
+    allOf:
+      - $ref: '#/definitions/Screening'
+    properties:
+      address:
+        $ref: '#/definitions/Address'
 
   ScreeningResponse:
     allOf:
-      - $ref: "#/definitions/Screening"
+      - $ref: '#/definitions/Screening'
     properties:
       address:
-        $ref: "#/definitions/Address"
+        $ref: '#/definitions/Address'
       participants:
         type: array
         items:
-          $ref: "#/definitions/Participant"
+          $ref: '#/definitions/Participant'
 
 paths:
   /people/{id}:
     get:
       description: Gets `Person` object for the id.
-      tags: ["people", "person"]
+      tags:
+        - people
+        - person
       parameters:
       - name: id
         in: path
@@ -149,10 +212,12 @@ paths:
         200:
           description: Successful response
           schema:
-            $ref: "#/definitions/Person"
+            $ref: '#/definitions/PersonResponse'
     put:
       description: Updates a `Person` object.
-      tags: ["people", "person"]
+      tags:
+        - people
+        - person
       parameters:
       - name: id
         in: path
@@ -165,12 +230,12 @@ paths:
         description: Person to update
         required: true
         schema:
-          "$ref": "#/definitions/Person"
+          $ref: '#/definitions/PersonUpdateRequest'
       responses:
         200:
           description: Successful response
           schema:
-            $ref: "#/definitions/Person"
+            $ref: '#/definitions/PersonResponse'
 
   /people:
     post:
@@ -182,23 +247,19 @@ paths:
         description: Person to create
         required: true
         schema:
-          "$ref": "#/definitions/Person"
+          $ref: '#/definitions/PersonCreateRequest'
       responses:
         201:
           description: Successful creation
           schema:
-            title: Person
-            allOf:
-            - $ref: '#/definitions/Person'
-            properties:
-              id:
-                type: integer
-                format: int64
+            $ref: '#/definitions/PersonResponse'
 
   /screenings/{id}:
     get:
       description: Gets `Screening` object for the id.
-      tags: ["screenings", "screening"]
+      tags:
+        - screenings
+        - screening
       parameters:
       - name: id
         in: path
@@ -210,10 +271,12 @@ paths:
         200:
           description: Successful response
           schema:
-            $ref: "#/definitions/ScreeningResponse"
+            $ref: '#/definitions/ScreeningResponse'
     put:
       description: Updates a `Screening` object
-      tags: ["screenings", "screening"]
+      tags:
+        - screenings
+        - screening
       parameters:
         - name: id
           in: path
@@ -226,17 +289,19 @@ paths:
           description: Screening parameters
           required: true
           schema:
-            $ref: "#/definitions/ScreeningRequest"
+            $ref: '#/definitions/ScreeningRequest'
       responses:
         200:
           description: Successful response
           schema:
-            $ref: "#/definitions/ScreeningResponse"
+            $ref: '#/definitions/ScreeningResponse'
 
   /screenings:
     post:
       description: Creates a new screening
-      tags: ["screenings", "screening"]
+      tags:
+        - screenings
+        - screening
       parameters:
         - name: body
           in: body
@@ -253,7 +318,7 @@ paths:
           schema:
             title: Screening
             allOf:
-            - $ref: "#/definitions/ScreeningResponse"
+            - $ref: '#/definitions/ScreeningResponse'
             properties:
               id:
                 type: integer
@@ -269,7 +334,7 @@ paths:
         description: Participant to create
         required: true
         schema:
-          "$ref": "#/definitions/Participant"
+          $ref: '#/definitions/Participant'
       responses:
         201:
           description: Successful creation
