@@ -3,10 +3,10 @@ require 'rails_helper'
 
 describe ParticipantSerializer do
   describe 'as_json' do
-    it 'returns the attributes of a participant as a hash' do
-      person = Person.new
-      screening = Screening.new
-      participant = Participant.new(
+    let(:person) { Person.create }
+    let(:screening) { Screening.create }
+    let(:participant) do
+      Participant.new(
         first_name: 'Robert',
         last_name: 'Smith',
         gender: 'male',
@@ -15,10 +15,12 @@ describe ParticipantSerializer do
         person: person,
         screening: screening
       )
-      participant.save!
-      expect(
-        described_class.new(participant).as_json
-      ).to eq(
+    end
+
+    before { participant.save! }
+
+    it 'returns the attributes of a participant as a hash' do
+      expect(described_class.new(participant).as_json).to eq(
         id: participant.id,
         first_name: 'Robert',
         last_name: 'Smith',

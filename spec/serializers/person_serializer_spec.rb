@@ -3,7 +3,7 @@ require 'rails_helper'
 
 describe PersonSerializer do
   describe 'as_json' do
-    it 'returns the attributes of a person as a hash' do
+    let(:person) do
       person = Person.new(
         first_name: 'Paul',
         middle_name: 'Maurice',
@@ -21,7 +21,12 @@ describe PersonSerializer do
         city: 'Jackson Heights',
         zip: 11_372
       )
-      person.save!
+      person
+    end
+
+    before { person.save! }
+
+    it 'returns the attributes of a person as a hash' do
       expect(
         described_class.new(person).as_json
       ).to eq(
