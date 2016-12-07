@@ -5,4 +5,6 @@
 class PersonPhoneNumber < ActiveRecord::Base
   belongs_to :person
   belongs_to :phone_number
+
+  accepts_nested_attributes_for :phone_number
 end

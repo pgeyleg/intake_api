@@ -16,7 +16,7 @@ module Api
         person = Person.find(params[:id])
         person.update_attributes!(person_params)
         person.address.update_attributes!(address_params)
-        person.phone_numbers = update_phone_numbers(person)
+        person.person_phone_numbers = update_phone_numbers(person)
         person.save!
         render json: person, status: :ok
       end
@@ -60,18 +60,24 @@ module Api
         params.permit(
           phone_numbers: [
             :id,
-            :phone_number,
-            :phone_number_type
+            :number,
+            :type
           ]
         )
       end
 
       def update_phone_numbers(person)
-        phone_numbers_params[:phone_numbers].map do |phone_number|
-          p = person.phone_numbers.find_or_initialize_by(id: phone_number[:id])
-          person.person_phone_numbers.build(phone_number: p) if p.id.nil?
-          p.update_attributes!(phone_number)
-          p
+        phone_numbers_params[:phone_numbers].map do |phone_number_attrs|
+          person_phone_join_model = person
+            .person_phone_numbers
+            .find_or_initialize_by(phone_number_id: phone_number_attrs[:id])
+
+          if person_phone_join_model.persisted?
+            person_phone_join_model.phone_number.update!(phone_number_attrs)
+          else
+            person_phone_join_model.build_phone_number(phone_number_attrs)
+          end
+          person_phone_join_model
         end
       end
     end

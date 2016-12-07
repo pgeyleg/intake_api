@@ -21,8 +21,8 @@ describe 'People API' do
           zip: '10010'
         },
         phone_numbers: [
-          { phone_number: '917-901-8765', phone_number_type: 'Home' },
-          { phone_number: '916-101-1234', phone_number_type: 'Cell' }
+          { number: '917-901-8765', type: 'Home' },
+          { number: '916-101-1234', type: 'Cell' }
         ]
       }
       post '/api/v1/people', params: person_params
@@ -45,14 +45,14 @@ describe 'People API' do
         ),
         phone_numbers: array_including(
           a_hash_including(
-            phone_number: '917-901-8765',
-            phone_number_type: 'Home',
+            number: '917-901-8765',
+            type: 'Home',
             created_at: '2016-12-03T22:08:38.204Z',
             updated_at: '2016-12-03T22:08:38.204Z'
           ),
           a_hash_including(
-            phone_number: '916-101-1234',
-            phone_number_type: 'Cell',
+            number: '916-101-1234',
+            type: 'Cell',
             created_at: '2016-12-03T22:08:38.204Z',
             updated_at: '2016-12-03T22:08:38.204Z'
           )
@@ -85,8 +85,8 @@ describe 'People API' do
       Timecop.freeze(created_at)
       person.build_person_address
       person.person_address.build_address
-      person.phone_numbers.build(phone_number: '111-111-1111')
-      person.phone_numbers.build(phone_number: '222-222-2222')
+      person.phone_numbers.build(number: '111-111-1111')
+      person.phone_numbers.build(number: '222-222-2222')
       person.save!
       Timecop.freeze(updated_at)
     end
@@ -109,13 +109,13 @@ describe 'People API' do
         phone_numbers: [
           {
             id: existing_phone_number.id,
-            phone_number: '333-333-3333',
-            phone_number_type: 'Home'
+            number: '333-333-3333',
+            type: 'Home'
           },
           {
             id: nil,
-            phone_number: '444-444-4444',
-            phone_number_type: 'Cell'
+            number: '444-444-4444',
+            type: 'Cell'
           }
         ]
       }.with_indifferent_access
@@ -143,20 +143,21 @@ describe 'People API' do
         phone_numbers: array_including(
           a_hash_including(
             id: existing_phone_number.id,
-            phone_number: '333-333-3333',
-            phone_number_type: 'Home',
+            number: '333-333-3333',
+            type: 'Home',
             created_at: created_at,
             updated_at: updated_at,
           ),
           a_hash_including(
-            phone_number: '444-444-4444',
-            phone_number_type: 'Cell',
+            number: '444-444-4444',
+            type: 'Cell',
             created_at: updated_at,
             updated_at: updated_at,
           )
         )
       )
       expect(person.person_phone_numbers.count).to eq 2
+      expect(person.phone_numbers.count).to eq 2
     end
   end
 
