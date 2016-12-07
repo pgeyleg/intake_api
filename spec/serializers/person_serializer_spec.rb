@@ -11,7 +11,8 @@ describe PersonSerializer do
         name_suffix: 'Jr',
         gender: 'male',
         ssn: '321021222',
-        date_of_birth: Date.parse('1955-01-31')
+        date_of_birth: Date.parse('1955-01-31'),
+        languages: %w(Turkish German)
       )
       person.build_person_address
       person.person_address.build_address(
@@ -32,6 +33,7 @@ describe PersonSerializer do
         middle_name: 'Maurice',
         name_suffix: 'Jr',
         ssn: '321021222',
+        languages: %w(Turkish German),
         address: {
           id: person.address.id,
           street_address: '9273 Corona St',

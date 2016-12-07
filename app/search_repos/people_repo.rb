@@ -26,6 +26,7 @@ class PeopleRepo
       indexes :gender
       indexes :ssn
       indexes :date_of_birth
+      indexes :languages
       indexes :created_at
       indexes :updated_at
     end
