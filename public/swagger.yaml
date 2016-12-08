@@ -70,6 +70,45 @@ definitions:
         format: date
       ssn:
         type: string
+      languages:
+        type: array
+        items:
+          type: string
+          enum:
+            - American Sign Language
+            - Arabic
+            - Armenian
+            - Cambodian
+            - Cantonese
+            - English
+            - Farsi
+            - Filipino
+            - French
+            - German
+            - Hawaiian
+            - Hebrew
+            - Hmong
+            - Ilacano
+            - Indochinese
+            - Italian
+            - Japanese
+            - Korean
+            - Lao
+            - Mandarin
+            - Mien
+            - Other Chinese
+            - Other Non-English
+            - Polish
+            - Portuguese
+            - Romanian
+            - Russian
+            - Samoan
+            - Sign Language (Not ASL)
+            - Spanish
+            - Tagalog
+            - Thai
+            - Turkish
+            - Vietnamese
 
   Person:
     type: object

@@ -9,5 +9,6 @@ class PersonSerializer < ActiveModel::Serializer # :nodoc:
     :name_suffix,
     :gender,
     :ssn,
-    :date_of_birth
+    :date_of_birth,
+    :languages
 end
