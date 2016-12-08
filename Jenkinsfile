@@ -40,6 +40,8 @@ node('Slave') {
         )
 
         slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
+
+        throw e
     }
     finally {
         stage('Clean') {
