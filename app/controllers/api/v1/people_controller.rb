@@ -70,8 +70,8 @@ module Api
       def update_phone_numbers(person)
         phone_numbers_params[:phone_numbers].map do |phone_number_attrs|
           person_phone_join_model = person
-            .person_phone_numbers
-            .find_or_initialize_by(phone_number_id: phone_number_attrs[:id])
+                                    .person_phone_numbers
+                                    .find_or_initialize_by(phone_number_id: phone_number_attrs[:id])
 
           if person_phone_join_model.persisted?
             person_phone_join_model.phone_number.update!(phone_number_attrs)

@@ -153,13 +153,13 @@ describe 'People API' do
             number: '333-333-3333',
             type: 'Home',
             created_at: created_at,
-            updated_at: updated_at,
+            updated_at: updated_at
           ),
           a_hash_including(
             number: '444-444-4444',
             type: 'Cell',
             created_at: updated_at,
-            updated_at: updated_at,
+            updated_at: updated_at
           )
         ),
         languages: array_including('Japanese', 'English')
