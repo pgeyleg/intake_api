@@ -39,6 +39,7 @@ describe PersonSerializer do
         name_suffix: 'Jr',
         ssn: '321021222',
         languages: %w(Turkish German),
+        phone_numbers: [],
         address: {
           id: person.address.id,
           street_address: '9273 Corona St',
