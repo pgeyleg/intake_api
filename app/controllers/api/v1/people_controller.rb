@@ -40,7 +40,8 @@ module Api
           :street_address,
           :city,
           :state,
-          :zip
+          :zip,
+          :type
         )
       end
 

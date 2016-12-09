@@ -17,7 +17,8 @@ describe 'People API' do
           street_address: '123 fake st',
           city: 'Fake City',
           state: 'NY',
-          zip: '10010'
+          zip: '10010',
+          type: 'Placement'
         },
         phone_numbers: [
           { number: '917-901-8765', type: 'Home' },
@@ -43,7 +44,8 @@ describe 'People API' do
           street_address: '123 fake st',
           state: 'NY',
           city: 'Fake City',
-          zip: 10_010
+          zip: 10_010,
+          type: 'Placement'
         ),
         phone_numbers: array_including(
           a_hash_including(
@@ -85,7 +87,7 @@ describe 'People API' do
         languages: %w(Hmong Japanese German)
       )
       person.build_person_address
-      person.person_address.build_address
+      person.person_address.build_address(type: 'Other')
       person.phone_numbers.build(number: '111-111-1111')
       person.phone_numbers.build(number: '222-222-2222')
       person
@@ -107,7 +109,8 @@ describe 'People API' do
           street_address: '123 fake st',
           city: 'Fake City',
           state: 'NY',
-          zip: '10010'
+          zip: '10010',
+          type: 'Other'
         },
         phone_numbers: [{
           id: existing_phone_number.id,
@@ -145,6 +148,7 @@ describe 'People API' do
           state: 'NY',
           city: 'Fake City',
           zip: 10_010,
+          type: 'Other',
           id: person.address.id
         ),
         phone_numbers: array_including(
