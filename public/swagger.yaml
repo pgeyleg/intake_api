@@ -133,6 +133,15 @@ definitions:
       zip:
         type: integer
         format: int32
+      type:
+        type: string
+        enum:
+          - Home
+          - School
+          - Work
+          - Placement
+          - Homeless
+          - Other
 
   PhoneNumber:
     type: object
@@ -140,9 +149,9 @@ definitions:
       id:
         type: integer
         format: int64
-      phone_number:
+      number:
         type: string
-      phone_number_type:
+      type:
         type: string
         enum:
           - Cell
