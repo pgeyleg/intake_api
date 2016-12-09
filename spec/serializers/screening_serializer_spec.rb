@@ -40,7 +40,8 @@ describe ScreeningSerializer do
         street_address: '52 Evercrest',
         state: 'AL',
         city: 'Albatros',
-        zip: 12_333
+        zip: 12_333,
+        type: 'Placement'
       )
       screening.save!
     end
@@ -65,7 +66,8 @@ describe ScreeningSerializer do
           street_address: '52 Evercrest',
           state: 'AL',
           city: 'Albatros',
-          zip: 12_333
+          zip: 12_333,
+          type: 'Placement'
         },
         participants: [{
           id: participant.id,
