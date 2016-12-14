@@ -27,13 +27,21 @@ class PeopleRepo
       indexes :ssn
       indexes :date_of_birth
       indexes :languages
+      indexes :address do
+        indexes :id
+        indexes :street_address
+        indexes :city
+        indexes :state
+        indexes :zip
+        indexes :type
+      end
       indexes :created_at
       indexes :updated_at
     end
   end
 
   def serialize(document)
-    document.attributes
+    PersonSerializer.new(document).as_json.except(:phone_numbers)
   end
 
   def deserialize(document)

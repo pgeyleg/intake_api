@@ -5,4 +5,10 @@
 class PersonAddress < ActiveRecord::Base
   belongs_to :person
   belongs_to :address
+
+  after_commit :reindex
+
+  def reindex
+    PersonIndexer.perform(person.id)
+  end
 end
