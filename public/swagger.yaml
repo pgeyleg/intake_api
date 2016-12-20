@@ -195,8 +195,10 @@ definitions:
     allOf:
       - $ref: '#/definitions/NewPerson'
     properties:
-      address:
-        $ref: '#/definitions/Address'
+      addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
       phone_numbers:
         type: array
         items:
@@ -206,8 +208,10 @@ definitions:
     allOf:
       - $ref: '#/definitions/Person'
     properties:
-      address:
-        $ref: '#/definitions/Address'
+      addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
       phone_numbers:
         type: array
         items:
@@ -217,8 +221,10 @@ definitions:
     allOf:
       - $ref: '#/definitions/Person'
     properties:
-      address:
-        $ref: '#/definitions/Address'
+      addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
       phone_numbers:
         type: array
         items:
