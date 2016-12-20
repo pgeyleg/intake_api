@@ -13,13 +13,22 @@ describe 'People API' do
         gender: 'male',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
-        address: {
-          street_address: '123 fake st',
-          city: 'Fake City',
-          state: 'NY',
-          zip: '10010',
-          type: 'Placement'
-        },
+        addresses: [
+          {
+            street_address: '123 fake st',
+            city: 'Fake City',
+            state: 'NY',
+            zip: '10010',
+            type: 'Placement'
+          },
+          {
+            street_address: '711 capital Mall',
+            city: 'Sacramento',
+            state: 'CA',
+            zip: '95822',
+            type: 'Home'
+          }
+        ],
         phone_numbers: [
           { number: '917-901-8765', type: 'Home' },
           { number: '916-101-1234', type: 'Cell' }
@@ -40,12 +49,21 @@ describe 'People API' do
         gender: 'male',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
-        address: a_hash_including(
-          street_address: '123 fake st',
-          state: 'NY',
-          city: 'Fake City',
-          zip: 10_010,
-          type: 'Placement'
+        addresses: array_including(
+          a_hash_including(
+            street_address: '123 fake st',
+            state: 'NY',
+            city: 'Fake City',
+            zip: 10_010,
+            type: 'Placement'
+          ),
+          a_hash_including(
+            street_address: '711 capital Mall',
+            city: 'Sacramento',
+            state: 'CA',
+            zip: 958_22,
+            type: 'Home'
+          )
         ),
         phone_numbers: array_including(
           a_hash_including(
@@ -86,12 +104,12 @@ describe 'People API' do
         last_name: 'White',
         languages: %w(Hmong Japanese German)
       )
-      person.build_person_address
-      person.person_address.build_address(type: 'Other')
+      person.addresses.build(street_address: '123 fake street')
       person.phone_numbers.build(number: '111-111-1111')
       person.phone_numbers.build(number: '222-222-2222')
       person
     end
+    let(:existing_address) { person.addresses.first }
     let(:existing_phone_number) { person.phone_numbers.first }
     let(:created_at) { '2016-12-03T22:08:38.204Z' }
     let(:updated_at) { '2016-12-03T22:12:38.204Z' }
@@ -105,13 +123,21 @@ describe 'People API' do
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
-        address: {
+        addresses: [{
+          id: existing_address.id,
           street_address: '123 fake st',
           city: 'Fake City',
           state: 'NY',
           zip: '10010',
           type: 'Other'
-        },
+        }, {
+          id: nil,
+          street_address: '711 capital Mall',
+          city: 'Sacramento',
+          state: 'CA',
+          zip: '95822',
+          type: 'Home'
+        }],
         phone_numbers: [{
           id: existing_phone_number.id,
           number: '333-333-3333',
@@ -131,9 +157,13 @@ describe 'People API' do
       Timecop.freeze(updated_at)
     end
 
-    it 'updates attributes of a person' do
+    it 'responds with a status code 200' do
       put "/api/v1/people/#{person.id}", params: params
       expect(response.status).to eq(200)
+    end
+
+    it 'updates attributes of a person' do
+      put "/api/v1/people/#{person.id}", params: params
       expect(body).to match a_hash_including(
         id: person.id,
         first_name: 'Deborah',
@@ -143,13 +173,22 @@ describe 'People API' do
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
-        address: a_hash_including(
-          street_address: '123 fake st',
-          state: 'NY',
-          city: 'Fake City',
-          zip: 10_010,
-          type: 'Other',
-          id: person.address.id
+        addresses: array_including(
+          a_hash_including(
+            id: existing_address.id,
+            street_address: '123 fake st',
+            state: 'NY',
+            city: 'Fake City',
+            zip: 10_010,
+            type: 'Other',
+          ),
+          a_hash_including(
+            street_address: '711 capital Mall',
+            city: 'Sacramento',
+            state: 'CA',
+            zip: 95_822,
+            type: 'Home'
+          )
         ),
         phone_numbers: array_including(
           a_hash_including(
@@ -168,8 +207,104 @@ describe 'People API' do
         ),
         languages: array_including('Japanese', 'English')
       )
+    end
+
+    it 'creates a new phone number and updates an existing phone number' do
+      expect {
+        put "/api/v1/people/#{person.id}", params: params
+      }.to change(PhoneNumber, :count).by(1)
+      expect {
+        put "/api/v1/people/#{person.id}", params: params
+      }.to change(PersonPhoneNumber, :count).by(1)
       expect(person.person_phone_numbers.count).to eq 2
       expect(person.phone_numbers.count).to eq 2
+    end
+
+    it 'creates a new person address and updates and existing person address' do
+      expect {
+        put "/api/v1/people/#{person.id}", params: params
+      }.to change {
+        person.person_addresses.count
+      }.from(1).to(2)
+    end
+  end
+
+  describe 'delete an existing address' do
+    let(:person) do
+      person = Person.new(
+        first_name: 'James',
+        last_name: 'Rosling',
+        languages: %w(Hmong Japanese German)
+      )
+      person.addresses.build([
+        {
+          street_address: '123 fake street',
+          city: 'Sacramento',
+          state: 'CA',
+          zip: '95822',
+          type: 'Home'
+        },{
+          street_address: '123 fake street',
+          city: 'Sacramento',
+          state: 'CA',
+          zip: '95822',
+          type: 'Home'
+        }
+      ])
+      person.phone_numbers.build(number: '111-111-1111')
+      person
+    end
+    let(:existing_address) { person.addresses.first }
+    let(:existing_phone_number) { person.phone_numbers.first }
+    let(:params) do
+      {
+        first_name: 'Deborah',
+        middle_name: 'Ann',
+        last_name: 'Harry',
+        name_suffix: 'md',
+        gender: 'female',
+        date_of_birth: '1990-03-30',
+        ssn: '345-12-2345',
+        addresses: [{
+          id: existing_address.id,
+          street_address: '123 fake st',
+          city: 'Fake City',
+          state: 'NY',
+          zip: '10010',
+          type: 'Other'
+        }, {
+          id: nil,
+          street_address: '711 capital Mall',
+          city: 'Sacramento',
+          state: 'CA',
+          zip: '95822',
+          type: 'Home'
+        }],
+        phone_numbers: [{
+          id: existing_phone_number.id,
+          number: '333-333-3333',
+          type: 'Home'
+        }, {
+          id: nil,
+          number: '444-444-4444',
+          type: 'Cell'
+        }],
+      }
+    end
+    before do
+      person.save!
+    end
+
+    it 'create a person and delete an existing address' do
+      put "/api/v1/people/#{person.id}", params: params
+      expect(person.person_addresses.count).to eq 2
+      expect(person.addresses.count).to eq 2
+      address = person.addresses.find_by_id(existing_address.id)
+      person_address=person.person_addresses.find_by_id(address.id)
+      person_address.delete
+      address.delete
+      expect(person.person_addresses.count).to eq 1
+      expect(person.addresses.count).to eq 1
     end
   end
 
