@@ -14,14 +14,13 @@ describe PeopleRepo do
         date_of_birth: Date.parse('1955-01-31'),
         languages: %w(Turkish German)
       )
-      person.build_person_address
-      person.person_address.build_address(
+      person.addresses.build([
         street_address: '9273 Corona St',
         state: 'NY',
         city: 'Jackson Heights',
         zip: 11_372,
         type: 'Placement'
-      )
+      ])
       serialized_person = PersonSerializer.new(person).as_json.except(:phone_numbers)
       expect(described_class.new.serialize(person)).to eq(serialized_person)
     end

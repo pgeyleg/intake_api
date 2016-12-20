@@ -14,14 +14,13 @@ describe PersonSerializer do
         date_of_birth: Date.parse('1955-01-31'),
         languages: %w(Turkish German)
       )
-      person.build_person_address
-      person.person_address.build_address(
+        person.addresses.build([
         street_address: '9273 Corona St',
         state: 'NY',
         city: 'Jackson Heights',
         zip: 11_372,
         type: 'Placement'
-      )
+        ])
       person
     end
 
@@ -41,14 +40,14 @@ describe PersonSerializer do
         ssn: '321021222',
         languages: %w(Turkish German),
         phone_numbers: [],
-        address: {
-          id: person.address.id,
-          street_address: '9273 Corona St',
-          state: 'NY',
-          city: 'Jackson Heights',
-          zip: 11_372,
-          type: 'Placement'
-        }
+        addresses: [{
+        id: person.addresses.map(&:id).first,
+        street_address: '9273 Corona St',
+        state: 'NY',
+        city: 'Jackson Heights',
+        zip: 11_372,
+        type: 'Placement'
+      }]
       )
     end
   end
