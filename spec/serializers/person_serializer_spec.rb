@@ -18,7 +18,7 @@ describe PersonSerializer do
         street_address: '9273 Corona St',
         state: 'NY',
         city: 'Jackson Heights',
-        zip: 11_372,
+        zip: '11372',
         type: 'Placement'
         ])
       person
@@ -45,7 +45,7 @@ describe PersonSerializer do
         street_address: '9273 Corona St',
         state: 'NY',
         city: 'Jackson Heights',
-        zip: 11_372,
+        zip: '11372',
         type: 'Placement'
       }]
       )

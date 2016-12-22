@@ -54,14 +54,14 @@ describe 'People API' do
             street_address: '123 fake st',
             state: 'NY',
             city: 'Fake City',
-            zip: 10_010,
+            zip: '10010',
             type: 'Placement'
           ),
           a_hash_including(
             street_address: '711 capital Mall',
             city: 'Sacramento',
             state: 'CA',
-            zip: 958_22,
+            zip: '95822',
             type: 'Home'
           )
         ),
@@ -179,14 +179,14 @@ describe 'People API' do
             street_address: '123 fake st',
             state: 'NY',
             city: 'Fake City',
-            zip: 10_010,
+            zip: '10010',
             type: 'Other',
           ),
           a_hash_including(
             street_address: '711 capital Mall',
             city: 'Sacramento',
             state: 'CA',
-            zip: 95_822,
+            zip: '95822',
             type: 'Home'
           )
         ),

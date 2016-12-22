@@ -105,7 +105,7 @@ describe 'Screening API' do
         street_address: '123 Fake St',
         city: 'Fake City',
         state: 'NY',
-        zip: 10_010
+        zip: '10010'
       )
       expect(body[:participants]).to include(
         id: participant.id,
@@ -196,7 +196,7 @@ describe 'Screening API' do
           street_address: '123 Real St',
           city: 'Fake City',
           state: 'CA',
-          zip: 10_010
+          zip: '10010'
         ),
         participants: [
           include(

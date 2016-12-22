@@ -131,8 +131,7 @@ definitions:
       state:
         type: string
       zip:
-        type: integer
-        format: int32
+        type: string
       type:
         type: string
         enum:
