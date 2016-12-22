@@ -307,6 +307,27 @@ paths:
           schema:
             $ref: '#/definitions/PersonResponse'
 
+  /people_search:
+    get:
+      summary: Gets People by searching the provided search_term
+      description: Gets `People` by searching the provided search_term.
+      tags:
+        - people
+      operationId: peopleSearch
+      parameters:
+      - name: search_term
+        in: search_term
+        description: the search term to search
+        required: true
+        type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PersonResponse'
+
   /screenings/{id}:
     get:
       description: Gets `Screening` object for the id.
