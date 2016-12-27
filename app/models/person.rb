@@ -6,7 +6,6 @@ class Person < ActiveRecord::Base
   has_many :person_phone_numbers, inverse_of: :person
   has_many :phone_numbers, through: :person_phone_numbers
 
-
   after_commit :reindex
 
   def reindex

@@ -71,7 +71,9 @@ module Api
 
       def update_addresses(person)
         addresses_params[:addresses].map do |address_attr|
-          person_address_join_model = person.person_addresses.find_or_initialize_by(address_id: address_attr[:id])
+          person_address_join_model = person
+                                      .person_addresses
+                                      .find_or_initialize_by(address_id: address_attr[:id])
 
           if person_address_join_model.persisted?
             person_address_join_model.address.update!(address_attr)
