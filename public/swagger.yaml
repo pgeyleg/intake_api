@@ -397,6 +397,44 @@ paths:
               id:
                 type: integer
                 format: int64
+    get:
+      summary: Gets Screenings by response times and or screening decision 
+      description: Gets `Screenings` by response times and or screening decision.
+      tags:
+        - screenings
+      parameters:
+      - name: response_times
+        in: query
+        description: the expected response_times of listed screenings
+        type: array
+        items:
+          type: string
+          enum:
+            - immediate
+            - within_twenty_four_hours
+            - more_than_twenty_four_hours
+      - name: screening_decisions
+        in: query
+        description: the expected screening_decision of listed screenings
+        type: array
+        items:
+          type: string
+          enum:
+            - evaluate_out
+            - accept_for_investigation
+            - referral_to_other_agency
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              allOf:
+              - $ref: '#/definitions/ScreeningResponse'
+              properties:
+                id:
+                  type: integer
+                  format: int64
 
   /participants:
     post:
