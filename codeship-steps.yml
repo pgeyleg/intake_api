@@ -1,3 +1,0 @@
-- name: rspec
-  service: api
-  command: bin/ci
