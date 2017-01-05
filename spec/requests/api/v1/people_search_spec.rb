@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'People Search API' do
+describe 'People Search API', elasticsearch: true do
   describe 'GET /api/v1/people_search' do
     context 'when search term does not match on a persons name' do
       it 'searches against people index' do
@@ -22,7 +22,7 @@ describe 'People Search API' do
           middle_name: 'Jon',
           last_name: 'Gilmour'
         }]
-        sleep 1
+        PeopleRepo.client.indices.flush
       end
 
       it 'searches against people index' do

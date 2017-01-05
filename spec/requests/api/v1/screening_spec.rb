@@ -2,10 +2,6 @@
 require 'rails_helper'
 
 describe 'Screening API' do
-  after do
-    ScreeningsRepo.delete_index!
-  end
-
   describe 'POST /api/v1/screenings' do
     it 'creates a screening' do
       screening_params = {
@@ -216,7 +212,7 @@ describe 'Screening API' do
     end
   end
 
-  describe 'GET /api/v1/screenings' do
+  describe 'GET /api/v1/screenings', elasticsearch: true do
     before do
       Screening.create([{
         reference: 'ABCDEF',
@@ -237,7 +233,7 @@ describe 'Screening API' do
         response_time: 'more_than_twenty_four_hours',
         screening_decision: 'accept_for_investigation'
       }])
-      sleep 1
+      ScreeningsRepo.client.indices.flush
     end
 
     context 'when params contains response times' do
