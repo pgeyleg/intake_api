@@ -316,7 +316,7 @@ paths:
       operationId: peopleSearch
       parameters:
       - name: search_term
-        in: search_term
+        in: query
         description: the search term to search
         required: true
         type: string
