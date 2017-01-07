@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "#{Rails.root}/lib/elasticsearch_wrapper"
 
 # ScreeningsRepo is the Repository object for accessing Screenings ES index
 class ScreeningsRepo
@@ -6,12 +7,7 @@ class ScreeningsRepo
 
   def initialize(options = {})
     index options[:index] || 'screenings'
-    es_host = if Rails.env.test?
-                ENV['TEST_ELASTICSEARCH_URL']
-              else
-                ENV['ELASTICSEARCH_URL']
-              end
-    client Elasticsearch::Client.new(host: es_host)
+    client ::ElasticsearchWrapper.client
   end
 
   klass Screening
@@ -41,5 +37,16 @@ class ScreeningsRepo
 
   def deserialize(document)
     document['_source']
+  end
+
+  def self.search_es_by(response_times, screening_decisions)
+    search(query(response_times, screening_decisions))
+  end
+
+  def self.query(response_times, screening_decisions)
+    terms = []
+    terms << { terms: { response_time: response_times } } if response_times
+    terms << { terms: { screening_decision: screening_decisions } } if screening_decisions
+    { query: { filtered: { filter: { bool: { must: terms } } } } }
   end
 end

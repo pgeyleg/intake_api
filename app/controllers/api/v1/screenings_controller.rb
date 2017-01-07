@@ -24,6 +24,11 @@ module Api
         render json: ScreeningSerializer.new(screening), status: :ok
       end
 
+      def index
+        screenings = ScreeningsRepo.search_es_by(response_times, screening_decisions).results
+        render json: screenings.as_json, status: :ok
+      end
+
       private
 
       def address_params
@@ -51,6 +56,14 @@ module Api
           :started_at,
           participant_ids: []
         )
+      end
+
+      def response_times
+        params[:response_times]
+      end
+
+      def screening_decisions
+        params[:screening_decisions]
       end
     end
   end

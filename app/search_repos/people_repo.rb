@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "#{Rails.root}/lib/elasticsearch_wrapper"
 
 # PeopleRepo is the Repository object for accessing People ES index
 class PeopleRepo
@@ -6,12 +7,7 @@ class PeopleRepo
 
   def initialize(options = {})
     index options[:index] || 'people'
-    es_host = if Rails.env.test?
-                ENV['TEST_ELASTICSEARCH_URL']
-              else
-                ENV['ELASTICSEARCH_URL']
-              end
-    client Elasticsearch::Client.new(host: es_host)
+    client ::ElasticsearchWrapper.client
   end
 
   klass Person
