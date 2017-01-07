@@ -38,4 +38,15 @@ class ScreeningsRepo
   def deserialize(document)
     document['_source']
   end
+
+  def self.search_es_by(response_times, screening_decisions)
+    search(query(response_times, screening_decisions))
+  end
+
+  def self.query(response_times, screening_decisions)
+    terms = []
+    terms << { terms: { response_time: response_times } } if response_times
+    terms << { terms: { screening_decision: screening_decisions } } if screening_decisions
+    { query: { filtered: { filter: { bool: { must: terms } } } } }
+  end
 end

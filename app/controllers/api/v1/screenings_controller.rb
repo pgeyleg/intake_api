@@ -25,7 +25,7 @@ module Api
       end
 
       def index
-        screenings = ScreeningsRepo.search(query).results
+        screenings = ScreeningsRepo.search_es_by(response_times, screening_decisions).results
         render json: screenings.as_json, status: :ok
       end
 
@@ -56,17 +56,6 @@ module Api
           :started_at,
           participant_ids: []
         )
-      end
-
-      def query
-        { query: { filtered: { filter: { bool: { must: search_terms } } } } }
-      end
-
-      def search_terms
-        terms = []
-        terms << { terms: { response_time: response_times } } if response_times
-        terms << { terms: { screening_decision: screening_decisions } } if screening_decisions
-        terms
       end
 
       def response_times
