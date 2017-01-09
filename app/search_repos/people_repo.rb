@@ -23,6 +23,7 @@ class PeopleRepo
       indexes :ssn
       indexes :date_of_birth
       indexes :languages
+      indexes :races
       indexes :addresses do
         indexes :id
         indexes :street_address
