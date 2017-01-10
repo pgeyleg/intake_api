@@ -33,7 +33,8 @@ describe 'People API' do
           { number: '917-901-8765', type: 'Home' },
           { number: '916-101-1234', type: 'Cell' }
         ],
-        languages: %w(Hmong Japanese German)
+        languages: %w(Hmong Japanese German),
+        races: %w(White Asian)
       }
     end
     let(:body) { JSON.parse(response.body).with_indifferent_access }
@@ -79,7 +80,8 @@ describe 'People API' do
             updated_at: '2016-12-03T22:08:38.204Z'
           )
         ),
-        languages: array_including('Hmong', 'Japanese', 'German')
+        languages: array_including('Hmong', 'Japanese', 'German'),
+        races: array_including('White', 'Asian')
       )
     end
   end
@@ -147,7 +149,8 @@ describe 'People API' do
           number: '444-444-4444',
           type: 'Cell'
         }],
-        languages: %w(Japanese English)
+        languages: %w(Japanese English),
+        races: %w(White Asian)
       }
     end
 
@@ -205,7 +208,8 @@ describe 'People API' do
             updated_at: updated_at
           )
         ),
-        languages: array_including('Japanese', 'English')
+        languages: array_including('Japanese', 'English'),
+        races: array_including('White', 'Asian')
       )
     end
 

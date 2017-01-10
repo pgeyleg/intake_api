@@ -12,7 +12,8 @@ describe PersonSerializer do
         gender: 'male',
         ssn: '321021222',
         date_of_birth: Date.parse('1955-01-31'),
-        languages: %w(Turkish German)
+        languages: %w(Turkish German),
+        races: %w(White Asian)
       )
       person.addresses.build([
                                street_address: '9273 Corona St',
@@ -39,6 +40,7 @@ describe PersonSerializer do
         name_suffix: 'Jr',
         ssn: '321021222',
         languages: %w(Turkish German),
+        races: %w(White Asian),
         phone_numbers: [],
         addresses: [{
           id: person.addresses.map(&:id).first,

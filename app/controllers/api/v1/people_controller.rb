@@ -55,7 +55,8 @@ module Api
           :gender,
           :date_of_birth,
           :ssn,
-          languages: []
+          languages: [],
+          races: []
         )
       end
 
