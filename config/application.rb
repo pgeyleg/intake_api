@@ -30,5 +30,6 @@ module CasebookApi
     config.autoload_paths << Rails.root.join('app/indexers')
     config.autoload_paths << Rails.root.join('app/search_repos')
     config.api_only = true
+    config.active_record.schema_format = :sql
   end
 end
