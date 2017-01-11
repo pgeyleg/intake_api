@@ -38,7 +38,7 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE addresses (
-    id integer NOT NULL,
+    id character varying NOT NULL,
     street_address character varying,
     city character varying,
     state character varying,
@@ -85,13 +85,13 @@ CREATE TABLE ar_internal_metadata (
 --
 
 CREATE TABLE participants (
-    id integer NOT NULL,
+    id character varying NOT NULL,
     date_of_birth date,
     first_name character varying,
     gender character varying,
     last_name character varying,
     ssn character varying,
-    screening_id integer,
+    screening_id character varying,
     person_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
@@ -161,9 +161,9 @@ ALTER SEQUENCE people_id_seq OWNED BY people.id;
 --
 
 CREATE TABLE person_addresses (
-    id integer NOT NULL,
+    id character varying NOT NULL,
     person_id character varying,
-    address_id integer,
+    address_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -193,9 +193,9 @@ ALTER SEQUENCE person_addresses_id_seq OWNED BY person_addresses.id;
 --
 
 CREATE TABLE person_phone_numbers (
-    id integer NOT NULL,
+    id character varying NOT NULL,
     person_id character varying,
-    phone_number_id integer,
+    phone_number_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -225,7 +225,7 @@ ALTER SEQUENCE person_phone_numbers_id_seq OWNED BY person_phone_numbers.id;
 --
 
 CREATE TABLE phone_numbers (
-    id integer NOT NULL,
+    id character varying NOT NULL,
     number character varying,
     type character varying,
     created_at timestamp without time zone NOT NULL,
@@ -266,9 +266,9 @@ CREATE TABLE schema_migrations (
 --
 
 CREATE TABLE screening_addresses (
-    id integer NOT NULL,
-    screening_id integer,
-    address_id integer,
+    id character varying NOT NULL,
+    screening_id character varying,
+    address_id character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -298,7 +298,7 @@ ALTER SEQUENCE screening_addresses_id_seq OWNED BY screening_addresses.id;
 --
 
 CREATE TABLE screenings (
-    id integer NOT NULL,
+    id character varying NOT NULL,
     reference character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
@@ -532,6 +532,6 @@ CREATE INDEX index_screening_addresses_on_screening_id ON screening_addresses US
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160727210432'), ('20160808213209'), ('20160810212922'), ('20160817211617'), ('20160824142845'), ('20160902152935'), ('20160902185908'), ('20160902193705'), ('20160906201325'), ('20160914192750'), ('20160922191047'), ('20161011184741'), ('20161011203949'), ('20161011205146'), ('20161013183454'), ('20161013222844'), ('20161101235059'), ('20161102190951'), ('20161121112618'), ('20161123203048'), ('20161206160824'), ('20161206193420'), ('20161208232502'), ('20161222163255'), ('20170109102207'), ('20170110150042');
+INSERT INTO schema_migrations (version) VALUES ('20160727210432'), ('20160808213209'), ('20160810212922'), ('20160817211617'), ('20160824142845'), ('20160902152935'), ('20160902185908'), ('20160902193705'), ('20160906201325'), ('20160914192750'), ('20160922191047'), ('20161011184741'), ('20161011203949'), ('20161011205146'), ('20161013183454'), ('20161013222844'), ('20161101235059'), ('20161102190951'), ('20161121112618'), ('20161123203048'), ('20161206160824'), ('20161206193420'), ('20161208232502'), ('20161222163255'), ('20170109102207'), ('20170110150042'), ('20170111142114');
 
 

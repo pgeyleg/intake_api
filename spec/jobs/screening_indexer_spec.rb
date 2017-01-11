@@ -3,7 +3,7 @@ require 'rails_helper'
 
 describe ScreeningIndexer do
   it 'indexes the screening data in elastic search when screening is found' do
-    screening = double(:screening, id: 1)
+    screening = double(:screening, id: '1')
     allow(Screening).to receive(:find)
       .with(screening.id)
       .and_return(screening)
@@ -12,7 +12,7 @@ describe ScreeningIndexer do
   end
 
   it 'deletes screening data from elastic search when screening is not found' do
-    screening = double(:screening, id: 1)
+    screening = double(:screening, id: '1')
     allow(Screening).to receive(:find)
       .with(screening.id)
       .and_raise(ActiveRecord::RecordNotFound)
