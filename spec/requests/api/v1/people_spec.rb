@@ -69,15 +69,11 @@ describe 'People API' do
         phone_numbers: array_including(
           a_hash_including(
             number: '917-901-8765',
-            type: 'Home',
-            created_at: '2016-12-03T22:08:38.204Z',
-            updated_at: '2016-12-03T22:08:38.204Z'
+            type: 'Home'
           ),
           a_hash_including(
             number: '916-101-1234',
-            type: 'Cell',
-            created_at: '2016-12-03T22:08:38.204Z',
-            updated_at: '2016-12-03T22:08:38.204Z'
+            type: 'Cell'
           )
         ),
         languages: array_including('Hmong', 'Japanese', 'German'),
@@ -197,15 +193,11 @@ describe 'People API' do
           a_hash_including(
             id: existing_phone_number.id,
             number: '333-333-3333',
-            type: 'Home',
-            created_at: created_at,
-            updated_at: updated_at
+            type: 'Home'
           ),
           a_hash_including(
             number: '444-444-4444',
-            type: 'Cell',
-            created_at: updated_at,
-            updated_at: updated_at
+            type: 'Cell'
           )
         ),
         languages: array_including('Japanese', 'English'),

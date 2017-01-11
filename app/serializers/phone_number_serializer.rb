@@ -2,7 +2,5 @@
 class PhoneNumberSerializer < ActiveModel::Serializer # :nodoc:
   attributes :id,
     :number,
-    :type,
-    :created_at,
-    :updated_at
+    :type
 end

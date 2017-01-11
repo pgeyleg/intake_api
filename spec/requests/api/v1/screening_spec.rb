@@ -215,30 +215,30 @@ describe 'Screening API' do
   describe 'GET /api/v1/screenings', elasticsearch: true do
     before do
       Screening.create([{
-        reference: 'ABCDEF',
-        created_at: '2016-08-11T18:24:22.157Z',
-        name: 'Little Shop Of Horrors',
-        response_time: 'immediate',
-        screening_decision: 'evaluate_out'
-      }, {
-        reference: 'HIJKLM',
-        created_at: '2016-07-07T11:21:22.007Z',
-        name: 'The Shining',
-        response_time: 'within_twenty_four_hours',
-        screening_decision: 'accept_for_investigation'
-      }, {
-        reference: 'NOPQRS',
-        created_at: '2016-08-10T09:11:22.112Z',
-        name: 'It Follows',
-        response_time: 'more_than_twenty_four_hours',
-        screening_decision: 'accept_for_investigation'
-      }])
+                         reference: 'ABCDEF',
+                         created_at: '2016-08-11T18:24:22.157Z',
+                         name: 'Little Shop Of Horrors',
+                         response_time: 'immediate',
+                         screening_decision: 'evaluate_out'
+                       }, {
+                         reference: 'HIJKLM',
+                         created_at: '2016-07-07T11:21:22.007Z',
+                         name: 'The Shining',
+                         response_time: 'within_twenty_four_hours',
+                         screening_decision: 'accept_for_investigation'
+                       }, {
+                         reference: 'NOPQRS',
+                         created_at: '2016-08-10T09:11:22.112Z',
+                         name: 'It Follows',
+                         response_time: 'more_than_twenty_four_hours',
+                         screening_decision: 'accept_for_investigation'
+                       }])
       ScreeningsRepo.client.indices.flush
     end
 
     context 'when params contains response times' do
       it 'returns screenings matching response times' do
-        get '/api/v1/screenings', params: { response_times: ['immediate', 'within_twenty_four_hours'] }
+        get '/api/v1/screenings', params: { response_times: %w(immediate within_twenty_four_hours) }
         assert_response :success
         body = JSON.parse(response.body)
         expect(body).to match array_including(

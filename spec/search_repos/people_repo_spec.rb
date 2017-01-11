@@ -23,9 +23,9 @@ describe PeopleRepo do
                                type: 'Placement'
                              ])
       person.phone_numbers.build([
-        number: '571-897-7458',
-        type: 'Home'
-      ])
+                                   number: '571-897-7458',
+                                   type: 'Home'
+                                 ])
       serialized_person = PersonSerializer.new(person).as_json
       received_person = described_class.new.serialize(person)
       expect(received_person).to eq(serialized_person)

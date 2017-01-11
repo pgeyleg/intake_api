@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# ElasticsearchWrapper resolves ElasticSearch URL based on environment
 module ElasticsearchWrapper
   def self.client
     return @client if @client

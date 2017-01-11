@@ -18,9 +18,7 @@ describe PhoneNumberSerializer do
       expect(described_class.new(phone_number).as_json).to eq(
         id: phone_number.id,
         number: '917-901-8765',
-        type: 'Home',
-        created_at: '2016-12-03T22:08:38.204Z',
-        updated_at: '2016-12-03T22:08:38.204Z'
+        type: 'Home'
       )
     end
   end
