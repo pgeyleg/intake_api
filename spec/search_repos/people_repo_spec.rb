@@ -19,11 +19,16 @@ describe PeopleRepo do
                                street_address: '9273 Corona St',
                                state: 'NY',
                                city: 'Jackson Heights',
-                               zip: 11_372,
+                               zip: '11372',
                                type: 'Placement'
                              ])
-      serialized_person = PersonSerializer.new(person).as_json.except(:phone_numbers)
-      expect(described_class.new.serialize(person)).to eq(serialized_person)
+      person.phone_numbers.build([
+        number: '571-897-7458',
+        type: 'Home'
+      ])
+      serialized_person = PersonSerializer.new(person).as_json
+      received_person = described_class.new.serialize(person)
+      expect(received_person).to eq(serialized_person)
     end
   end
 end
