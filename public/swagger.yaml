@@ -109,6 +109,19 @@ definitions:
             - Thai
             - Turkish
             - Vietnamese
+      races:
+        type: array
+        items:
+          type: object
+          properties:
+            race:
+              type: string
+              enum:
+                - White
+                - Black or African American
+                - Asian
+                - American Indian or Alaskan Native
+                - Native Hawaiian or Other Pacific Islander
 
   Person:
     type: object
