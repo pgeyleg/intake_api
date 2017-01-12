@@ -3,7 +3,7 @@ require 'rails_helper'
 
 describe PersonIndexer do
   it 'indexes the person data in elastic search when person is found' do
-    person = double(:person, id: 1)
+    person = double(:person, id: '1')
     allow(Person).to receive(:find)
       .with(person.id)
       .and_return(person)
@@ -12,7 +12,7 @@ describe PersonIndexer do
   end
 
   it 'deletes the person data in elastic search when person is not found' do
-    person = double(:person, id: 1)
+    person = double(:person, id: '1')
     allow(Person).to receive(:find)
       .with(person.id)
       .and_raise(ActiveRecord::RecordNotFound)
