@@ -35,7 +35,7 @@ describe 'People API' do
         ],
         languages: %w(Hmong Japanese German),
         races: [
-          { race: 'White' },
+          { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
         ]
       }
@@ -82,7 +82,8 @@ describe 'People API' do
         languages: array_including('Hmong', 'Japanese', 'German'),
         races: array_including(
           a_hash_including(
-            race: 'White'
+            race: 'White',
+            race_detail: 'Armenian'
           ),
           a_hash_including(
             race: 'Asian'
@@ -157,7 +158,7 @@ describe 'People API' do
         }],
         languages: %w(Japanese English),
         races: [
-          { race: 'White' },
+          { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
         ]
       }
@@ -216,7 +217,8 @@ describe 'People API' do
         languages: array_including('Japanese', 'English'),
         races: array_including(
           a_hash_including(
-            race: 'White'
+            race: 'White',
+            race_detail: 'Armenian'
           ),
           a_hash_including(
             race: 'Asian'

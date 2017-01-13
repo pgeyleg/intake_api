@@ -14,7 +14,7 @@ describe PersonSerializer do
         date_of_birth: Date.parse('1955-01-31'),
         languages: %w(Turkish German),
         races: [
-          { race: 'White' },
+          { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
         ]
       )
@@ -44,7 +44,7 @@ describe PersonSerializer do
         ssn: '321021222',
         languages: %w(Turkish German),
         races: [
-          { 'race' => 'White' },
+          { 'race' => 'White', 'race_detail' => 'Armenian' },
           { 'race' => 'Asian' }
         ],
         phone_numbers: [],

@@ -25,6 +25,7 @@ class PeopleRepo
       indexes :languages
       indexes :races do
         indexes :race
+        indexes :race_detail
       end
       indexes :addresses do
         indexes :id

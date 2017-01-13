@@ -14,7 +14,7 @@ describe PeopleRepo do
         date_of_birth: Date.parse('1955-01-31'),
         languages: %w(Turkish German),
         races: [
-          { race: 'White' },
+          { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
         ]
       )

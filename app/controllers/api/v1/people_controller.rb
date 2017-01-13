@@ -57,7 +57,8 @@ module Api
           :ssn,
           languages: [],
           races: [
-            :race
+            :race,
+            :race_detail
           ]
         )
       end
