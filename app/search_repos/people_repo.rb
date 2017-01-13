@@ -32,13 +32,18 @@ class PeopleRepo
         indexes :zip
         indexes :type
       end
+      indexes :phone_numbers do
+        indexes :id
+        indexes :number
+        indexes :type
+      end
       indexes :created_at
       indexes :updated_at
     end
   end
 
   def serialize(document)
-    PersonSerializer.new(document).as_json.except(:phone_numbers)
+    PersonSerializer.new(document).as_json
   end
 
   def deserialize(document)
