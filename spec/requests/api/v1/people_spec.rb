@@ -34,7 +34,10 @@ describe 'People API' do
           { number: '916-101-1234', type: 'Cell' }
         ],
         languages: %w(Hmong Japanese German),
-        races: %w(White Asian)
+        races: [
+          { race: 'White', race_detail: 'Armenian' },
+          { race: 'Asian' }
+        ]
       }
     end
     let(:body) { JSON.parse(response.body).with_indifferent_access }
@@ -77,7 +80,15 @@ describe 'People API' do
           )
         ),
         languages: array_including('Hmong', 'Japanese', 'German'),
-        races: array_including('White', 'Asian')
+        races: array_including(
+          a_hash_including(
+            race: 'White',
+            race_detail: 'Armenian'
+          ),
+          a_hash_including(
+            race: 'Asian'
+          )
+        )
       )
     end
   end
@@ -146,7 +157,10 @@ describe 'People API' do
           type: 'Cell'
         }],
         languages: %w(Japanese English),
-        races: %w(White Asian)
+        races: [
+          { race: 'White', race_detail: 'Armenian' },
+          { race: 'Asian' }
+        ]
       }
     end
 
@@ -201,7 +215,15 @@ describe 'People API' do
           )
         ),
         languages: array_including('Japanese', 'English'),
-        races: array_including('White', 'Asian')
+        races: array_including(
+          a_hash_including(
+            race: 'White',
+            race_detail: 'Armenian'
+          ),
+          a_hash_including(
+            race: 'Asian'
+          )
+        )
       )
     end
 
