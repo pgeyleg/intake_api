@@ -37,7 +37,8 @@ describe 'People API' do
         races: [
           { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
-        ]
+        ],
+        ethnicity: { hispanic_latino_origin: 'Yes', ethnicity_detail: 'Mexican' }
       }
     end
     let(:body) { JSON.parse(response.body).with_indifferent_access }
@@ -88,6 +89,10 @@ describe 'People API' do
           a_hash_including(
             race: 'Asian'
           )
+        ),
+        ethnicity: a_hash_including(
+          hispanic_latino_origin: 'Yes',
+          ethnicity_detail: 'Mexican'
         )
       )
     end
@@ -160,7 +165,8 @@ describe 'People API' do
         races: [
           { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
-        ]
+        ],
+        ethnicity: { hispanic_latino_origin: 'Yes', ethnicity_detail: 'Mexican' }
       }
     end
 
@@ -223,6 +229,10 @@ describe 'People API' do
           a_hash_including(
             race: 'Asian'
           )
+        ),
+        ethnicity: a_hash_including(
+          hispanic_latino_origin: 'Yes',
+          ethnicity_detail: 'Mexican'
         )
       )
     end
