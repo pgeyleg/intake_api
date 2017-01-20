@@ -16,7 +16,8 @@ describe PersonSerializer do
         races: [
           { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
-        ]
+        ],
+        ethnicity: { hispanic_latino_origin: 'Yes', ethnicity_detail: 'Mexican' }
       )
       person.addresses.build([
                                street_address: '9273 Corona St',
@@ -47,6 +48,7 @@ describe PersonSerializer do
           { 'race' => 'White', 'race_detail' => 'Armenian' },
           { 'race' => 'Asian' }
         ],
+        ethnicity: { 'hispanic_latino_origin' => 'Yes', 'ethnicity_detail' => 'Mexican' },
         phone_numbers: [],
         addresses: [{
           id: person.addresses.map(&:id).first,

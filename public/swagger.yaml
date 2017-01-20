@@ -151,6 +151,24 @@ definitions:
                 - Other Pacific Islander
                 - Polynesian
                 - Samoan
+      ethnicity:
+        type: object
+        properties:
+          hispanic_latino_origin:
+            type: string
+            enum:
+              - Yes
+              - No
+              - Unknown
+              - Abandoned
+              - Declined to answer
+          ethnicity_detail:
+            type: string
+            enum:
+              - Hispanic
+              - Mexican
+              - Central American
+              - South American
 
   Person:
     type: object

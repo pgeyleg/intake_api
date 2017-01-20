@@ -27,6 +27,10 @@ class PeopleRepo
         indexes :race
         indexes :race_detail
       end
+      indexes :ethnicity do
+        indexes :hispanic_latino_origin
+        indexes :ethnicity_detail
+      end
       indexes :addresses do
         indexes :id
         indexes :street_address
