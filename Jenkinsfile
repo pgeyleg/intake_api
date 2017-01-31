@@ -2,7 +2,14 @@ node('Slave') {
     checkout scm
     def branch = env.BRANCH_NAME ?: 'master'
     def curStage = 'Start'
-    def emailList = EMAIL_NOTIFICATION_LIST ?: 'thomas.ramirez@osi.ca.gov'
+    def emailList = 'thomas.ramirez@osi.ca.gov'
+    def pipelineStatus = 'SUCCESS'
+
+    try {
+        emailList = EMAIL_NOTIFICATION_LIST
+    } catch (e) {
+        // Okay not to perform assignment if EMAIL_NOTIFICATION_LIST is not defined
+    }
 
     try {
         stage('Test') {
@@ -31,19 +38,18 @@ node('Slave') {
         }
     }
     catch (e) {
-         emailext (
-            to: emailList,
-            subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage ${curStage}",
-            body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}':</p>
-                <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>
-                <p>${e.toString()}</p>"""
-        )
-
-        slackSend (color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
-
+        pipelineStatus = 'FAILED'
         throw e
     }
     finally {
+        emailext (
+            to: emailList,
+            subject: "${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage ${curStage}",
+            body: """<p>${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}':</p>
+            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
+        )
+        slackSend (color: '#FF0000', message: "${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
+
         stage('Clean') {
             retry(1) {
                 sh 'make clean'
