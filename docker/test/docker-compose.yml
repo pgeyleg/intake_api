@@ -2,9 +2,13 @@ version: '2'
 
 services:
   elasticsearch:
-    image: 'elasticsearch:2.4'
+    build:
+      context: .
+      dockerfile: Dockerfile.elasticsearch
   postgres:
-    image: postgres:9.5.3
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
     ports:
       - "5432:5432"
     environment:
