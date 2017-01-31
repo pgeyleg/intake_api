@@ -28,6 +28,3 @@ services:
       CI_REPORTS: /reports
       GENERATE_TEST_REPORTS: 'yes'
       TEST_ELASTICSEARCH_URL: 'http://elasticsearch:9200'
-    links:
-      - postgres
-      - elasticsearch
