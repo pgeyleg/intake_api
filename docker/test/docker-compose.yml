@@ -3,12 +3,12 @@ version: '2'
 services:
   elasticsearch:
     build:
-      context: .
-      dockerfile: Dockerfile.elasticsearch
+      context: ../
+      dockerfile: common/Dockerfile.elasticsearch
   postgres:
     build:
-      context: .
-      dockerfile: Dockerfile.postgres
+      context: ../
+      dockerfile: common/Dockerfile.postgres
     ports:
       - "5432:5432"
     environment:
@@ -28,3 +28,11 @@ services:
       CI_REPORTS: /reports
       GENERATE_TEST_REPORTS: 'yes'
       TEST_ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+  builder:
+    build:
+      context: ../../
+      dockerfile: docker/test/Dockerfile
+    environment:
+      APP_VERSION: ${APP_VERSION}
+    command:
+      - build.sh

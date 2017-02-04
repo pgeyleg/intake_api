@@ -23,6 +23,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'timecop'
+  gem 'fpm'
 end
 
 group :development do

@@ -16,3 +16,6 @@ reports
 
 # Ignore Byebug command history file.
 .byebug_history
+
+# Ignore release artifacts
+release
