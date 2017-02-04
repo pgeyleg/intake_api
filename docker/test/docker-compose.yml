@@ -9,8 +9,6 @@ services:
     build:
       context: ../
       dockerfile: common/Dockerfile.postgres
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_DB: casebook_api_test
   rspec_test:
