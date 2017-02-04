@@ -1,0 +1,50 @@
+version: '2'
+
+volumes:
+  webroot:
+    driver: local
+  tmp:
+    driver: local
+
+services:
+  elasticsearch:
+    build:
+      context: ../
+      dockerfile: common/Dockerfile.elasticsearch
+  postgres:
+    build:
+      context: ../
+      dockerfile: common/Dockerfile.postgres
+    ports:
+      - "5432:5432"
+  app:
+    build:
+      context: ../../
+      dockerfile: docker/release/Dockerfile
+    volumes:
+      - webroot:/intake_api_prototype/public
+      - tmp:/tmp
+    environment:
+      RAILS_ENV: production
+      PG_HOST: postgres
+      PG_USER: postgres
+      ELASTICSEARCH_URL: 'http://elasticsearch:9200'
+    command:
+      - bundle
+      - exec
+      - puma
+      - -v
+      - -b
+      - unix:///tmp/app.sock
+  nginx:
+    image: 429614120872.dkr.ecr.us-west-2.amazonaws.com/cwds/nginx
+    ports:
+      - "${HTTP_PORT}"
+    environment:
+      HTTP_PORT: ${HTTP_PORT}
+      WEB_ROOT: /intake_api_prototype/public
+      UPSTREAM_URL: unix:///tmp/app.sock
+      HEALTHCHECK: curl -fs localhost:${HTTP_PORT}/api/v1/screenings
+    volumes:
+      - webroot:/intake_api_prototype/public
+      - tmp:/tmp
