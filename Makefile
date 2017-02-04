@@ -10,7 +10,12 @@ export HTTP_PORT ?= 80
 
 include Makefile.settings
 
-.PHONY: test build clean release
+.PHONY: all version test build clean release tag publish login logout
+
+all: clean login test build release tag publish clean logout
+
+version:
+	@ echo $(APP_VERSION)
 
 test:
 	${INFO} "Pulling latest images..."
@@ -72,3 +77,33 @@ clean:
 	${INFO} "Removing dangling images..."
 	@ $(call clean_dangling_images,$(PROJECT_NAME))
 	${INFO} "Clean complete"
+
+# 'make tag [<tag>...]' tags development and/or release image with default tags or specified tag(s)
+tag: TAGS ?= $(if $(ARGS),$(ARGS),latest $(APP_VERSION) $(COMMIT_ID) $(COMMIT_TAG))
+tag:
+	${INFO} "Tagging release image with tags $(TAGS)..."
+	@ $(foreach tag,$(TAGS),$(call tag_image,$(RELEASE_ARGS),app,$(DOCKER_REGISTRY)/$(ORG_NAME)/$(REPO_NAME):$(tag));)
+	${INFO} "Tagging complete"
+
+# Login to Docker registry
+login:
+	${INFO} "Logging in to Docker registry $$DOCKER_REGISTRY..."
+	@ $(if $(AWS_ROLE),$(call assume_role,$(AWS_ROLE)),)
+	@ $(DOCKER_LOGIN_EXPRESSION)
+	${INFO} "Logged in to Docker registry $$DOCKER_REGISTRY"
+
+# Logout of Docker registry
+logout:
+	${INFO} "Logging out of Docker registry $$DOCKER_REGISTRY..."
+	@ docker logout
+	${INFO} "Logged out of Docker registry $$DOCKER_REGISTRY"
+
+# Publishes image(s) tagged using make tag commands
+publish:
+	${INFO} "Publishing release image to $(DOCKER_REGISTRY)/$(ORG_NAME)/$(REPO_NAME)..."
+	@ $(call publish_image,$(RELEASE_ARGS),app,$(DOCKER_REGISTRY)/$(ORG_NAME)/$(REPO_NAME))
+	${INFO} "Publish complete"
+
+# IMPORTANT - ensures arguments are not interpreted as make targets
+%:
+	@:
