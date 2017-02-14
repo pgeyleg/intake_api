@@ -119,6 +119,9 @@ definitions:
                 - Asian
                 - American Indian or Alaskan Native
                 - Native Hawaiian or Other Pacific Islander
+                - Unknown
+                - Abandoned
+                - Declined to answer
             race_detail:
               type: string
               enum:
