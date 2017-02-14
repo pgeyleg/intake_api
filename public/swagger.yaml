@@ -35,8 +35,7 @@ definitions:
         format: date
       ssn:
         type: string
-
-  NewPerson:
+  BasePerson:
     type: object
     properties:
       first_name:
@@ -169,18 +168,17 @@ definitions:
               - Mexican
               - Central American
               - South American
-
   Person:
     type: object
     allOf:
-      - $ref: '#/definitions/NewPerson'
-    properties:
-      id:
-        type: string
-    required:
-      - id
-
-  Address:
+      - $ref: "#/definitions/BasePerson"
+      - type: object
+        properties:
+          id:
+            type: string
+        required:
+          - id
+  BaseAddress:
     type: object
     properties:
       street_address:
@@ -200,12 +198,16 @@ definitions:
           - Placement
           - Homeless
           - Other
-
-  PhoneNumber:
+  Address:
+    allOf:
+      - $ref: '#/definitions/BaseAddress'
+      - type: object
+        properties:
+          id:
+            type: string
+  BasePhoneNumber:
     type: object
     properties:
-      id:
-        type: string
       number:
         type: string
       type:
@@ -215,7 +217,13 @@ definitions:
           - Work
           - Home
           - Other
-
+  PhoneNumber:
+    allOf:
+      - $ref: "#/definitions/BasePhoneNumber"
+      - type: object
+        properties:
+          id:
+            type: string
   Screening:
     type: object
     properties:
@@ -246,33 +254,33 @@ definitions:
         format: date-time
       report_narrative:
         type: string
-
   PersonCreateRequest:
     allOf:
-      - $ref: '#/definitions/NewPerson'
-    properties:
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      phone_numbers:
-        type: array
-        items:
-          $ref: '#/definitions/PhoneNumber'
-
+      - $ref: '#/definitions/BasePerson'
+      - type: object
+        properties:
+          addresses:
+            type: array
+            items:
+              $ref: '#/definitions/BaseAddress'
+          phone_numbers:
+            type: array
+            items:
+              $ref: '#/definitions/BasePhoneNumber'
   PersonUpdateRequest:
+    type: object
     allOf:
-      - $ref: '#/definitions/Person'
-    properties:
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      phone_numbers:
-        type: array
-        items:
-          $ref: '#/definitions/PhoneNumber'
-
+      - $ref: '#/definitions/BasePerson'
+      - type: object
+        properties:
+          addresses:
+            type: array
+            items:
+              $ref: '#/definitions/Address'
+          phone_numbers:
+            type: array
+            items:
+              $ref: '#/definitions/PhoneNumber'
   PersonResponse:
     allOf:
       - $ref: '#/definitions/Person'
@@ -285,14 +293,12 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/PhoneNumber'
-
   ScreeningRequest:
     allOf:
       - $ref: '#/definitions/Screening'
     properties:
       address:
         $ref: '#/definitions/Address'
-
   ScreeningResponse:
     allOf:
       - $ref: '#/definitions/Screening'
