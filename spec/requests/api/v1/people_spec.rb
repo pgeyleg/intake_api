@@ -329,14 +329,4 @@ describe 'People API' do
       expect(person.addresses.count).to eq 2
     end
   end
-
-  describe 'DELETE /api/v1/people/:id' do
-    let(:person) { Person.create(first_name: 'Walter', last_name: 'White') }
-
-    it 'deletes the person' do
-      delete "/api/v1/people/#{person.id}"
-      expect(response.status).to eq(204)
-      expect(response.body).to be_empty
-    end
-  end
 end
