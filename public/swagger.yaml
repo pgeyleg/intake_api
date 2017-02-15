@@ -298,13 +298,30 @@ definitions:
   ScreeningResponse:
     allOf:
       - $ref: '#/definitions/Screening'
+      - type: object
+        properties:
+          address:
+            $ref: '#/definitions/Address'
+          participants:
+            type: array
+            items:
+              type: object
+              allOf:
+                - $ref: '#/definitions/Participant'
+                - type: object
+                  properties:
+                    addresses:
+                      type: array
+                      items:
+                        $ref: '#/definitions/Address'
+  ParticipantResponse:
+    allOf:
+      - $ref: '#/definitions/Participant'
     properties:
-      address:
-        $ref: '#/definitions/Address'
-      participants:
+      addresses:
         type: array
         items:
-          $ref: '#/definitions/Participant'
+          - $ref: '#/definitions/Address'
 
 parameters:
   AuthorizationHeader:
@@ -522,14 +539,14 @@ paths:
           description: Participant to create
           required: true
           schema:
-            $ref: '#/definitions/Participant'
+            $ref: '#/definitions/ParticipantResponse'
       responses:
         201:
           description: Successful creation
           schema:
             title: Participant
             allOf:
-            - $ref: '#/definitions/Participant'
+            - $ref: '#/definitions/ParticipantResponse'
             properties:
               id:
                 type: integer
