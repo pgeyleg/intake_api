@@ -19,9 +19,9 @@ version:
 
 test:
 	${INFO} "Pulling latest images..."
-	@ docker-compose $(TEST_ARGS) pull
+	@ $(if $(NOPULL_ARG),,docker-compose $(TEST_ARGS) pull)
 	${INFO} "Building images..."
-	@ docker-compose $(TEST_ARGS) build --pull
+	@ docker-compose $(TEST_ARGS) build $(NOPULL_FLAG)
 	${INFO} "Starting services..."
 	@ docker-compose $(TEST_ARGS) up -d postgres
 	@ $(call check_service_health,$(TEST_ARGS),postgres)
