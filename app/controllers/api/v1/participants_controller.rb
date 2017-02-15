@@ -4,11 +4,25 @@ module Api
   module V1
     class ParticipantsController < ApplicationController # :nodoc:
       def create
-        participant = Participant.create!(participant_params)
+        participant = Participant.new(participant_params)
+        participant.addresses.build(addresses_params[:addresses])
+        participant.save!
         render json: participant, status: :created
       end
 
       private
+
+      def addresses_params
+        params.permit(
+          addresses: [
+            :street_address,
+            :city,
+            :state,
+            :zip,
+            :type
+          ]
+        )
+      end
 
       def participant_params
         params.permit(

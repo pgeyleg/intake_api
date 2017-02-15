@@ -13,7 +13,23 @@ describe 'Participants API' do
         last_name: 'White',
         gender: 'female',
         date_of_birth: '1990-03-30',
-        ssn: '345-12-2345'
+        ssn: '345-12-2345',
+        addresses: [
+          {
+            street_address: '123 fake st',
+            city: 'Fake City',
+            state: 'NY',
+            zip: '10010',
+            type: 'Placement'
+          },
+          {
+            street_address: '711 capital Mall',
+            city: 'Sacramento',
+            state: 'CA',
+            zip: '95822',
+            type: 'Home'
+          }
+        ]
       }
 
       post '/api/v1/participants', params: participant_params
@@ -27,7 +43,23 @@ describe 'Participants API' do
         last_name: 'White',
         gender: 'female',
         date_of_birth: '1990-03-30',
-        ssn: '345-12-2345'
+        ssn: '345-12-2345',
+        addresses: array_including(
+          a_hash_including(
+            street_address: '123 fake st',
+            state: 'NY',
+            city: 'Fake City',
+            zip: '10010',
+            type: 'Placement'
+          ),
+          a_hash_including(
+            street_address: '711 capital Mall',
+            city: 'Sacramento',
+            state: 'CA',
+            zip: '95822',
+            type: 'Home'
+          )
+        )
       )
       expect(body['id']).to_not eq nil
     end
