@@ -23,6 +23,7 @@ services:
       - webroot:/intake_api_prototype/public
       - tmp:/tmp
     environment:
+      SECRET_KEY_BASE: bmcE7qdwemQrhf6NJR6OUlq05iqYH/fSXd1NT/aIdBI=
       RAILS_ENV: production
       PG_HOST: postgres
       PG_USER: postgres
