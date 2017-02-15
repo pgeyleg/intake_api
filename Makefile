@@ -54,8 +54,8 @@ release:
 	${INFO} "Release image build complete..."
 	${INFO} "Starting databases..."
 	@ docker-compose $(RELEASE_ARGS) up -d postgres
-	@ $(call check_service_health,$(RELEASE_ARGS),postgres)
 	@ docker-compose $(RELEASE_ARGS) up -d elasticsearch
+	@ $(call check_service_health,$(RELEASE_ARGS),postgres)
 	@ $(call check_service_health,$(RELEASE_ARGS),elasticsearch)
 	${INFO} "Running database migrations..."
 	@ docker-compose $(RELEASE_ARGS) run app bundle exec rake db:create
