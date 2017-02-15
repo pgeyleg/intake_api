@@ -13,7 +13,6 @@ consumes:
   - application/json
 produces:
   - application/json
-
 definitions:
   Participant:
     type: object
@@ -307,6 +306,14 @@ definitions:
         items:
           $ref: '#/definitions/Participant'
 
+parameters:
+  AuthorizationHeader:
+    name: Authorization
+    in: header
+    type: string
+    required: true
+    description: Authorization token
+
 paths:
   /people/{id}:
     get:
@@ -315,11 +322,7 @@ paths:
         - people
         - person
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: id
           in: path
           description: id of the person
@@ -337,11 +340,7 @@ paths:
         - people
         - person
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: id
           in: path
           description: id of the person
@@ -365,11 +364,7 @@ paths:
       summary: Creates a `Person` object.
       operationId: createPerson
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: body
           in: body
           description: Person to create
@@ -390,11 +385,7 @@ paths:
         - people
       operationId: peopleSearch
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: search_term
           in: query
           description: the search term to search
@@ -415,11 +406,7 @@ paths:
         - screenings
         - screening
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: id
           in: path
           description: id of the screening
@@ -437,11 +424,7 @@ paths:
         - screenings
         - screening
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: id
           in: path
           description: id of the screening
@@ -467,11 +450,7 @@ paths:
         - screenings
         - screening
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: body
           in: body
           description: Screening parameters
@@ -498,11 +477,7 @@ paths:
       tags:
         - screenings
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: response_times
           in: query
           description: the expected response_times of listed screenings
@@ -541,11 +516,7 @@ paths:
       summary: Creates a `Participant` object.
       operationId: createParticipant
       parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: Authorization token
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: body
           in: body
           description: Participant to create
@@ -563,4 +534,5 @@ paths:
               id:
                 type: integer
                 format: int64
+
 
