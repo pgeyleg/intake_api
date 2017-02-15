@@ -13,7 +13,6 @@ consumes:
   - application/json
 produces:
   - application/json
-
 definitions:
   Participant:
     type: object
@@ -307,6 +306,14 @@ definitions:
         items:
           $ref: '#/definitions/Participant'
 
+parameters:
+  AuthorizationHeader:
+    name: Authorization
+    in: header
+    type: string
+    required: true
+    description: Authorization token
+
 paths:
   /people/{id}:
     get:
@@ -315,12 +322,13 @@ paths:
         - people
         - person
       parameters:
-      - name: id
-        in: path
-        description: id of the person
-        required: true
-        type: number
-        format: int64
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: id
+          in: path
+          description: id of the person
+          required: true
+          type: number
+          format: int64
       responses:
         200:
           description: Successful response
@@ -332,18 +340,19 @@ paths:
         - people
         - person
       parameters:
-      - name: id
-        in: path
-        description: id of the person
-        required: true
-        type: number
-        format: int64
-      - name: body
-        in: body
-        description: Person to update
-        required: true
-        schema:
-          $ref: '#/definitions/PersonUpdateRequest'
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: id
+          in: path
+          description: id of the person
+          required: true
+          type: number
+          format: int64
+        - name: body
+          in: body
+          description: Person to update
+          required: true
+          schema:
+            $ref: '#/definitions/PersonUpdateRequest'
       responses:
         200:
           description: Successful response
@@ -355,12 +364,13 @@ paths:
       summary: Creates a `Person` object.
       operationId: createPerson
       parameters:
-      - name: body
-        in: body
-        description: Person to create
-        required: true
-        schema:
-          $ref: '#/definitions/PersonCreateRequest'
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: body
+          in: body
+          description: Person to create
+          required: true
+          schema:
+            $ref: '#/definitions/PersonCreateRequest'
       responses:
         201:
           description: Successful creation
@@ -375,11 +385,12 @@ paths:
         - people
       operationId: peopleSearch
       parameters:
-      - name: search_term
-        in: query
-        description: the search term to search
-        required: true
-        type: string
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: search_term
+          in: query
+          description: the search term to search
+          required: true
+          type: string
       responses:
         200:
           description: Successful operation
@@ -395,12 +406,13 @@ paths:
         - screenings
         - screening
       parameters:
-      - name: id
-        in: path
-        description: id of the screening
-        required: true
-        type: number
-        format: int64
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: id
+          in: path
+          description: id of the screening
+          required: true
+          type: number
+          format: int64
       responses:
         200:
           description: Successful response
@@ -412,6 +424,7 @@ paths:
         - screenings
         - screening
       parameters:
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: id
           in: path
           description: id of the screening
@@ -437,6 +450,7 @@ paths:
         - screenings
         - screening
       parameters:
+        - $ref: '#/parameters/AuthorizationHeader'
         - name: body
           in: body
           description: Screening parameters
@@ -463,26 +477,27 @@ paths:
       tags:
         - screenings
       parameters:
-      - name: response_times
-        in: query
-        description: the expected response_times of listed screenings
-        type: array
-        items:
-          type: string
-          enum:
-            - immediate
-            - within_twenty_four_hours
-            - more_than_twenty_four_hours
-      - name: screening_decisions
-        in: query
-        description: the expected screening_decision of listed screenings
-        type: array
-        items:
-          type: string
-          enum:
-            - evaluate_out
-            - accept_for_investigation
-            - referral_to_other_agency
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: response_times
+          in: query
+          description: the expected response_times of listed screenings
+          type: array
+          items:
+            type: string
+            enum:
+              - immediate
+              - within_twenty_four_hours
+              - more_than_twenty_four_hours
+        - name: screening_decisions
+          in: query
+          description: the expected screening_decision of listed screenings
+          type: array
+          items:
+            type: string
+            enum:
+              - evaluate_out
+              - accept_for_investigation
+              - referral_to_other_agency
       responses:
         200:
           description: Successful operation
@@ -501,12 +516,13 @@ paths:
       summary: Creates a `Participant` object.
       operationId: createParticipant
       parameters:
-      - name: body
-        in: body
-        description: Participant to create
-        required: true
-        schema:
-          $ref: '#/definitions/Participant'
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: body
+          in: body
+          description: Participant to create
+          required: true
+          schema:
+            $ref: '#/definitions/Participant'
       responses:
         201:
           description: Successful creation
@@ -518,3 +534,5 @@ paths:
               id:
                 type: integer
                 format: int64
+
+
