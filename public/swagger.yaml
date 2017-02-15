@@ -299,10 +299,12 @@ definitions:
         items:
           $ref: '#/definitions/PhoneNumber'
   ScreeningCreateRequest:
-    type: object  
-    properties:
-      reference:
-          type: string
+    allOf:
+      - $ref: '#/definitions/Screening'
+      - type: object
+        properties:
+          address:
+            $ref: '#/definitions/Address'
   ScreeningUpdateRequest:
     allOf:
       - $ref: '#/definitions/Screening'
