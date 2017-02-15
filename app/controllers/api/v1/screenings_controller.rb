@@ -56,8 +56,7 @@ module Api
           :reference,
           :response_time,
           :screening_decision,
-          :started_at,
-          participant_ids: []
+          :started_at
         )
       end
 
