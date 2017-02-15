@@ -14,7 +14,7 @@ consumes:
 produces:
   - application/json
 definitions:
-  Participant:
+  BaseParticipant:
     type: object
     properties:
       person_id:
@@ -168,6 +168,13 @@ definitions:
               - Mexican
               - Central American
               - South American
+  Participant:
+    allOf:
+      - $ref: "#/definitions/BaseParticipant"
+      - type: object
+        properties:
+          id:
+            type: string
   Person:
     type: object
     allOf:
@@ -227,8 +234,6 @@ definitions:
   Screening:
     type: object
     properties:
-      id:
-        type: string
       reference:
         type: string
       ended_at:
@@ -293,17 +298,25 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/PhoneNumber'
-  ScreeningRequest:
+  ScreeningCreateRequest:
+    type: object  
+    properties:
+      reference:
+          type: string
+  ScreeningUpdateRequest:
     allOf:
       - $ref: '#/definitions/Screening'
-    properties:
-      address:
-        $ref: '#/definitions/Address'
+      - type: object
+        properties:
+          address:
+            $ref: '#/definitions/Address'
   ScreeningResponse:
     allOf:
       - $ref: '#/definitions/Screening'
       - type: object
         properties:
+          id:
+            type: string
           address:
             $ref: '#/definitions/Address'
           participants:
@@ -456,7 +469,7 @@ paths:
           description: Screening parameters
           required: true
           schema:
-            $ref: '#/definitions/ScreeningRequest'
+            $ref: '#/definitions/ScreeningUpdateRequest'
       responses:
         200:
           description: Successful response
@@ -476,20 +489,13 @@ paths:
           description: Screening parameters
           required: true
           schema:
-            title: Screening Reference
-            properties:
-              reference:
-                type: string
+            $ref: '#/definitions/ScreeningCreateRequest'
       responses:
         200:
           description: Successful creation
           schema:
-            title: Screening
-            allOf:
-            - $ref: '#/definitions/ScreeningResponse'
-            properties:
-              id:
-                type: string
+            $ref: '#/definitions/ScreeningResponse'
+            
     get:
       summary: Gets Screenings by response times and or screening decision 
       description: Gets `Screenings` by response times and or screening decision.
@@ -523,11 +529,7 @@ paths:
           schema:
             type: array
             items:
-              allOf:
-              - $ref: '#/definitions/ScreeningResponse'
-              properties:
-                id:
-                  type: string
+              $ref: '#/definitions/ScreeningResponse'
 
   /participants:
     post:
@@ -541,7 +543,7 @@ paths:
           required: true
           schema:
             allOf:
-              - $ref: '#/definitions/Participant'
+              - $ref: '#/definitions/BaseParticipant'
               - type: object
                 properties:
                   addresses:
