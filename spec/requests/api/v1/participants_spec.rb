@@ -64,5 +64,25 @@ describe 'Participants API' do
       expect(body['id']).to_not eq nil
       expect(body['addresses'].first['id']).to_not eq nil
     end
+
+    it 'deletes a participant' do
+      person = Person.create!
+      screening = Screening.create!
+      participant= Participant.new ({
+        person_id: person.id,
+        screening_id: screening.id,
+        first_name: 'Walter',
+        last_name: 'White',
+        gender: 'female',
+        date_of_birth: '1990-03-30',
+        ssn: '345-12-2345'
+      })
+
+      participant.save
+
+      delete "/api/v1/participants/#{participant.id}"
+
+      expect(response.status).to eq(204)
+    end
   end
 end

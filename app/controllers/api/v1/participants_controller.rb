@@ -10,6 +10,11 @@ module Api
         render json: participant, status: :created
       end
 
+      def destroy
+        participant = Participant.find(params[:id])
+        participant.destroy
+      end
+
       private
 
       def addresses_params

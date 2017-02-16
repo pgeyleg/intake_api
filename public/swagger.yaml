@@ -463,6 +463,21 @@ paths:
             items:
               $ref: '#/definitions/ScreeningResponse'
 
+  /participants/{id}:
+    delete:
+      summary: Deletes a `Participant` Object
+      operationId: deleteParticipant
+      parameters:
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: id
+          in: path
+          description: Participant id to delete
+          required: true
+          type: string
+      responses:
+        204:
+          description: Successful deletion
+
   /participants:
     post:
       summary: Creates a `Participant` object.
@@ -480,3 +495,10 @@ paths:
           description: Successful creation
           schema:
             $ref: '#/definitions/ParticipantResponse'
+            title: Participant
+            allOf:
+            - $ref: '#/definitions/Participant'
+            properties:
+              id:
+                type: integer
+                format: int64
