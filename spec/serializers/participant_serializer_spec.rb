@@ -40,7 +40,7 @@ describe ParticipantSerializer do
         screening_id: screening.id,
         addresses: [
           {
-            id: participant.addresses.map(&:id).first,
+            id: participant.addresses.ids.first,
             street_address: '1840 Broad rd',
             state: 'CA',
             city: 'sacramento',

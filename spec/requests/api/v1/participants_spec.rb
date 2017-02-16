@@ -62,6 +62,7 @@ describe 'Participants API' do
         )
       )
       expect(body['id']).to_not eq nil
+      expect(body['addresses'].first['id']).to_not eq nil
     end
   end
 end

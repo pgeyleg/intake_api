@@ -317,11 +317,14 @@ definitions:
   ParticipantResponse:
     allOf:
       - $ref: '#/definitions/Participant'
-    properties:
-      addresses:
-        type: array
-        items:
-          - $ref: '#/definitions/Address'
+      - type: object
+        properties:
+          id:
+            type: string
+          addresses:
+            type: array
+            items:
+              - $ref: '#/definitions/Address'
 
 parameters:
   AuthorizationHeader:
@@ -539,17 +542,16 @@ paths:
           description: Participant to create
           required: true
           schema:
-            $ref: '#/definitions/ParticipantResponse'
+            allOf:
+              - $ref: '#/definitions/Participant'
+              - type: object
+                properties:
+                  addresses:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Address'
       responses:
         201:
           description: Successful creation
           schema:
-            title: Participant
-            allOf:
-            - $ref: '#/definitions/ParticipantResponse'
-            properties:
-              id:
-                type: integer
-                format: int64
-
-
+            $ref: '#/definitions/ParticipantResponse'
