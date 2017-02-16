@@ -8,4 +8,6 @@ class ParticipantSerializer < ActiveModel::Serializer # :nodoc:
     :date_of_birth,
     :person_id,
     :screening_id
+
+  has_many :addresses
 end

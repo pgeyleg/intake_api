@@ -8,12 +8,14 @@ module Api
         screening.build_screening_address
         screening.screening_address.build_address
         screening.save!
-        render json: ScreeningSerializer.new(screening), status: :created
+        render json: ScreeningSerializer.new(screening)
+          .as_json(include: ['participants.addresses', 'address']), status: :created
       end
 
       def show
         screening = Screening.find(screening_params[:id])
-        render json: ScreeningSerializer.new(screening), status: :ok
+        render json: ScreeningSerializer.new(screening)
+          .as_json(include: ['participants.addresses', 'address']), status: :ok
       end
 
       def update
@@ -21,12 +23,13 @@ module Api
         screening.assign_attributes(screening_params)
         screening.address.assign_attributes(address_params)
         screening.save!
-        render json: ScreeningSerializer.new(screening), status: :ok
+        render json: ScreeningSerializer.new(screening)
+          .as_json(include: ['participants.addresses', 'address']), status: :ok
       end
 
       def index
         screenings = ScreeningsRepo.search_es_by(response_times, screening_decisions).results
-        render json: screenings.as_json, status: :ok
+        render json: screenings.as_json(include: ['participants.addresses', 'address']), status: :ok
       end
 
       private

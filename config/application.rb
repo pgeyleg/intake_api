@@ -31,5 +31,7 @@ module CasebookApi
     config.autoload_paths << Rails.root.join('app/search_repos')
     config.api_only = true
     config.active_record.schema_format = :sql
+    config.logger = Logger.new(STDOUT)
+    config.log_level = :debug
   end
 end

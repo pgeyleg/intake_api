@@ -79,7 +79,16 @@ describe 'Screening API' do
         last_name: 'Simpson',
         gender: 'male',
         ssn: '123-23-1234',
-        date_of_birth: Date.today
+        date_of_birth: Date.today,
+        addresses: [
+          Address.new(
+            street_address: '1840 Broad rd',
+            state: 'CA',
+            city: 'sacramento',
+            zip: '78495',
+            type: 'Work'
+          )
+        ]
       )
 
       get "/api/v1/screenings/#{screening.id}"
@@ -115,7 +124,17 @@ describe 'Screening API' do
         last_name: 'Simpson',
         gender: 'male',
         ssn: '123-23-1234',
-        date_of_birth: Date.today.to_s
+        date_of_birth: Date.today.to_s,
+        addresses: [
+          {
+            id: participant.addresses.map(&:id).first,
+            street_address: '1840 Broad rd',
+            state: 'CA',
+            city: 'sacramento',
+            zip: '78495',
+            type: 'Work'
+          }
+        ]
       )
     end
   end

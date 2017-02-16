@@ -81,6 +81,38 @@ CREATE TABLE ar_internal_metadata (
 
 
 --
+-- Name: participant_addresses; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE participant_addresses (
+    id character varying NOT NULL,
+    participant_id character varying,
+    address_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: participant_addresses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE participant_addresses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: participant_addresses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE participant_addresses_id_seq OWNED BY participant_addresses.id;
+
+
+--
 -- Name: participants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -346,6 +378,13 @@ ALTER TABLE ONLY addresses ALTER COLUMN id SET DEFAULT nextval('addresses_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY participant_addresses ALTER COLUMN id SET DEFAULT nextval('participant_addresses_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY participants ALTER COLUMN id SET DEFAULT nextval('participants_id_seq'::regclass);
 
 
@@ -405,6 +444,14 @@ ALTER TABLE ONLY addresses
 
 ALTER TABLE ONLY ar_internal_metadata
     ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: participant_addresses_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY participant_addresses
+    ADD CONSTRAINT participant_addresses_pkey PRIMARY KEY (id);
 
 
 --
@@ -472,6 +519,20 @@ ALTER TABLE ONLY screenings
 
 
 --
+-- Name: index_participant_addresses_on_address_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_participant_addresses_on_address_id ON participant_addresses USING btree (address_id);
+
+
+--
+-- Name: index_participant_addresses_on_participant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_participant_addresses_on_participant_id ON participant_addresses USING btree (participant_id);
+
+
+--
 -- Name: index_participants_on_person_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -533,6 +594,6 @@ CREATE INDEX index_screening_addresses_on_screening_id ON screening_addresses US
 
 SET search_path TO "$user", public;
 
-INSERT INTO schema_migrations (version) VALUES ('20160727210432'), ('20160808213209'), ('20160810212922'), ('20160817211617'), ('20160824142845'), ('20160902152935'), ('20160902185908'), ('20160902193705'), ('20160906201325'), ('20160914192750'), ('20160922191047'), ('20161011184741'), ('20161011203949'), ('20161011205146'), ('20161013183454'), ('20161013222844'), ('20161101235059'), ('20161102190951'), ('20161121112618'), ('20161123203048'), ('20161206160824'), ('20161206193420'), ('20161208232502'), ('20161222163255'), ('20170109102207'), ('20170110150042'), ('20170111142114'), ('20170119163207');
+INSERT INTO schema_migrations (version) VALUES ('20160727210432'), ('20160808213209'), ('20160810212922'), ('20160817211617'), ('20160824142845'), ('20160902152935'), ('20160902185908'), ('20160902193705'), ('20160906201325'), ('20160914192750'), ('20160922191047'), ('20161011184741'), ('20161011203949'), ('20161011205146'), ('20161013183454'), ('20161013222844'), ('20161101235059'), ('20161102190951'), ('20161121112618'), ('20161123203048'), ('20161206160824'), ('20161206193420'), ('20161208232502'), ('20161222163255'), ('20170109102207'), ('20170110150042'), ('20170111142114'), ('20170119163207'), ('20170208174745');
 
 

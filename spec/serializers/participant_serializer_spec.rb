@@ -17,7 +17,16 @@ describe ParticipantSerializer do
       )
     end
 
-    before { participant.save! }
+    before do
+      participant.addresses.build(
+        street_address: '1840 Broad rd',
+        state: 'CA',
+        city: 'sacramento',
+        zip: '78495',
+        type: 'Work'
+      )
+      participant.save!
+    end
 
     it 'returns the attributes of a participant as a hash' do
       expect(described_class.new(participant).as_json).to eq(
@@ -28,7 +37,17 @@ describe ParticipantSerializer do
         ssn: '111223333',
         date_of_birth: Date.parse('1955-01-31'),
         person_id: person.id,
-        screening_id: screening.id
+        screening_id: screening.id,
+        addresses: [
+          {
+            id: participant.addresses.ids.first,
+            street_address: '1840 Broad rd',
+            state: 'CA',
+            city: 'sacramento',
+            zip: '78495',
+            type: 'Work'
+          }
+        ]
       )
     end
   end
