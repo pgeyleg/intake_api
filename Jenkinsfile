@@ -16,7 +16,6 @@ node('Slave') {
             curStage = 'Test'
             sh 'make test'
         }
-    
         stage('Publish') {
             curStage = 'Publish'
             withEnv(["DOCKER_USER=${DOCKER_USER}",
@@ -39,16 +38,28 @@ node('Slave') {
     }
     catch (e) {
         pipelineStatus = 'FAILED'
-        throw e
+        currentBuild.result = 'FAILURE'
     }
     finally {
-        emailext (
-            to: emailList,
-            subject: "${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage ${curStage}",
-            body: """<p>${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}':</p>
-            <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
-        )
-        slackSend (color: '#FF0000', message: "${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})")
+        try {
+            emailext (
+                to: emailList,
+                subject: "${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage ${curStage}",
+                body: """<p>${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}':</p>
+                <p>Check console output at &QUOT;<a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>&QUOT;</p>"""
+            )
+
+            slackAlertColor = '#11AB1B'
+            slackMessage = "${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' completed for branch '${branch}' (${env.BUILD_URL})"
+
+            if(pipelineStatus == 'FAILED') {
+              slackAlertColor = '#FF0000'
+              slackMessage = "${pipelineStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' in stage '${curStage}' for branch '${branch}' (${env.BUILD_URL})"
+            }
+
+            slackSend (color: slackAlertColor, message: slackMessage)
+        }
+        catch(e) { /* Nothing to do */ }
 
         stage('Clean') {
             retry(1) {
