@@ -185,9 +185,11 @@ definitions:
             type: string
         required:
           - id
-  BaseAddress:
+  Address:
     type: object
     properties:
+      id:
+        type: string
       street_address:
         type: string
       city:
@@ -205,16 +207,11 @@ definitions:
           - Placement
           - Homeless
           - Other
-  Address:
-    allOf:
-      - $ref: '#/definitions/BaseAddress'
-      - type: object
-        properties:
-          id:
-            type: string
-  BasePhoneNumber:
+  PhoneNumber:
     type: object
     properties:
+      id:
+        type: string
       number:
         type: string
       type:
@@ -224,13 +221,6 @@ definitions:
           - Work
           - Home
           - Other
-  PhoneNumber:
-    allOf:
-      - $ref: "#/definitions/BasePhoneNumber"
-      - type: object
-        properties:
-          id:
-            type: string
   Screening:
     type: object
     properties:
@@ -267,11 +257,11 @@ definitions:
           addresses:
             type: array
             items:
-              $ref: '#/definitions/BaseAddress'
+              $ref: '#/definitions/Address'
           phone_numbers:
             type: array
             items:
-              $ref: '#/definitions/BasePhoneNumber'
+              $ref: '#/definitions/PhoneNumber'
   PersonUpdateRequest:
     type: object
     allOf:

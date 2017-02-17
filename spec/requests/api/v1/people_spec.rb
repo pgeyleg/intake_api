@@ -15,6 +15,7 @@ describe 'People API' do
         ssn: '345-12-2345',
         addresses: [
           {
+            id: nil,
             street_address: '123 fake st',
             city: 'Fake City',
             state: 'NY',
@@ -22,6 +23,7 @@ describe 'People API' do
             type: 'Placement'
           },
           {
+            id: nil,
             street_address: '711 capital Mall',
             city: 'Sacramento',
             state: 'CA',
