@@ -97,6 +97,11 @@ describe 'People API' do
           ethnicity_detail: 'Mexican'
         )
       )
+      expect(body[:id]).to_not be_nil
+      expect(body[:addresses][0][:id]).to_not be_nil
+      expect(body[:addresses][1][:id]).to_not be_nil
+      expect(body[:phone_numbers][0][:id]).to_not be_nil
+      expect(body[:phone_numbers][1][:id]).to_not be_nil
     end
   end
 
@@ -237,6 +242,10 @@ describe 'People API' do
           ethnicity_detail: 'Mexican'
         )
       )
+      expect(body[:addresses][0][:id]).to_not be_nil
+      expect(body[:addresses][1][:id]).to_not be_nil
+      expect(body[:phone_numbers][0][:id]).to_not be_nil
+      expect(body[:phone_numbers][1][:id]).to_not be_nil
     end
 
     it 'creates a new phone number and updates an existing phone number' do
@@ -312,11 +321,12 @@ describe 'People API' do
         }]
       }
     end
+    let(:body) { JSON.parse(response.body).with_indifferent_access }
     before { person.save! }
 
     it 'create a person and delete an existing address' do
       put "/api/v1/people/#{person.id}", params: params
-      expect(JSON.parse(response.body).with_indifferent_access).to match a_hash_including(
+      expect(body).to match a_hash_including(
         addresses: array_including(
           a_hash_including(
             id: existing_address.id,
@@ -327,6 +337,10 @@ describe 'People API' do
           )
         )
       )
+      expect(body[:id]).to_not be_nil
+      expect(body[:addresses][0][:id]).to_not be_nil
+      expect(body[:addresses][1][:id]).to_not be_nil
+      expect(body[:phone_numbers][0][:id]).to_not be_nil
       expect(person.person_addresses.count).to eq 2
       expect(person.addresses.count).to eq 2
     end
