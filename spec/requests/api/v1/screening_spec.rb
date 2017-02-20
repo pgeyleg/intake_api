@@ -238,7 +238,6 @@ describe 'Screening API' do
     let!(:little_shop_of_horrors) do
       Screening.create!(
         reference: 'ABCDEF',
-        created_at: '2016-08-11T18:24:22.157Z',
         name: 'Little Shop Of Horrors',
         response_time: 'immediate',
         screening_decision: 'evaluate_out'
@@ -247,7 +246,6 @@ describe 'Screening API' do
     let!(:the_shining) do
       Screening.create!(
         reference: 'HIJKLM',
-        created_at: '2016-07-07T11:21:22.007Z',
         name: 'The Shining',
         response_time: 'within_twenty_four_hours',
         screening_decision: 'accept_for_investigation'
@@ -256,7 +254,6 @@ describe 'Screening API' do
     let!(:it_follows) do
       Screening.create!(
         reference: 'NOPQRS',
-        created_at: '2016-08-10T09:11:22.112Z',
         name: 'It Follows',
         response_time: 'more_than_twenty_four_hours',
         screening_decision: 'accept_for_investigation'

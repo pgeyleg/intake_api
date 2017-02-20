@@ -15,8 +15,6 @@ class ScreeningsRepo
   settings do
     mappings dynamic: 'strict' do
       indexes :id
-      indexes :created_at
-      indexes :updated_at
       indexes :ended_at
       indexes :incident_county
       indexes :incident_date
