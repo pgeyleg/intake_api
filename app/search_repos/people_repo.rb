@@ -44,8 +44,6 @@ class PeopleRepo
         indexes :number
         indexes :type
       end
-      indexes :created_at
-      indexes :updated_at
     end
   end
 

@@ -132,8 +132,6 @@ describe 'People API' do
     end
     let(:existing_address) { person.addresses.first }
     let(:existing_phone_number) { person.phone_numbers.first }
-    let(:created_at) { '2016-12-03T22:08:38.204Z' }
-    let(:updated_at) { '2016-12-03T22:12:38.204Z' }
     let(:body) { JSON.parse(response.body).with_indifferent_access }
     let(:params) do
       {
@@ -178,9 +176,9 @@ describe 'People API' do
     end
 
     before do
-      Timecop.freeze(created_at)
+      Timecop.freeze('2016-12-03T22:08:38.204Z')
       person.save!
-      Timecop.freeze(updated_at)
+      Timecop.freeze('2016-12-03T22:12:38.204Z')
     end
 
     it 'responds with a status code 200' do
