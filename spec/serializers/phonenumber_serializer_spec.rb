@@ -6,9 +6,7 @@ describe PhoneNumberSerializer do
     let(:phone_number) do
       PhoneNumber.new(
         number: '917-901-8765',
-        type: 'Home',
-        created_at: '2016-12-03T22:08:38.204Z',
-        updated_at: '2016-12-03T22:08:38.204Z'
+        type: 'Home'
       )
     end
 
