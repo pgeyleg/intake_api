@@ -14,7 +14,7 @@ consumes:
 produces:
   - application/json
 definitions:
-  BaseParticipant:
+  Participant:
     type: object
     properties:
       person_id:
@@ -180,9 +180,9 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/PhoneNumber'
-  Participant:
+  ParticipantResponse:
     allOf:
-      - $ref: "#/definitions/BaseParticipant"
+      - $ref: "#/definitions/Participant"
       - type: object
         properties:
           id:
@@ -273,7 +273,7 @@ definitions:
           participants:
             type: array
             items:
-              $ref: '#/definitions/Participant'
+              $ref: '#/definitions/ParticipantResponse'
 
 parameters:
   AuthorizationHeader:
@@ -474,9 +474,9 @@ paths:
           description: Participant to create
           required: true
           schema:
-            $ref: '#/definitions/BaseParticipant'
+            $ref: '#/definitions/Participant'
       responses:
         201:
           description: Successful creation
           schema:
-            $ref: '#/definitions/Participant'
+            $ref: '#/definitions/ParticipantResponse'
