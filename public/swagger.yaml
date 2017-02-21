@@ -39,7 +39,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Address'
-  BasePerson:
+  Person:
     type: object
     properties:
       first_name:
@@ -187,10 +187,10 @@ definitions:
         properties:
           id:
             type: string
-  Person:
+  PersonResponse:
     type: object
     allOf:
-      - $ref: "#/definitions/BasePerson"
+      - $ref: "#/definitions/Person"
       - type: object
         properties:
           id:
@@ -301,7 +301,7 @@ paths:
         200:
           description: Successful response
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/PersonResponse'
     put:
       description: Updates a `Person` object.
       tags:
@@ -319,12 +319,12 @@ paths:
           description: Person to update
           required: true
           schema:
-            $ref: '#/definitions/BasePerson'
+            $ref: '#/definitions/Person'
       responses:
         200:
           description: Successful response
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/PersonResponse'
 
   /people:
     post:
@@ -337,12 +337,12 @@ paths:
           description: Person to create
           required: true
           schema:
-            $ref: '#/definitions/BasePerson'
+            $ref: '#/definitions/Person'
       responses:
         201:
           description: Successful creation
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/PersonResponse'
 
   /people_search:
     get:
@@ -364,7 +364,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Person'
+              $ref: '#/definitions/PersonResponse'
 
   /screenings/{id}:
     get:
