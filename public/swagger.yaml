@@ -18,11 +18,9 @@ definitions:
     type: object
     properties:
       person_id:
-        type: integer
-        format: int64
+        type: string
       screening_id:
-        type: integer
-        format: int64
+        type: string
       first_name:
         type: string
       last_name:
@@ -37,8 +35,11 @@ definitions:
         format: date
       ssn:
         type: string
-
-  NewPerson:
+      addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+  Person:
     type: object
     properties:
       first_name:
@@ -121,6 +122,9 @@ definitions:
                 - Asian
                 - American Indian or Alaskan Native
                 - Native Hawaiian or Other Pacific Islander
+                - Unknown
+                - Abandoned
+                - Declined to answer
             race_detail:
               type: string
               enum:
@@ -168,21 +172,36 @@ definitions:
               - Mexican
               - Central American
               - South American
-
-  Person:
+      addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
+  ParticipantResponse:
+    allOf:
+      - $ref: "#/definitions/Participant"
+      - type: object
+        properties:
+          id:
+            type: string
+  PersonResponse:
     type: object
     allOf:
-      - $ref: '#/definitions/NewPerson'
-    properties:
-      id:
-        type: integer
-        format: int64
-    required:
-      - id
-
+      - $ref: "#/definitions/Person"
+      - type: object
+        properties:
+          id:
+            type: string
+        required:
+          - id
   Address:
     type: object
     properties:
+      id:
+        type: string
       street_address:
         type: string
       city:
@@ -200,13 +219,11 @@ definitions:
           - Placement
           - Homeless
           - Other
-
   PhoneNumber:
     type: object
     properties:
       id:
-        type: integer
-        format: int64
+        type: string
       number:
         type: string
       type:
@@ -216,13 +233,9 @@ definitions:
           - Work
           - Home
           - Other
-
   Screening:
     type: object
     properties:
-      id:
-        type: integer
-        format: int64
       reference:
         type: string
       ended_at:
@@ -248,83 +261,19 @@ definitions:
         format: date-time
       report_narrative:
         type: string
-
-  PersonCreateRequest:
-    allOf:
-      - $ref: '#/definitions/NewPerson'
-    properties:
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      phone_numbers:
-        type: array
-        items:
-          $ref: '#/definitions/PhoneNumber'
-
-  PersonUpdateRequest:
-    allOf:
-      - $ref: '#/definitions/Person'
-    properties:
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      phone_numbers:
-        type: array
-        items:
-          $ref: '#/definitions/PhoneNumber'
-
-  PersonResponse:
-    allOf:
-      - $ref: '#/definitions/Person'
-    properties:
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      phone_numbers:
-        type: array
-        items:
-          $ref: '#/definitions/PhoneNumber'
-
-  ScreeningRequest:
-    allOf:
-      - $ref: '#/definitions/Screening'
-    properties:
       address:
         $ref: '#/definitions/Address'
-
   ScreeningResponse:
     allOf:
       - $ref: '#/definitions/Screening'
       - type: object
         properties:
-          address:
-            $ref: '#/definitions/Address'
+          id:
+            type: string
           participants:
             type: array
             items:
-              type: object
-              allOf:
-                - $ref: '#/definitions/Participant'
-                - type: object
-                  properties:
-                    addresses:
-                      type: array
-                      items:
-                        $ref: '#/definitions/Address'
-  ParticipantResponse:
-    allOf:
-      - $ref: '#/definitions/Participant'
-      - type: object
-        properties:
-          id:
-            type: string
-          addresses:
-            type: array
-            items:
-              - $ref: '#/definitions/Address'
+              $ref: '#/definitions/ParticipantResponse'
 
 parameters:
   AuthorizationHeader:
@@ -347,8 +296,7 @@ paths:
           in: path
           description: id of the person
           required: true
-          type: number
-          format: int64
+          type: string
       responses:
         200:
           description: Successful response
@@ -365,14 +313,13 @@ paths:
           in: path
           description: id of the person
           required: true
-          type: number
-          format: int64
+          type: string
         - name: body
           in: body
           description: Person to update
           required: true
           schema:
-            $ref: '#/definitions/PersonUpdateRequest'
+            $ref: '#/definitions/Person'
       responses:
         200:
           description: Successful response
@@ -390,7 +337,7 @@ paths:
           description: Person to create
           required: true
           schema:
-            $ref: '#/definitions/PersonCreateRequest'
+            $ref: '#/definitions/Person'
       responses:
         201:
           description: Successful creation
@@ -431,8 +378,7 @@ paths:
           in: path
           description: id of the screening
           required: true
-          type: number
-          format: int64
+          type: string
       responses:
         200:
           description: Successful response
@@ -449,14 +395,13 @@ paths:
           in: path
           description: id of the screening
           required: true
-          type: number
-          format: int64
+          type: string
         - name: body
           in: body
           description: Screening parameters
           required: true
           schema:
-            $ref: '#/definitions/ScreeningRequest'
+            $ref: '#/definitions/Screening'
       responses:
         200:
           description: Successful response
@@ -476,21 +421,13 @@ paths:
           description: Screening parameters
           required: true
           schema:
-            title: Screening Reference
-            properties:
-              reference:
-                type: string
+            $ref: '#/definitions/Screening'
       responses:
         200:
           description: Successful creation
           schema:
-            title: Screening
-            allOf:
-            - $ref: '#/definitions/ScreeningResponse'
-            properties:
-              id:
-                type: integer
-                format: int64
+            $ref: '#/definitions/ScreeningResponse'
+            
     get:
       summary: Gets Screenings by response times and or screening decision 
       description: Gets `Screenings` by response times and or screening decision.
@@ -524,12 +461,7 @@ paths:
           schema:
             type: array
             items:
-              allOf:
-              - $ref: '#/definitions/ScreeningResponse'
-              properties:
-                id:
-                  type: integer
-                  format: int64
+              $ref: '#/definitions/ScreeningResponse'
 
   /participants:
     post:
@@ -542,14 +474,7 @@ paths:
           description: Participant to create
           required: true
           schema:
-            allOf:
-              - $ref: '#/definitions/Participant'
-              - type: object
-                properties:
-                  addresses:
-                    type: array
-                    items:
-                      $ref: '#/definitions/Address'
+            $ref: '#/definitions/Participant'
       responses:
         201:
           description: Successful creation

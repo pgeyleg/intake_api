@@ -25,12 +25,6 @@ module Api
         render json: person, status: :ok
       end
 
-      def destroy
-        person = Person.find(params[:id])
-        person.destroy
-        head :no_content
-      end
-
       private
 
       def addresses_params

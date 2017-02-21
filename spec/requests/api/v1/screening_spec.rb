@@ -42,6 +42,7 @@ describe 'Screening API' do
         )
       )
       expect(body['id']).to_not eq nil
+      expect(body[:address][:id]).to_not eq nil
     end
   end
 
@@ -163,13 +164,13 @@ describe 'Screening API' do
           zip: '10010'
         )
       )
-      Participant.create!(
+      bart = Participant.create!(
         person: Person.create!,
         screening: screening,
         first_name: 'Bart',
         last_name: 'Simpson'
       )
-      Participant.create!(
+      lisa = Participant.create!(
         person: Person.create!,
         screening: screening,
         first_name: 'Lisa',
@@ -219,10 +220,12 @@ describe 'Screening API' do
         ),
         participants: [
           include(
+            id: bart.id,
             first_name: 'Bart',
             last_name: 'Simpson'
           ),
           include(
+            id: lisa.id,
             first_name: 'Lisa',
             last_name: 'Simpson'
           )
@@ -232,41 +235,50 @@ describe 'Screening API' do
   end
 
   describe 'GET /api/v1/screenings', elasticsearch: true do
-    before do
-      Screening.create([{
-                         reference: 'ABCDEF',
-                         created_at: '2016-08-11T18:24:22.157Z',
-                         name: 'Little Shop Of Horrors',
-                         response_time: 'immediate',
-                         screening_decision: 'evaluate_out'
-                       }, {
-                         reference: 'HIJKLM',
-                         created_at: '2016-07-07T11:21:22.007Z',
-                         name: 'The Shining',
-                         response_time: 'within_twenty_four_hours',
-                         screening_decision: 'accept_for_investigation'
-                       }, {
-                         reference: 'NOPQRS',
-                         created_at: '2016-08-10T09:11:22.112Z',
-                         name: 'It Follows',
-                         response_time: 'more_than_twenty_four_hours',
-                         screening_decision: 'accept_for_investigation'
-                       }])
-      ScreeningsRepo.client.indices.flush
+    let!(:little_shop_of_horrors) do
+      Screening.create!(
+        reference: 'ABCDEF',
+        created_at: '2016-08-11T18:24:22.157Z',
+        name: 'Little Shop Of Horrors',
+        response_time: 'immediate',
+        screening_decision: 'evaluate_out'
+      )
     end
+    let!(:the_shining) do
+      Screening.create!(
+        reference: 'HIJKLM',
+        created_at: '2016-07-07T11:21:22.007Z',
+        name: 'The Shining',
+        response_time: 'within_twenty_four_hours',
+        screening_decision: 'accept_for_investigation'
+      )
+    end
+    let!(:it_follows) do
+      Screening.create!(
+        reference: 'NOPQRS',
+        created_at: '2016-08-10T09:11:22.112Z',
+        name: 'It Follows',
+        response_time: 'more_than_twenty_four_hours',
+        screening_decision: 'accept_for_investigation'
+      )
+    end
+    before { ScreeningsRepo.client.indices.flush }
 
     context 'when params contains response times' do
       it 'returns screenings matching response times' do
         get '/api/v1/screenings', params: { response_times: %w(immediate within_twenty_four_hours) }
         assert_response :success
         body = JSON.parse(response.body)
+
         expect(body).to match array_including(
           a_hash_including(
+            'id' => little_shop_of_horrors.id,
             'name' => 'Little Shop Of Horrors',
             'response_time' => 'immediate',
             'screening_decision' => 'evaluate_out'
           ),
           a_hash_including(
+            'id' => the_shining.id,
             'name' => 'The Shining',
             'response_time' => 'within_twenty_four_hours',
             'screening_decision' => 'accept_for_investigation'
@@ -274,6 +286,7 @@ describe 'Screening API' do
         )
         expect(body).to_not match array_including(
           a_hash_including(
+            'id' => it_follows.id,
             'name' => 'It Follows',
             'response_time' => 'more_than_twenty_four_hours',
             'screening_decision' => 'accept_for_investigation'

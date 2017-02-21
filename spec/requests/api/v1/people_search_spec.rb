@@ -12,27 +12,32 @@ describe 'People Search API', elasticsearch: true do
     end
 
     context 'when search term matches on a persons name' do
-      before do
-        Person.create [{
-          first_name: 'Deborah',
-          middle_name: 'Ann',
-          last_name: 'Harry'
-        }, {
-          first_name: 'David',
-          middle_name: 'Jon',
-          last_name: 'Gilmour'
-        }]
-        PeopleRepo.client.indices.flush
+      let!(:deborah) do
+        Person.create!(first_name: 'Deborah', middle_name: 'Ann', last_name: 'Harry')
       end
+      let!(:david) do
+        Person.create!(first_name: 'David', middle_name: 'Jon', last_name: 'Gilmour')
+      end
+      before { PeopleRepo.client.indices.flush }
+      let(:body) { JSON.parse(response.body) }
 
       it 'searches against people index' do
         get '/api/v1/people_search?search_term=Deborah'
         assert_response :success
-        expect(JSON.parse(response.body)).to match array_including(
+        expect(body).to match array_including(
           a_hash_including(
+            'id' => deborah.id,
             'first_name' => 'Deborah',
             'middle_name' => 'Ann',
             'last_name' => 'Harry'
+          )
+        )
+        expect(body).to_not match array_including(
+          a_hash_including(
+            'id' => david.id,
+            'first_name' => 'David',
+            'middle_name' => 'Jon',
+            'last_name' => 'Gilmour'
           )
         )
       end
