@@ -35,6 +35,10 @@ definitions:
         format: date
       ssn:
         type: string
+      addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
   BasePerson:
     type: object
     properties:
@@ -314,26 +318,7 @@ definitions:
           participants:
             type: array
             items:
-              type: object
-              allOf:
-                - $ref: '#/definitions/Participant'
-                - type: object
-                  properties:
-                    addresses:
-                      type: array
-                      items:
-                        $ref: '#/definitions/Address'
-  ParticipantResponse:
-    allOf:
-      - $ref: '#/definitions/Participant'
-      - type: object
-        properties:
-          id:
-            type: string
-          addresses:
-            type: array
-            items:
-              - $ref: '#/definitions/Address'
+              $ref: '#/definitions/Participant'
 
 parameters:
   AuthorizationHeader:
@@ -534,16 +519,9 @@ paths:
           description: Participant to create
           required: true
           schema:
-            allOf:
-              - $ref: '#/definitions/BaseParticipant'
-              - type: object
-                properties:
-                  addresses:
-                    type: array
-                    items:
-                      $ref: '#/definitions/Address'
+            $ref: '#/definitions/BaseParticipant'
       responses:
         201:
           description: Successful creation
           schema:
-            $ref: '#/definitions/ParticipantResponse'
+            $ref: '#/definitions/Participant'
