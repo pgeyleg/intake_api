@@ -172,6 +172,14 @@ definitions:
               - Mexican
               - Central American
               - South American
+      addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
   Participant:
     allOf:
       - $ref: "#/definitions/BaseParticipant"
@@ -253,45 +261,6 @@ definitions:
         format: date-time
       report_narrative:
         type: string
-  PersonCreateRequest:
-    allOf:
-      - $ref: '#/definitions/BasePerson'
-      - type: object
-        properties:
-          addresses:
-            type: array
-            items:
-              $ref: '#/definitions/Address'
-          phone_numbers:
-            type: array
-            items:
-              $ref: '#/definitions/PhoneNumber'
-  PersonUpdateRequest:
-    type: object
-    allOf:
-      - $ref: '#/definitions/BasePerson'
-      - type: object
-        properties:
-          addresses:
-            type: array
-            items:
-              $ref: '#/definitions/Address'
-          phone_numbers:
-            type: array
-            items:
-              $ref: '#/definitions/PhoneNumber'
-  PersonResponse:
-    allOf:
-      - $ref: '#/definitions/Person'
-    properties:
-      addresses:
-        type: array
-        items:
-          $ref: '#/definitions/Address'
-      phone_numbers:
-        type: array
-        items:
-          $ref: '#/definitions/PhoneNumber'
   ScreeningCreateRequest:
     allOf:
       - $ref: '#/definitions/Screening'
@@ -346,7 +315,7 @@ paths:
         200:
           description: Successful response
           schema:
-            $ref: '#/definitions/PersonResponse'
+            $ref: '#/definitions/Person'
     put:
       description: Updates a `Person` object.
       tags:
@@ -364,12 +333,12 @@ paths:
           description: Person to update
           required: true
           schema:
-            $ref: '#/definitions/PersonUpdateRequest'
+            $ref: '#/definitions/BasePerson'
       responses:
         200:
           description: Successful response
           schema:
-            $ref: '#/definitions/PersonResponse'
+            $ref: '#/definitions/Person'
 
   /people:
     post:
@@ -382,12 +351,12 @@ paths:
           description: Person to create
           required: true
           schema:
-            $ref: '#/definitions/PersonCreateRequest'
+            $ref: '#/definitions/BasePerson'
       responses:
         201:
           description: Successful creation
           schema:
-            $ref: '#/definitions/PersonResponse'
+            $ref: '#/definitions/Person'
 
   /people_search:
     get:
@@ -409,7 +378,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/PersonResponse'
+              $ref: '#/definitions/Person'
 
   /screenings/{id}:
     get:
