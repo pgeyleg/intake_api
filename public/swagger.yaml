@@ -261,20 +261,8 @@ definitions:
         format: date-time
       report_narrative:
         type: string
-  ScreeningCreateRequest:
-    allOf:
-      - $ref: '#/definitions/Screening'
-      - type: object
-        properties:
-          address:
-            $ref: '#/definitions/Address'
-  ScreeningUpdateRequest:
-    allOf:
-      - $ref: '#/definitions/Screening'
-      - type: object
-        properties:
-          address:
-            $ref: '#/definitions/Address'
+      address:
+        $ref: '#/definitions/Address'
   ScreeningResponse:
     allOf:
       - $ref: '#/definitions/Screening'
@@ -282,8 +270,6 @@ definitions:
         properties:
           id:
             type: string
-          address:
-            $ref: '#/definitions/Address'
           participants:
             type: array
             items:
@@ -415,7 +401,7 @@ paths:
           description: Screening parameters
           required: true
           schema:
-            $ref: '#/definitions/ScreeningUpdateRequest'
+            $ref: '#/definitions/Screening'
       responses:
         200:
           description: Successful response
@@ -435,7 +421,7 @@ paths:
           description: Screening parameters
           required: true
           schema:
-            $ref: '#/definitions/ScreeningCreateRequest'
+            $ref: '#/definitions/Screening'
       responses:
         200:
           description: Successful creation
