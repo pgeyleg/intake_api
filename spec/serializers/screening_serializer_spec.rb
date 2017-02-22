@@ -60,7 +60,6 @@ describe ScreeningSerializer do
         .as_json(include: ['participants.addresses', 'address'])).to eq(
           id: screening.id,
           communication_method: 'email',
-          created_at: screening.created_at,
           ended_at: ended_at,
           incident_county: 'alpine',
           incident_date: incident_date,
