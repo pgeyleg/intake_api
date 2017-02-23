@@ -68,7 +68,7 @@ describe 'Participants API' do
     it 'deletes a participant' do
       person = Person.create!
       screening = Screening.create!
-      participant= Participant.new ({
+      participant = Participant.new ({
         person_id: person.id,
         screening_id: screening.id,
         first_name: 'Walter',
@@ -79,10 +79,10 @@ describe 'Participants API' do
       })
 
       participant.save
-
       delete "/api/v1/participants/#{participant.id}"
-
       expect(response.status).to eq(204)
+      expect(Participant.where(person_id: person.id).size).to eq 0
+
     end
   end
 end
