@@ -9,7 +9,7 @@ gem 'faraday_middleware'
 gem 'newrelic_rpm'
 gem 'paper_trail'
 gem 'pg', '~> 0.18'
-gem 'puma', '~> 3.0'
+gem 'puma', '3.6.2'
 gem 'rack-cors'
 gem 'rails', '~> 5.1'
 
