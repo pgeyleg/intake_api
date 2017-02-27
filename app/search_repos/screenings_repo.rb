@@ -26,6 +26,7 @@ class ScreeningsRepo
       indexes :response_time
       indexes :screening_decision
       indexes :started_at
+      indexes :assignee
     end
   end
 
