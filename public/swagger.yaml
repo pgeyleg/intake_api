@@ -495,9 +495,3 @@ paths:
           description: Successful creation
           schema:
             $ref: '#/definitions/ParticipantResponse'
-            title: Participant
-            allOf:
-            - $ref: '#/definitions/Participant'
-            properties:
-              id:
-                type: string
