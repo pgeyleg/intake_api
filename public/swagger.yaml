@@ -263,6 +263,8 @@ definitions:
         type: string
       address:
         $ref: '#/definitions/Address'
+      assignee:
+        type: string
   ScreeningResponse:
     allOf:
       - $ref: '#/definitions/Screening'
@@ -495,9 +497,3 @@ paths:
           description: Successful creation
           schema:
             $ref: '#/definitions/ParticipantResponse'
-            title: Participant
-            allOf:
-            - $ref: '#/definitions/Participant'
-            properties:
-              id:
-                type: string

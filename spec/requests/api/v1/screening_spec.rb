@@ -15,7 +15,8 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test'
+        report_narrative: 'Narrative 123 test',
+        assignee: 'Michael Geary'
       }
 
       post '/api/v1/screenings', params: screening_params
@@ -39,7 +40,8 @@ describe 'Screening API' do
           city: nil,
           state: nil,
           zip: nil
-        )
+        ),
+        assignee: 'Michael Geary'
       )
       expect(body['id']).to_not eq nil
       expect(body[:address][:id]).to_not eq nil
@@ -59,7 +61,8 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test'
+        report_narrative: 'Narrative 123 test',
+        assignee: 'Michael Bastow'
       )
 
       address = ScreeningAddress.create!(
@@ -108,7 +111,8 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test'
+        report_narrative: 'Narrative 123 test',
+        assignee: 'Michael Bastow'
       )
       expect(body[:address]).to include(
         id: address.address_id,
@@ -153,7 +157,8 @@ describe 'Screening API' do
         response_time: 'within_twenty_four_hours',
         screening_decision: 'referral_to_other_agency',
         started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test'
+        report_narrative: 'Narrative 123 test',
+        assignee: 'Natina Grace'
       )
       address = ScreeningAddress.create!(
         screening: screening,
@@ -183,6 +188,7 @@ describe 'Screening API' do
         response_time: 'immediate',
         screening_decision: 'evaluate_out',
         report_narrative: 'Updated Narrative',
+        assignee: 'Natina Sheridan',
         address: {
           id: address.address_id,
           street_address: '123 Real St',
@@ -211,6 +217,7 @@ describe 'Screening API' do
         screening_decision: 'evaluate_out',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Updated Narrative',
+        assignee: 'Natina Sheridan',
         address: include(
           id: address.address_id,
           street_address: '123 Real St',

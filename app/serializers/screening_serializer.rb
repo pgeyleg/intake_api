@@ -11,7 +11,8 @@ class ScreeningSerializer < ActiveModel::Serializer # :nodoc:
     :reference,
     :response_time,
     :screening_decision,
-    :started_at
+    :started_at,
+    :assignee
 
   has_one :address
   has_many :participants, serializer: ParticipantSerializer

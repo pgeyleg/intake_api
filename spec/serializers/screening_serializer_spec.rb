@@ -39,7 +39,8 @@ describe ScreeningSerializer do
         response_time: 'within_twenty_four_hours',
         screening_decision: 'accept_for_investigation',
         started_at: started_at,
-        participants: [participant]
+        participants: [participant],
+        assignee: 'Michael Geary'
       )
     end
 
@@ -97,7 +98,8 @@ describe ScreeningSerializer do
                 type: 'Work'
               }
             ]
-          }]
+          }],
+          assignee: 'Michael Geary'
         )
     end
   end
