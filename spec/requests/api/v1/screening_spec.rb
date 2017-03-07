@@ -5,6 +5,7 @@ describe 'Screening API' do
   describe 'POST /api/v1/screenings' do
     it 'creates a screening' do
       screening_params = {
+        decision_rationale: 'I have great reasons',
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
@@ -25,6 +26,7 @@ describe 'Screening API' do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
         incident_county: 'sacramento',
+        decision_rationale: 'I have great reasons',
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
@@ -52,6 +54,7 @@ describe 'Screening API' do
     it 'returns a JSON representation of the screening' do
       screening = Screening.create!(
         ended_at: '2016-08-03T01:00:00.000Z',
+        decision_rationale: 'I have great reasons',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
@@ -103,6 +106,7 @@ describe 'Screening API' do
         id: screening.id,
         incident_county: 'sacramento',
         ended_at: '2016-08-03T01:00:00.000Z',
+        decision_rationale: 'I have great reasons',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         communication_method: 'Phone',
@@ -149,6 +153,7 @@ describe 'Screening API' do
       screening = Screening.create!(
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
+        decision_rationale: 'I have great reasons',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         communication_method: 'Phone',
@@ -184,6 +189,7 @@ describe 'Screening API' do
 
       updated_params = {
         name: 'Some new name',
+        decision_rationale: 'This is my new, more comprehensive reasoning',
         incident_county: 'mendocino',
         response_time: 'immediate',
         screening_decision: 'evaluate_out',
@@ -207,6 +213,7 @@ describe 'Screening API' do
       expect(body).to include(
         id: screening.id,
         ended_at: '2016-08-03T01:00:00.000Z',
+        decision_rationale: 'This is my new, more comprehensive reasoning',
         incident_county: 'mendocino',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',

@@ -45,6 +45,7 @@ module Api
 
       def screening_params
         params.permit(
+          :decision_rationale,
           :ended_at,
           :id,
           :incident_county,

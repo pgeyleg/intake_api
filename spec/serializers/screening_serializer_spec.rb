@@ -29,6 +29,7 @@ describe ScreeningSerializer do
     let(:screening) do
       Screening.new(
         communication_method: 'email',
+        decision_rationale: 'I have my reasons',
         ended_at: ended_at,
         incident_county: 'alpine',
         incident_date: incident_date,
@@ -61,6 +62,7 @@ describe ScreeningSerializer do
         .as_json(include: ['participants.addresses', 'address'])).to eq(
           id: screening.id,
           communication_method: 'email',
+          decision_rationale: 'I have my reasons',
           ended_at: ended_at,
           incident_county: 'alpine',
           incident_date: incident_date,
