@@ -238,6 +238,8 @@ definitions:
     properties:
       reference:
         type: string
+      decision_rationale:
+        type: string
       ended_at:
         type: string
         format: date-time
