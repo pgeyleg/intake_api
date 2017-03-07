@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class ScreeningSerializer < ActiveModel::Serializer # :nodoc:
   attributes :id,
+    :decision_rationale,
     :ended_at,
     :incident_county,
     :incident_date,
