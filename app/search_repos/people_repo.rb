@@ -10,14 +10,37 @@ class PeopleRepo
     client ::ElasticsearchWrapper.client
   end
 
+  def self.index_settings
+    {
+      index: {
+        analysis: {
+          filter: {
+            autocomplete_filter: {
+              type: "edge_ngram",
+              min_gram: 1,
+              max_gram: 20
+            }
+          },
+          analyzer: {
+            autocomplete: {
+              type: "custom",
+              tokenizer: "standard",
+              filter: [ "lowercase", "autocomplete_filter" ]
+            }
+          }
+        }
+      }
+    }
+  end
+
   klass Person
 
-  settings do
+  settings index_settings do
     mappings dynamic: 'strict' do
       indexes :id
-      indexes :first_name
+      indexes :first_name, type: 'string', analyzer: :autocomplete, search_analyzer: :standard
       indexes :middle_name
-      indexes :last_name
+      indexes :last_name, type: 'string', analyzer: :autocomplete, search_analyzer: :standard
       indexes :name_suffix
       indexes :gender
       indexes :ssn
