@@ -4,10 +4,20 @@ require 'rails_helper'
 describe 'People Search API', elasticsearch: true do
   describe 'GET /api/v1/people_search' do
     let!(:deborah) do
-      Person.create!(first_name: 'Deborah', middle_name: 'Ann', last_name: 'Harry')
+      Person.create!(
+        first_name: 'Deborah',
+        middle_name: 'Ann',
+        last_name: 'Harry',
+        ssn: '663298776'
+      )
     end
     let!(:david) do
-      Person.create!(first_name: 'David', middle_name: 'Jon', last_name: 'Gilmour')
+      Person.create!(
+        first_name: 'David',
+        middle_name: 'Jon',
+        last_name: 'Gilmour',
+        ssn: '567689210'
+      )
     end
     before { PeopleRepo.client.indices.flush }
     let(:body) { JSON.parse(response.body) }
@@ -123,7 +133,42 @@ describe 'People Search API', elasticsearch: true do
           'id' => david.id,
           'first_name' => 'David',
           'middle_name' => 'Jon',
-          'last_name' => 'Gilmour'
+        )
+      )
+    end
+
+    it 'returns records matching on SSN without hypens' do
+      get '/api/v1/people_search?search_term=663298776'
+      assert_response :success
+      expect(body).to match array_including(
+        a_hash_including(
+          'id' => deborah.id,
+          'first_name' => 'Deborah',
+          'ssn' => '663298776'
+        )
+      )
+      expect(body).to_not match array_including(
+        a_hash_including(
+          'id' => david.id,
+          'first_name' => 'David'
+        )
+      )
+    end
+
+    it 'returns records matching on SSN with hypens' do
+      get '/api/v1/people_search?search_term=663-29-8776'
+      assert_response :success
+      expect(body).to match array_including(
+        a_hash_including(
+          'id' => deborah.id,
+          'first_name' => 'Deborah',
+          'ssn' => '663298776'
+        )
+      )
+      expect(body).to_not match array_including(
+        a_hash_including(
+          'id' => david.id,
+          'first_name' => 'David'
         )
       )
     end
