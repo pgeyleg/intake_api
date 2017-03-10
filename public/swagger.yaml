@@ -39,6 +39,8 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Address'
+    required:
+      - screening_id
   Person:
     type: object
     properties:
