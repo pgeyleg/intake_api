@@ -16,16 +16,16 @@ class PeopleRepo
         analysis: {
           filter: {
             autocomplete_filter: {
-              type: "edge_ngram",
+              type: 'edge_ngram',
               min_gram: 1,
               max_gram: 20
             }
           },
           analyzer: {
             autocomplete: {
-              type: "custom",
-              tokenizer: "standard",
-              filter: [ "lowercase", "autocomplete_filter" ]
+              type: 'custom',
+              tokenizer: 'standard',
+              filter: %w(lowercase autocomplete_filter)
             }
           }
         }
@@ -44,7 +44,7 @@ class PeopleRepo
       indexes :name_suffix
       indexes :gender
       indexes :ssn
-      indexes :date_of_birth
+      indexes :date_of_birth, type: :string, index: 'not_analyzed'
       indexes :languages
       indexes :races do
         indexes :race

@@ -8,7 +8,8 @@ describe 'People Search API', elasticsearch: true do
         first_name: 'Deborah',
         middle_name: 'Ann',
         last_name: 'Harry',
-        ssn: '663298776'
+        ssn: '663298776',
+        date_of_birth: '1982-11-23'
       )
     end
     let!(:david) do
@@ -16,7 +17,8 @@ describe 'People Search API', elasticsearch: true do
         first_name: 'David',
         middle_name: 'Jon',
         last_name: 'Gilmour',
-        ssn: '567689210'
+        ssn: '567689210',
+        date_of_birth: '1986-01-02'
       )
     end
     before { PeopleRepo.client.indices.flush }
@@ -132,7 +134,7 @@ describe 'People Search API', elasticsearch: true do
         a_hash_including(
           'id' => david.id,
           'first_name' => 'David',
-          'middle_name' => 'Jon',
+          'middle_name' => 'Jon'
         )
       )
     end
@@ -169,6 +171,82 @@ describe 'People Search API', elasticsearch: true do
         a_hash_including(
           'id' => david.id,
           'first_name' => 'David'
+        )
+      )
+    end
+
+    it 'responds records matching on date of birth in the form YYYY-MM-DD' do
+      get '/api/v1/people_search?search_term=1982-11-23'
+      assert_response :success
+      expect(body).to match array_including(
+        a_hash_including(
+          'id' => deborah.id,
+          'first_name' => 'Deborah',
+          'date_of_birth' => deborah.date_of_birth.to_s(:db)
+        )
+      )
+      expect(body).to_not match array_including(
+        a_hash_including(
+          'id' => david.id,
+          'first_name' => 'David',
+          'date_of_birth' => david.date_of_birth.to_s(:db)
+        )
+      )
+    end
+
+    it 'responds records matching on date of birth in the form MM/DD/YYYY' do
+      get '/api/v1/people_search?search_term=11/23/1982'
+      assert_response :success
+      expect(body).to match array_including(
+        a_hash_including(
+          'id' => deborah.id,
+          'first_name' => 'Deborah',
+          'date_of_birth' => deborah.date_of_birth.to_s(:db)
+        )
+      )
+      expect(body).to_not match array_including(
+        a_hash_including(
+          'id' => david.id,
+          'first_name' => 'David',
+          'date_of_birth' => david.date_of_birth.to_s(:db)
+        )
+      )
+    end
+
+    it 'responds records matching on date of birth in the form M/D/YYYY' do
+      get '/api/v1/people_search?search_term=1/2/1986'
+      assert_response :success
+      expect(body).to match array_including(
+        a_hash_including(
+          'id' => david.id,
+          'first_name' => 'David',
+          'date_of_birth' => david.date_of_birth.to_s(:db)
+        )
+      )
+      expect(body).to_not match array_including(
+        a_hash_including(
+          'id' => deborah.id,
+          'first_name' => 'Deborah',
+          'date_of_birth' => deborah.date_of_birth.to_s(:db)
+        )
+      )
+    end
+
+    it 'responds records matching on date of birth in the form YYYY' do
+      get '/api/v1/people_search?search_term=1982'
+      assert_response :success
+      expect(body).to match array_including(
+        a_hash_including(
+          'id' => deborah.id,
+          'first_name' => 'Deborah',
+          'date_of_birth' => deborah.date_of_birth.to_s(:db)
+        )
+      )
+      expect(body).to_not match array_including(
+        a_hash_including(
+          'id' => david.id,
+          'first_name' => 'David',
+          'date_of_birth' => david.date_of_birth.to_s(:db)
         )
       )
     end

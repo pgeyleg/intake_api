@@ -8,24 +8,62 @@ module Api
         people = PeopleRepo.search(
           query: {
             bool: {
-              should: [
-                { match: { first_name: params[:search_term] } },
-                { match: { last_name: params[:search_term] } },
-                { match: { ssn: ssn } }
-              ]
+              should: should_query
             }
           }
         )
         render json: people.map(&:to_h)
       end
 
+      private
+
       def ssn
         ssn = params[:search_term].match(/\d{3}-?\d{2}-?\d{4}/)
-        if ssn
-          ssn[0].gsub('-','')
+        if ssn.nil?
+          nil
         else
-          params[:search_term]
+          ssn[0].delete('-')
         end
+      end
+
+      def date_of_birth_year
+        dates = params[:search_term].match(/\d{4}/)
+        if dates.nil?
+          nil
+        else
+          dates[0]
+        end
+      end
+
+      def date_of_birth_year_month_day
+        dates = params[:search_term].match(/\d{4}-\d{2}-\d{2}/)
+        if dates.nil?
+          nil
+        else
+          dates[0]
+        end
+      end
+
+      def date_of_birth_month_day_year
+        dates = params[:search_term].match(%r{\d{1,2}\/\d{1,2}\/\d{4}})
+        if dates.nil?
+          nil
+        else
+          Date.strptime(dates[0], '%m/%d/%Y').to_s(:db)
+        end
+      end
+
+      def should_query
+        should = [
+          { match: { first_name: params[:search_term] } },
+          { match: { last_name: params[:search_term] } }
+        ]
+        should << { match: { ssn: ssn } } if ssn
+        [date_of_birth_year_month_day, date_of_birth_month_day_year].compact.each do |date|
+          should << { match: { date_of_birth: date } }
+        end
+        should << { prefix: { date_of_birth: date_of_birth_year } } if date_of_birth_year
+        should
       end
     end
   end
