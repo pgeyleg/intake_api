@@ -53,17 +53,21 @@ module Api
         end
       end
 
+      def date_of_birth_query
+        query = [date_of_birth_year_month_day, date_of_birth_month_day_year].compact.map do |date|
+          { match: { date_of_birth: date } }
+        end
+        query << { prefix: { date_of_birth: date_of_birth_year } } if date_of_birth_year
+        query
+      end
+
       def should_query
-        should = [
+        should_query = [
           { match: { first_name: params[:search_term] } },
           { match: { last_name: params[:search_term] } }
-        ]
-        should << { match: { ssn: ssn } } if ssn
-        [date_of_birth_year_month_day, date_of_birth_month_day_year].compact.each do |date|
-          should << { match: { date_of_birth: date } }
-        end
-        should << { prefix: { date_of_birth: date_of_birth_year } } if date_of_birth_year
-        should
+        ] | date_of_birth_query
+        should_query << { match: { ssn: ssn } } if ssn
+        should_query
       end
     end
   end
