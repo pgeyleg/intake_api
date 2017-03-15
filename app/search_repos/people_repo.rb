@@ -35,8 +35,8 @@ class PeopleRepo
 
   klass Person
 
-  settings index_settings do
-    mappings dynamic: 'strict' do
+  settings index_settings do # rubocop:disable BlockLength
+    mappings dynamic: 'strict' do # rubocop:disable BlockLength
       indexes :id
       indexes :first_name, type: 'string', analyzer: :autocomplete, search_analyzer: :standard
       indexes :middle_name

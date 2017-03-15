@@ -1,4 +1,4 @@
-FROM ruby:2.3.1
+FROM ruby:2.4.0
 LABEL application=intake_api_prototype
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresql-client
 
