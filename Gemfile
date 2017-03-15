@@ -6,7 +6,7 @@ gem 'elasticsearch-persistence'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rack-cors'
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 5.0.1'
 
 group :development, :test do
   gem 'pry'
