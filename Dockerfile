@@ -1,4 +1,4 @@
-FROM ruby:2.3.1
+FROM ruby:2.4.0
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev software-properties-common
 
 RUN add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ `lsb_release -cs`-pgdg main"

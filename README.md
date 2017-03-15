@@ -1,6 +1,6 @@
 # README
 
-* Ruby version: check the .ruby-version file(currently at 2.3.1)
+* Ruby version: check the .ruby-version file
 * Postgres Version: 9.5.3
 
 For Local Workstation setup, please follow these steps:
