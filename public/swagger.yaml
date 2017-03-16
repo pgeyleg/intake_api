@@ -481,6 +481,29 @@ paths:
       responses:
         204:
           description: Successful deletion
+    put:
+      description: Updates a `Participant` object
+      tags:
+        - participant
+        - participants
+      parameters:
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: id
+          in: path
+          description: id of the participant
+          required: true
+          type: string
+        - name: body
+          in: body
+          description: participant parameters
+          required: true
+          schema:
+            $ref: '#/definitions/Participant'
+      responses:
+        200:
+          description: Successful response
+          schema:
+            $ref: '#/definitions/ParticipantResponse'
 
   /participants:
     post:
