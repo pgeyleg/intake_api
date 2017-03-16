@@ -2,37 +2,37 @@
 require 'rails_helper'
 
 describe 'Participants API' do
-  describe 'POST /api/v1/participants' do
-    let(:person) { Person.create! }
-    let(:screening) { Screening.create! }
-    let(:participant_params) do
-      {
-        person_id: person.id,
-        screening_id: screening.id,
-        first_name: 'Walter',
-        last_name: 'White',
-        gender: 'female',
-        date_of_birth: '1990-03-30',
-        ssn: '345-12-2345',
-        addresses: [
-          {
-            street_address: '123 fake st',
-            city: 'Fake City',
-            state: 'NY',
-            zip: '10010',
-            type: 'Placement'
-          },
-          {
-            street_address: '711 capital Mall',
-            city: 'Sacramento',
-            state: 'CA',
-            zip: '95822',
-            type: 'Home'
-          }
-        ]
-      }
-    end
-    context 'a participant does not already exist' do
+  let(:person) { Person.create! }
+  let(:screening) { Screening.create! }
+  let(:participant_params) do
+    {
+      person_id: person.id,
+      screening_id: screening.id,
+      first_name: 'Walter',
+      last_name: 'White',
+      gender: 'female',
+      date_of_birth: '1990-03-30',
+      ssn: '345-12-2345',
+      addresses: [
+        {
+          street_address: '123 fake st',
+          city: 'Fake City',
+          state: 'NY',
+          zip: '10010',
+          type: 'Placement'
+        },
+        {
+          street_address: '711 capital Mall',
+          city: 'Sacramento',
+          state: 'CA',
+          zip: '95822',
+          type: 'Home'
+        }
+      ]
+    }
+  end
+  context 'a participant does not already exist' do
+    describe 'POST /api/v1/participants' do
       it 'creates a participant' do
         post '/api/v1/participants', params: participant_params
 
@@ -67,33 +67,35 @@ describe 'Participants API' do
         expect(body['addresses'].first['id']).to_not eq nil
       end
     end
+  end
 
-    context 'participant already exists' do
-      let(:address1) do
-        Address.new(
-          street_address: '123 fake st',
-          city: 'Fake City',
-          state: 'NY',
-          zip: '10010',
-          type: 'Placement'
-        )
-      end
+  context 'participant already exists' do
+    let(:address1) do
+      Address.new(
+        street_address: '123 fake st',
+        city: 'Fake City',
+        state: 'NY',
+        zip: '10010',
+        type: 'Placement'
+      )
+    end
 
-      let(:participant) do
-        Participant.create!(
-          person_id: person.id,
-          screening_id: screening.id,
-          first_name: 'Walter',
-          last_name: 'White',
-          gender: 'female',
-          date_of_birth: '1990-03-30',
-          ssn: '345-12-2345',
-          addresses: [address1]
-        )
-      end
-      let(:updated_first_name) { 'Marge' }
-      let(:updated_last_name) { 'Simpson' }
+    let(:participant) do
+      Participant.create!(
+        person_id: person.id,
+        screening_id: screening.id,
+        first_name: 'Walter',
+        last_name: 'White',
+        gender: 'female',
+        date_of_birth: '1990-03-30',
+        ssn: '345-12-2345',
+        addresses: [address1]
+      )
+    end
+    let(:updated_first_name) { 'Marge' }
+    let(:updated_last_name) { 'Simpson' }
 
+    describe 'PUT /api/v1/participants/:id' do
       it 'updates a participant' do
         updated_params = {
           first_name: updated_first_name,
@@ -127,7 +129,9 @@ describe 'Participants API' do
           )
         )
       end
+    end
 
+    describe 'DELETE /api/v1/participants/:id' do
       it 'deletes a participant' do
         delete "/api/v1/participants/#{participant.id}"
         expect(response.status).to eq(204)

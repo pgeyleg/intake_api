@@ -53,13 +53,13 @@ module Api
       end
 
       def update_addresses(participant)
-        addresses_params[:addresses].map do |address_attr|
+        (addresses_params[:addresses] || []).map do |address_attr|
           participant_address = participant
                                 .participant_addresses
                                 .find_or_initialize_by(address_id: address_attr[:id])
 
           if participant_address.persisted?
-            person_address.address.update!(address_attr)
+            participant_address.address.update!(address_attr)
           else
             participant_address.build_address(address_attr)
           end
