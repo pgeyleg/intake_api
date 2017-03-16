@@ -10,12 +10,6 @@ module Api
         render json: participant, status: :created
       end
 
-      def show
-        participant = Participant.find(participant_params[:id])
-        render json: ParticipantSerializer.new(participant)
-          .as_json(include: %w(addresses address)), status: :ok
-      end
-
       def update
         participant = Participant.find(participant_params[:id])
         participant.update_attributes!(participant_params)

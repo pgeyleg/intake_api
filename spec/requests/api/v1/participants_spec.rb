@@ -94,16 +94,6 @@ describe 'Participants API' do
       let(:updated_first_name) { 'Marge' }
       let(:updated_last_name) { 'Simpson' }
 
-      it 'gets a paticipant' do
-        get "/api/v1/participants/#{participant.id}"
-        expect(response.status).to eq(200)
-
-        body = JSON.parse(response.body).with_indifferent_access
-        expect(body).to include(
-          first_name: 'Walter'
-        )
-      end
-
       it 'updates a participant' do
         updated_params = {
           first_name: updated_first_name,
