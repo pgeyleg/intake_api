@@ -10,6 +10,15 @@ module Api
         render json: participant, status: :created
       end
 
+      def update
+        participant = Participant.find(participant_params[:id])
+        participant.update_attributes!(participant_params)
+        participant.participant_addresses = update_addresses(participant)
+        participant.save!
+        render json: ParticipantSerializer.new(participant)
+          .as_json(include: %w(addresses address)), status: :ok
+      end
+
       def destroy
         participant = Participant.find(params[:id])
         participant.destroy
@@ -20,6 +29,7 @@ module Api
       def addresses_params
         params.permit(
           addresses: [
+            :id,
             :street_address,
             :city,
             :state,
@@ -31,6 +41,7 @@ module Api
 
       def participant_params
         params.permit(
+          :id,
           :date_of_birth,
           :first_name,
           :gender,
@@ -39,6 +50,22 @@ module Api
           :screening_id,
           :ssn
         )
+      end
+
+      def update_addresses(participant)
+        (addresses_params[:addresses] || []).map do |address_attr|
+          participant_address = participant
+                                .participant_addresses
+                                .find_or_initialize_by(address_id: address_attr[:id])
+
+          if participant_address.persisted?
+            participant_address.address.update!(address_attr)
+          else
+            participant_address.build_address(address_attr)
+          end
+
+          participant_address
+        end
       end
     end
   end
