@@ -48,7 +48,8 @@ module Api
           :last_name,
           :person_id,
           :screening_id,
-          :ssn
+          :ssn,
+          roles: []
         )
       end
 

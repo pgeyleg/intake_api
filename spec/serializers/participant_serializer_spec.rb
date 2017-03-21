@@ -13,7 +13,8 @@ describe ParticipantSerializer do
         ssn: '111223333',
         date_of_birth: Date.parse('1955-01-31'),
         person: person,
-        screening: screening
+        screening: screening,
+        roles: ['Victim']
       )
     end
 
@@ -47,7 +48,8 @@ describe ParticipantSerializer do
             zip: '78495',
             type: 'Work'
           }
-        ]
+        ],
+        roles: ['Victim']
       )
     end
   end

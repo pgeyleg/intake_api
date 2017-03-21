@@ -23,7 +23,8 @@ describe ScreeningSerializer do
             zip: '78495',
             type: 'Work'
           )
-        ]
+        ],
+        roles: %w(Perpetrator Victim)
       )
     end
     let(:screening) do
@@ -99,7 +100,8 @@ describe ScreeningSerializer do
                 zip: '78495',
                 type: 'Work'
               }
-            ]
+            ],
+            roles: %w(Perpetrator Victim)
           }],
           assignee: 'Michael Geary'
         )
