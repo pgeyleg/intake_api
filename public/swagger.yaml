@@ -39,6 +39,16 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Address'
+      roles:
+        type: array
+        items:
+          type: string
+          enum:
+            - Anonymous Reporter
+            - Mandated Reporter
+            - Non-mandated Reporter
+            - Perpetrator
+            - Victim
     required:
       - screening_id
   Person:
