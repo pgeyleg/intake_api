@@ -89,11 +89,13 @@ describe 'Participants API' do
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
-        addresses: [address1]
+        addresses: [address1],
+        roles: ['Victim', 'Anonymous Reporter']
       )
     end
     let(:updated_first_name) { 'Marge' }
     let(:updated_last_name) { 'Simpson' }
+    let(:updated_roles) { ['Victim'] }
 
     describe 'PUT /api/v1/participants/:id' do
       it 'updates a participant' do
@@ -108,7 +110,8 @@ describe 'Participants API' do
               zip: '10010',
               type: 'Placement'
             }
-          ]
+          ],
+          roles: updated_roles
         }
 
         put "/api/v1/participants/#{participant.id}", params: updated_params
@@ -126,7 +129,8 @@ describe 'Participants API' do
               zip: '10010',
               type: 'Placement'
             )
-          )
+          ),
+          roles: updated_roles
         )
       end
     end
