@@ -629,14 +629,6 @@ CREATE INDEX index_screening_addresses_on_screening_id ON screening_addresses US
 
 
 --
--- Name: fk_rails_ae53cbda2a; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY cross_reports
-    ADD CONSTRAINT fk_rails_ae53cbda2a FOREIGN KEY (screening_id) REFERENCES screenings(id);
-
-
---
 -- PostgreSQL database dump complete
 --
 

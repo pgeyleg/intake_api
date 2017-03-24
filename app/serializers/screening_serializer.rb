@@ -17,4 +17,5 @@ class ScreeningSerializer < ActiveModel::Serializer # :nodoc:
 
   has_one :address
   has_many :participants, serializer: ParticipantSerializer
+  has_many :cross_reports, serializer: CrossReportSerializer
 end

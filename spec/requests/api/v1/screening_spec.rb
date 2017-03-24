@@ -17,7 +17,10 @@ describe 'Screening API' do
         screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Geary'
+        assignee: 'Michael Geary',
+        cross_reports_attributes: [
+          { agency_type: 'District attorney', agency_name: 'Sacramento Attorney' }
+        ]
       }
 
       post '/api/v1/screenings', params: screening_params
@@ -43,6 +46,11 @@ describe 'Screening API' do
           state: nil,
           zip: nil
         ),
+        cross_reports: [
+          { agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ],
         assignee: 'Michael Geary'
       )
       expect(body['id']).to_not eq nil

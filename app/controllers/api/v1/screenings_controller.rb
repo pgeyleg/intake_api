@@ -9,7 +9,7 @@ module Api
         screening.screening_address.build_address
         screening.save!
         render json: ScreeningSerializer.new(screening)
-          .as_json(include: ['participants.addresses', 'address']), status: :created
+          .as_json(include: ['participants.addresses', 'address', 'cross_reports']), status: :created
       end
 
       def show
@@ -61,7 +61,11 @@ module Api
           :screening_decision_detail,
           :screening_decision,
           :started_at,
-          :assignee
+          :assignee,
+          cross_reports_attributes: [
+            :agency_type,
+            :agency_name
+          ]
         )
       end
 
