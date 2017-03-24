@@ -250,7 +250,7 @@ definitions:
     properties:
       reference:
         type: string
-      decision_rationale:
+      additional_information:
         type: string
       ended_at:
         type: string
@@ -266,7 +266,7 @@ definitions:
         type: string
       name:
         type: string
-      response_time:
+      screening_decision_detail:
         type: string
       screening_decision:
         type: string
@@ -451,16 +451,17 @@ paths:
         - screenings
       parameters:
         - $ref: '#/parameters/AuthorizationHeader'
-        - name: response_times
+        - name: screening_decision_details
           in: query
-          description: the expected response_times of listed screenings
+          description: the expected screening_decision_details of listed screenings
           type: array
           items:
             type: string
             enum:
               - immediate
-              - within_twenty_four_hours
-              - more_than_twenty_four_hours
+              - 3_days
+              - 5_days
+              - 10_days
         - name: screening_decisions
           in: query
           description: the expected screening_decision of listed screenings
@@ -468,9 +469,10 @@ paths:
           items:
             type: string
             enum:
-              - evaluate_out
-              - accept_for_investigation
-              - referral_to_other_agency
+              - differential_response
+              - information_to_child_welfare_services
+              - promote_to_referral
+              - screen_out
       responses:
         200:
           description: Successful operation

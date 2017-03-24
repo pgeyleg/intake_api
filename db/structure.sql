@@ -324,12 +324,12 @@ CREATE TABLE screenings (
     communication_method character varying,
     name character varying,
     started_at timestamp without time zone,
-    response_time character varying,
     screening_decision character varying,
     incident_county character varying,
     report_narrative text,
     assignee character varying,
-    decision_rationale character varying
+    additional_information character varying,
+    screening_decision_detail character varying
 );
 
 
@@ -613,5 +613,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170227192427'),
 ('20170306182111'),
 ('20170320225918');
-
+('20170324184740'),
+('20170324185122');
 

@@ -5,7 +5,7 @@ describe 'Screening API' do
   describe 'POST /api/v1/screenings' do
     it 'creates a screening' do
       screening_params = {
-        decision_rationale: 'I have great reasons',
+        additional_information: 'I have great reasons',
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
@@ -13,8 +13,8 @@ describe 'Screening API' do
         communication_method: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
-        response_time: 'immediate',
-        screening_decision: 'referral_to_other_agency',
+        screening_decision_detail: 'immediate',
+        screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Michael Geary'
@@ -26,15 +26,15 @@ describe 'Screening API' do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to include(
         incident_county: 'sacramento',
-        decision_rationale: 'I have great reasons',
+        additional_information: 'I have great reasons',
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         communication_method: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
-        response_time: 'immediate',
-        screening_decision: 'referral_to_other_agency',
+        screening_decision_detail: 'immediate',
+        screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         address: include(
@@ -54,15 +54,15 @@ describe 'Screening API' do
     it 'returns a JSON representation of the screening' do
       screening = Screening.create!(
         ended_at: '2016-08-03T01:00:00.000Z',
-        decision_rationale: 'I have great reasons',
+        additional_information: 'I have great reasons',
         incident_county: 'sacramento',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         communication_method: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
-        response_time: 'immediate',
-        screening_decision: 'referral_to_other_agency',
+        screening_decision_detail: 'immediate',
+        screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Michael Bastow'
@@ -106,14 +106,14 @@ describe 'Screening API' do
         id: screening.id,
         incident_county: 'sacramento',
         ended_at: '2016-08-03T01:00:00.000Z',
-        decision_rationale: 'I have great reasons',
+        additional_information: 'I have great reasons',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         communication_method: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
-        response_time: 'immediate',
-        screening_decision: 'referral_to_other_agency',
+        screening_decision_detail: 'immediate',
+        screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Michael Bastow',
@@ -156,14 +156,14 @@ describe 'Screening API' do
       screening = Screening.create!(
         ended_at: '2016-08-03T01:00:00.000Z',
         incident_county: 'sacramento',
-        decision_rationale: 'I have great reasons',
+        additional_information: 'I have great reasons',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         communication_method: 'Phone',
         name: 'The Rocky Horror Show',
         reference: '123ABC',
-        response_time: 'within_twenty_four_hours',
-        screening_decision: 'referral_to_other_agency',
+        screening_decision_detail: '3_days',
+        screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Natina Grace'
@@ -192,10 +192,10 @@ describe 'Screening API' do
 
       updated_params = {
         name: 'Some new name',
-        decision_rationale: 'This is my new, more comprehensive reasoning',
+        additional_information: 'This is my new, more comprehensive reasoning',
         incident_county: 'mendocino',
-        response_time: 'immediate',
-        screening_decision: 'evaluate_out',
+        screening_decision_detail: 'immediate',
+        screening_decision: 'screen_out',
         report_narrative: 'Updated Narrative',
         assignee: 'Natina Sheridan',
         address: {
@@ -216,15 +216,15 @@ describe 'Screening API' do
       expect(body).to match a_hash_including(
         id: screening.id,
         ended_at: '2016-08-03T01:00:00.000Z',
-        decision_rationale: 'This is my new, more comprehensive reasoning',
+        additional_information: 'This is my new, more comprehensive reasoning',
         incident_county: 'mendocino',
         incident_date: '2016-08-02',
         location_type: 'Foster Home',
         communication_method: 'Phone',
         name: 'Some new name',
         reference: '123ABC',
-        response_time: 'immediate',
-        screening_decision: 'evaluate_out',
+        screening_decision_detail: 'immediate',
+        screening_decision: 'screen_out',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Updated Narrative',
         assignee: 'Natina Sheridan',
@@ -256,54 +256,53 @@ describe 'Screening API' do
       Screening.create!(
         reference: 'ABCDEF',
         name: 'Little Shop Of Horrors',
-        response_time: 'immediate',
-        screening_decision: 'evaluate_out'
+        screening_decision_detail: 'immediate',
+        screening_decision: 'screen_out'
       )
     end
     let!(:the_shining) do
       Screening.create!(
         reference: 'HIJKLM',
         name: 'The Shining',
-        response_time: 'within_twenty_four_hours',
-        screening_decision: 'accept_for_investigation'
+        screening_decision_detail: '3_days',
+        screening_decision: 'promote_to_referral'
       )
     end
     let!(:it_follows) do
       Screening.create!(
         reference: 'NOPQRS',
         name: 'It Follows',
-        response_time: 'more_than_twenty_four_hours',
-        screening_decision: 'accept_for_investigation'
+        screening_decision_detail: '5_days',
+        screening_decision: 'promote_to_referral'
       )
     end
     before { ScreeningsRepo.client.indices.flush }
 
     context 'when params contains response times' do
       it 'returns screenings matching response times' do
-        get '/api/v1/screenings', params: { response_times: %w(immediate within_twenty_four_hours) }
+        get '/api/v1/screenings', params: { screening_decision_details: %w(immediate 3_days) }
         assert_response :success
         body = JSON.parse(response.body)
-
         expect(body).to match array_including(
           a_hash_including(
             'id' => little_shop_of_horrors.id,
             'name' => 'Little Shop Of Horrors',
-            'response_time' => 'immediate',
-            'screening_decision' => 'evaluate_out'
+            'screening_decision_detail' => 'immediate',
+            'screening_decision' => 'screen_out'
           ),
           a_hash_including(
             'id' => the_shining.id,
             'name' => 'The Shining',
-            'response_time' => 'within_twenty_four_hours',
-            'screening_decision' => 'accept_for_investigation'
+            'screening_decision_detail' => '3_days',
+            'screening_decision' => 'promote_to_referral'
           )
         )
         expect(body).to_not match array_including(
           a_hash_including(
             'id' => it_follows.id,
             'name' => 'It Follows',
-            'response_time' => 'more_than_twenty_four_hours',
-            'screening_decision' => 'accept_for_investigation'
+            'screening_decision_detail' => '5_days',
+            'screening_decision' => 'promote_to_referral'
           )
         )
       end
@@ -311,26 +310,26 @@ describe 'Screening API' do
 
     context 'when params contains screening decisions' do
       it 'returns screenings matching screening decisions' do
-        get '/api/v1/screenings', params: { screening_decisions: ['accept_for_investigation'] }
+        get '/api/v1/screenings', params: { screening_decisions: ['promote_to_referral'] }
         assert_response :success
         body = JSON.parse(response.body)
         expect(body).to match array_including(
           a_hash_including(
             'name' => 'It Follows',
-            'response_time' => 'more_than_twenty_four_hours',
-            'screening_decision' => 'accept_for_investigation'
+            'screening_decision_detail' => '5_days',
+            'screening_decision' => 'promote_to_referral'
           ),
           a_hash_including(
             'name' => 'The Shining',
-            'response_time' => 'within_twenty_four_hours',
-            'screening_decision' => 'accept_for_investigation'
+            'screening_decision_detail' => '3_days',
+            'screening_decision' => 'promote_to_referral'
           )
         )
         expect(body).to_not match array_including(
           a_hash_including(
             'name' => 'Little Shop Of Horrors',
-            'response_time' => 'immediate',
-            'screening_decision' => 'evaluate_out'
+            'screening_decision_detail' => 'immediate',
+            'screening_decision' => 'screen_out'
           )
         )
       end
@@ -338,27 +337,27 @@ describe 'Screening API' do
 
     context 'when params contains both response times and screening decisions' do
       it 'returns screenings matching screening decisions' do
-        get '/api/v1/screenings', params: { response_times: ['within_twenty_four_hours'],
-                                            screening_decisions: ['accept_for_investigation'] }
+        get '/api/v1/screenings', params: { screening_decision_details: ['3_days'],
+                                            screening_decisions: ['promote_to_referral'] }
         assert_response :success
         body = JSON.parse(response.body)
         expect(body).to match array_including(
           a_hash_including(
             'name' => 'The Shining',
-            'response_time' => 'within_twenty_four_hours',
-            'screening_decision' => 'accept_for_investigation'
+            'screening_decision_detail' => '3_days',
+            'screening_decision' => 'promote_to_referral'
           )
         )
         expect(body).to_not match array_including(
           a_hash_including(
             'name' => 'Little Shop Of Horrors',
-            'response_time' => 'immediate',
-            'screening_decision' => 'evaluate_out'
+            'screening_decision_detail' => 'immediate',
+            'screening_decision' => 'screen_out'
           ),
           a_hash_including(
             'name' => 'It Follows',
-            'response_time' => 'more_than_twenty_four_hours',
-            'screening_decision' => 'accept_for_investigation'
+            'screening_decision_detail' => '5_days',
+            'screening_decision' => 'promote_to_referral'
           )
         )
       end
@@ -366,7 +365,9 @@ describe 'Screening API' do
 
     context 'when params contains non matching data' do
       it 'returns no screenings' do
-        get '/api/v1/screenings', params: { screening_decisions: ['referral_to_other_agency'] }
+        get '/api/v1/screenings', params: {
+          screening_decisions: ['information_to_child_welfare_services']
+        }
         assert_response :success
         expect(JSON.parse(response.body)).to eq([])
       end
@@ -379,18 +380,18 @@ describe 'Screening API' do
         expect(JSON.parse(response.body)).to match array_including(
           a_hash_including(
             'name' => 'Little Shop Of Horrors',
-            'response_time' => 'immediate',
-            'screening_decision' => 'evaluate_out'
+            'screening_decision_detail' => 'immediate',
+            'screening_decision' => 'screen_out'
           ),
           a_hash_including(
             'name' => 'It Follows',
-            'response_time' => 'more_than_twenty_four_hours',
-            'screening_decision' => 'accept_for_investigation'
+            'screening_decision_detail' => '5_days',
+            'screening_decision' => 'promote_to_referral'
           ),
           a_hash_including(
             'name' => 'The Shining',
-            'response_time' => 'within_twenty_four_hours',
-            'screening_decision' => 'accept_for_investigation'
+            'screening_decision_detail' => '3_days',
+            'screening_decision' => 'promote_to_referral'
           )
         )
       end
