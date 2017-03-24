@@ -102,6 +102,7 @@ describe 'Screening API' do
         gender: 'male',
         ssn: '123-23-1234',
         date_of_birth: Date.today,
+        roles: [],
         addresses: [
           Address.new(
             street_address: '1840 Broad rd',
@@ -185,6 +186,7 @@ describe 'Screening API' do
         gender: 'male',
         ssn: '123-23-1234',
         date_of_birth: Date.today.to_s,
+        roles: [],
         addresses: [
           {
             id: participant.addresses.map(&:id).first,
@@ -311,17 +313,17 @@ describe 'Screening API' do
           }
         ],
         participants: array_including([
-          a_hash_including(
-            id: bart.id,
-            first_name: 'Bart',
-            last_name: 'Simpson'
-          ),
-          a_hash_including(
-            id: lisa.id,
-            first_name: 'Lisa',
-            last_name: 'Simpson'
-          )
-        ])
+                                        a_hash_including(
+                                          id: bart.id,
+                                          first_name: 'Bart',
+                                          last_name: 'Simpson'
+                                        ),
+                                        a_hash_including(
+                                          id: lisa.id,
+                                          first_name: 'Lisa',
+                                          last_name: 'Simpson'
+                                        )
+                                      ])
       )
     end
   end
