@@ -10,7 +10,7 @@ describe ScreeningSerializer do
     let(:cross_report) do
       CrossReport.new(
         agency_type: 'District attorney',
-        agency_name: 'Sacramento attorney',
+        agency_name: 'Sacramento attorney'
       )
     end
 

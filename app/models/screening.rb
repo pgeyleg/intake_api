@@ -14,4 +14,10 @@ class Screening < ActiveRecord::Base
   def reindex
     ScreeningIndexer.perform(id)
   end
+
+  # This cleans up existing cross reports if a new list is submitted
+  def cross_reports_attributes=(*attrs)
+    cross_reports.destroy_all
+    super(*attrs)
+  end
 end
