@@ -4,7 +4,7 @@ module Api
   module V1
     class ScreeningsController < ApplicationController # :nodoc:
       def create
-        screening = Screening.new(screening_params)
+        screening = Screening.new(transformed_params)
         screening.build_screening_address
         screening.screening_address.build_address
         screening.save!
@@ -21,8 +21,8 @@ module Api
       end
 
       def update
-        screening = Screening.find(screening_params[:id])
-        screening.assign_attributes(screening_params)
+        screening = Screening.find(transformed_params[:id])
+        screening.assign_attributes(transformed_params)
         screening.address.assign_attributes(address_params)
         screening.save!
         render json: ScreeningSerializer.new(screening)
@@ -48,6 +48,12 @@ module Api
         )
       end
 
+      def transformed_params
+        t_params = screening_params
+        t_params[:cross_reports_attributes] = t_params.delete(:cross_reports)
+        t_params
+      end
+
       def screening_params
         params.permit(
           :additional_information,
@@ -64,7 +70,7 @@ module Api
           :screening_decision,
           :started_at,
           :assignee,
-          cross_reports_attributes: [
+          cross_reports: [
             :agency_type,
             :agency_name
           ]

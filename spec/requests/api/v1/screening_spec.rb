@@ -18,7 +18,7 @@ describe 'Screening API' do
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Michael Geary',
-        cross_reports_attributes: [
+        cross_reports: [
           { agency_type: 'District attorney', agency_name: 'Sacramento Attorney' }
         ]
       }
@@ -261,7 +261,7 @@ describe 'Screening API' do
           state: 'CA',
           zip: '10010'
         },
-        cross_reports_attributes: [
+        cross_reports: [
           {
             agency_type: 'Law enforcement',
             agency_name: 'Sacramento Sheriff'
