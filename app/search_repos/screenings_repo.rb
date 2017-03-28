@@ -15,7 +15,7 @@ class ScreeningsRepo
   settings do
     mappings dynamic: 'strict' do
       indexes :id
-      indexes :decision_rationale
+      indexes :additional_information
       indexes :ended_at
       indexes :incident_county
       indexes :incident_date
@@ -24,7 +24,7 @@ class ScreeningsRepo
       indexes :name
       indexes :report_narrative
       indexes :reference
-      indexes :response_time
+      indexes :screening_decision_detail
       indexes :screening_decision
       indexes :started_at
       indexes :assignee
@@ -39,13 +39,15 @@ class ScreeningsRepo
     document['_source']
   end
 
-  def self.search_es_by(response_times, screening_decisions)
-    search(query(response_times, screening_decisions))
+  def self.search_es_by(screening_decision_details, screening_decisions)
+    search(query(screening_decision_details, screening_decisions))
   end
 
-  def self.query(response_times, screening_decisions)
+  def self.query(screening_decision_details, screening_decisions)
     terms = []
-    terms << { terms: { response_time: response_times } } if response_times
+    if screening_decision_details
+      terms << { terms: { screening_decision_detail: screening_decision_details } }
+    end
     terms << { terms: { screening_decision: screening_decisions } } if screening_decisions
     { query: { filtered: { filter: { bool: { must: terms } } } } }
   end

@@ -28,7 +28,10 @@ module Api
       end
 
       def index
-        screenings = ScreeningsRepo.search_es_by(response_times, screening_decisions).results
+        screenings = ScreeningsRepo.search_es_by(
+          screening_decision_details,
+          screening_decisions
+        ).results
         render json: screenings.as_json(include: ['participants.addresses', 'address']), status: :ok
       end
 
@@ -45,7 +48,7 @@ module Api
 
       def screening_params
         params.permit(
-          :decision_rationale,
+          :additional_information,
           :ended_at,
           :id,
           :incident_county,
@@ -55,15 +58,15 @@ module Api
           :name,
           :report_narrative,
           :reference,
-          :response_time,
+          :screening_decision_detail,
           :screening_decision,
           :started_at,
           :assignee
         )
       end
 
-      def response_times
-        params[:response_times]
+      def screening_decision_details
+        params[:screening_decision_details]
       end
 
       def screening_decisions

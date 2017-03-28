@@ -30,7 +30,7 @@ describe ScreeningSerializer do
     let(:screening) do
       Screening.new(
         communication_method: 'email',
-        decision_rationale: 'I have my reasons',
+        additional_information: 'I have my reasons',
         ended_at: ended_at,
         incident_county: 'alpine',
         incident_date: incident_date,
@@ -38,8 +38,8 @@ describe ScreeningSerializer do
         name: 'My Report',
         reference: '1T4THW',
         report_narrative: 'It helps pass the time.',
-        response_time: 'within_twenty_four_hours',
-        screening_decision: 'accept_for_investigation',
+        screening_decision_detail: '3_days',
+        screening_decision: 'promote_to_referral',
         started_at: started_at,
         participants: [participant],
         assignee: 'Michael Geary'
@@ -63,7 +63,7 @@ describe ScreeningSerializer do
         .as_json(include: ['participants.addresses', 'address'])).to eq(
           id: screening.id,
           communication_method: 'email',
-          decision_rationale: 'I have my reasons',
+          additional_information: 'I have my reasons',
           ended_at: ended_at,
           incident_county: 'alpine',
           incident_date: incident_date,
@@ -71,8 +71,8 @@ describe ScreeningSerializer do
           name: 'My Report',
           reference: '1T4THW',
           report_narrative: 'It helps pass the time.',
-          response_time: 'within_twenty_four_hours',
-          screening_decision: 'accept_for_investigation',
+          screening_decision_detail: '3_days',
+          screening_decision: 'promote_to_referral',
           started_at: started_at,
           address: {
             id: screening.address.id,
