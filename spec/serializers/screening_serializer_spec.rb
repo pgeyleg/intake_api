@@ -35,7 +35,7 @@ describe ScreeningSerializer do
       )
     end
 
-    let(:other_participant) { Participant.new() }
+    let(:other_participant) { Participant.new }
 
     let(:screening) do
       Screening.new(
@@ -103,43 +103,43 @@ describe ScreeningSerializer do
           city: 'Albatros',
           zip: '12333',
           type: 'Placement'
-      ),
-      cross_reports: array_including(
-        a_hash_including(
-          agency_type: 'District attorney',
-          agency_name: 'Sacramento attorney'
-        )
-      ),
-      participants: array_including(a_hash_including(
-        id: participant.id,
-        person_id: person.id,
-        screening_id: screening.id,
-        first_name: 'Paula',
-        last_name: 'Jones',
-        gender: 'female',
-        ssn: '111223333',
-        date_of_birth: Date.parse('2016-01-01'),
-        addresses: array_including(
+        ),
+        cross_reports: array_including(
           a_hash_including(
-            id: participant.addresses.map(&:id).first,
-            street_address: '1840 Broad rd',
-            state: 'CA',
-            city: 'sacramento',
-            zip: '78495',
-            type: 'Work'
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento attorney'
           )
-      ),
-      roles: %w(Perpetrator Victim)
-      ), a_hash_including(
-        id: other_participant.id,
-        screening_id: screening.id,
-      )),
-     allegations: array_including(a_hash_including(
-       id: allegation.id,
-       perpetrator_id: participant.id,
-       victim_id: other_participant.id
-      )),
-      assignee: 'Michael Geary'
+        ),
+        participants: array_including(a_hash_including(
+                                        id: participant.id,
+                                        person_id: person.id,
+                                        screening_id: screening.id,
+                                        first_name: 'Paula',
+                                        last_name: 'Jones',
+                                        gender: 'female',
+                                        ssn: '111223333',
+                                        date_of_birth: Date.parse('2016-01-01'),
+                                        addresses: array_including(
+                                          a_hash_including(
+                                            id: participant.addresses.map(&:id).first,
+                                            street_address: '1840 Broad rd',
+                                            state: 'CA',
+                                            city: 'sacramento',
+                                            zip: '78495',
+                                            type: 'Work'
+                                          )
+                                        ),
+                                        roles: %w(Perpetrator Victim)
+        ), a_hash_including(
+             id: other_participant.id,
+             screening_id: screening.id
+        )),
+        allegations: array_including(a_hash_including(
+                                       id: allegation.id,
+                                       perpetrator_id: participant.id,
+                                       victim_id: other_participant.id
+        )),
+        assignee: 'Michael Geary'
       )
     end
   end

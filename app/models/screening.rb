@@ -8,7 +8,7 @@ class Screening < ActiveRecord::Base
   has_many :cross_reports, dependent: :destroy
   has_many :allegations, inverse_of: :screening
 
-  accepts_nested_attributes_for :address, :cross_reports
+  accepts_nested_attributes_for :address, :allegations, :cross_reports
 
   after_commit :reindex
 

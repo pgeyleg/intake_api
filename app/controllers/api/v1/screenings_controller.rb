@@ -3,6 +3,32 @@
 module Api
   module V1
     class ScreeningsController < ApplicationController # :nodoc:
+      PERMITTED_PARAMS = [
+        :additional_information,
+        :ended_at,
+        :id,
+        :incident_county,
+        :incident_date,
+        :location_type,
+        :communication_method,
+        :name,
+        :report_narrative,
+        :reference,
+        :screening_decision_detail,
+        :screening_decision,
+        :started_at,
+        :assignee,
+        cross_reports: [
+          :agency_type,
+          :agency_name
+        ],
+        allegations: [
+          :screening_id,
+          :perpetrator_id,
+          :victim_id
+        ]
+      ].freeze
+
       def create
         screening = Screening.new(transformed_params)
         screening.build_screening_address
@@ -29,11 +55,19 @@ module Api
 
       def update
         screening = Screening.find(transformed_params[:id])
+
+        screening.allegations.destroy_all
         screening.assign_attributes(transformed_params)
         screening.address.assign_attributes(address_params)
         screening.save!
         render json: ScreeningSerializer.new(screening)
-          .as_json(include: ['participants.addresses', 'address', 'cross_reports']), status: :ok
+          .as_json(include:
+        [
+          'participants.addresses',
+          'address',
+          'allegations',
+          'cross_reports'
+        ]), status: :ok
       end
 
       def index
@@ -56,32 +90,14 @@ module Api
       end
 
       def transformed_params
-        t_params = screening_params
-        t_params[:cross_reports_attributes] = t_params.delete(:cross_reports)
-        t_params
+        screening_params.tap do |params|
+          params[:allegations_attributes] = params.delete(:allegations) || []
+          params[:cross_reports_attributes] = params.delete(:cross_reports) || []
+        end
       end
 
       def screening_params
-        params.permit(
-          :additional_information,
-          :ended_at,
-          :id,
-          :incident_county,
-          :incident_date,
-          :location_type,
-          :communication_method,
-          :name,
-          :report_narrative,
-          :reference,
-          :screening_decision_detail,
-          :screening_decision,
-          :started_at,
-          :assignee,
-          cross_reports: [
-            :agency_type,
-            :agency_name
-          ]
-        )
+        params.permit(*PERMITTED_PARAMS)
       end
 
       def screening_decision_details
