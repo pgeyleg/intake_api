@@ -231,6 +231,13 @@ definitions:
           - Placement
           - Homeless
           - Other
+  Allegation:
+    type: object
+    properties:
+      victim_id:
+        type: string
+      perpetrator_id:
+        type: string
   PhoneNumber:
     type: object
     properties:
@@ -296,6 +303,10 @@ definitions:
         $ref: '#/definitions/Address'
       assignee:
         type: string
+      allegations:
+        type: array
+        items:
+          $ref: '#/definitions/Allegation'
   ScreeningResponse:
     allOf:
       - $ref: '#/definitions/Screening'
