@@ -208,34 +208,6 @@ describe 'Screening API' do
           }
         ]
       )
-      expect(body[:address]).to include(
-        id: address.address_id,
-        street_address: '123 Fake St',
-        city: 'Fake City',
-        state: 'NY',
-        zip: '10010'
-      )
-      expect(body[:participants]).to include(
-        id: participant.id,
-        person_id: person.id,
-        screening_id: screening.id,
-        first_name: 'Bart',
-        last_name: 'Simpson',
-        gender: 'male',
-        ssn: '123-23-1234',
-        date_of_birth: Date.today.to_s,
-        roles: [],
-        addresses: [
-          {
-            id: participant.addresses.map(&:id).first,
-            street_address: '1840 Broad rd',
-            state: 'CA',
-            city: 'sacramento',
-            zip: '78495',
-            type: 'Work'
-          }
-        ]
-      )
     end
   end
 
@@ -275,13 +247,15 @@ describe 'Screening API' do
         person: Person.create!,
         screening: screening,
         first_name: 'Bart',
-        last_name: 'Simpson'
+        last_name: 'Simpson',
+        roles: ['Victim']
       )
       lisa = Participant.create!(
         person: Person.create!,
         screening: screening,
         first_name: 'Lisa',
-        last_name: 'Simpson'
+        last_name: 'Simpson',
+        roles: ['Perpetrator']
       )
 
       updated_params = {
@@ -308,13 +282,21 @@ describe 'Screening API' do
             agency_type: 'District attorney',
             agency_name: 'Sacramento Attorney'
           }
+        ],
+        allegations: [
+          {
+            id: nil,
+            screening_id: screening.id,
+            perpetrator_id: bart.id,
+            victim_id: lisa.id
+          }
         ]
-
       }
-
       expect do
         put "/api/v1/screenings/#{screening.id}", params: updated_params
-      end.to change(Address, :count).by(0)
+      end.to change(Address, :count).by(0).and change(Allegation, :count).by(1)
+
+      allegation = screening.allegations.first
 
       expect(response.status).to eq(200)
       body = JSON.parse(response.body).with_indifferent_access
@@ -340,28 +322,35 @@ describe 'Screening API' do
           state: 'CA',
           zip: '10010'
         ),
-        cross_reports: [
-          {
+        cross_reports: array_including(
+          a_hash_including(
             agency_type: 'Law enforcement',
             agency_name: 'Sacramento Sheriff'
-          },
-          {
+          ),
+          a_hash_including(
             agency_type: 'District attorney',
             agency_name: 'Sacramento Attorney'
-          }
-        ],
-        participants: array_including([
-                                        a_hash_including(
-                                          id: bart.id,
-                                          first_name: 'Bart',
-                                          last_name: 'Simpson'
-                                        ),
-                                        a_hash_including(
-                                          id: lisa.id,
-                                          first_name: 'Lisa',
-                                          last_name: 'Simpson'
-                                        )
-                                      ])
+          )
+        ),
+        participants: array_including(
+          a_hash_including(
+            id: bart.id,
+            first_name: 'Bart',
+            last_name: 'Simpson'
+          ),
+          a_hash_including(
+            id: lisa.id,
+            first_name: 'Lisa',
+            last_name: 'Simpson'
+          )
+        ), allegations: array_including(
+          a_hash_including(
+            screening_id: screening.id,
+            perpetrator_id: bart.id,
+            victim_id: lisa.id,
+            id: allegation.id
+          )
+        )
       )
     end
   end
