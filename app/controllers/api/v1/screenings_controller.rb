@@ -23,7 +23,6 @@ module Api
           :agency_name
         ],
         allegations: [
-          :screening_id,
           :perpetrator_id,
           :victim_id
         ]
