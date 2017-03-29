@@ -52,7 +52,8 @@ describe 'Screening API' do
             agency_name: 'Sacramento Attorney'
           }
         ],
-        assignee: 'Michael Geary'
+        assignee: 'Michael Geary',
+        allegations: []
       )
       expect(body['id']).to_not eq nil
       expect(body[:address][:id]).to_not eq nil
@@ -93,16 +94,16 @@ describe 'Screening API' do
         )
       )
 
-      person = Person.create!(first_name: 'Bart', last_name: 'Simpson')
-      participant = Participant.create!(
-        person: person,
+      person_bart = Person.create!(first_name: 'Bart', last_name: 'Simpson')
+      participant_bart = Participant.create!(
+        person: person_bart,
         screening: screening,
         first_name: 'Bart',
         last_name: 'Simpson',
         gender: 'male',
         ssn: '123-23-1234',
         date_of_birth: Date.today,
-        roles: [],
+        roles: ['Victim'],
         addresses: [
           Address.new(
             street_address: '1840 Broad rd',
@@ -112,6 +113,24 @@ describe 'Screening API' do
             type: 'Work'
           )
         ]
+      )
+
+      person_homer = Person.create!(first_name: 'Homer', last_name: 'Simpson')
+      participant_homer = Participant.create!(
+        person: person_homer,
+        screening: screening,
+        first_name: 'Homer',
+        last_name: 'Simpson',
+        gender: 'male',
+        ssn: '123-45-6789',
+        date_of_birth: 20.years.ago.to_date,
+        roles: ['Perpetrator']
+      )
+
+      allegation = Allegation.create!(
+        screening: screening,
+        perpetrator_id: participant_homer.id,
+        victim_id: participant_bart.id
       )
 
       get "/api/v1/screenings/#{screening.id}"
@@ -140,10 +159,29 @@ describe 'Screening API' do
           state: 'NY',
           zip: '10010'
         ),
+        allegations: array_including(
+          a_hash_including(
+            id: allegation.id,
+            screening_id: screening.id,
+            perpetrator_id: participant_homer.id,
+            victim_id: participant_bart.id
+          )
+        ),
         participants: array_including(
           a_hash_including(
-            id: participant.id,
-            person_id: person.id,
+            id: participant_homer.id,
+            person_id: person_homer.id,
+            screening_id: screening.id,
+            first_name: 'Homer',
+            last_name: 'Simpson',
+            gender: 'male',
+            ssn: '123-45-6789',
+            date_of_birth: 20.years.ago.to_date.to_s,
+            roles: ['Perpetrator']
+          ),
+          a_hash_including(
+            id: participant_bart.id,
+            person_id: person_bart.id,
             screening_id: screening.id,
             first_name: 'Bart',
             last_name: 'Simpson',
@@ -152,7 +190,7 @@ describe 'Screening API' do
             date_of_birth: Date.today.to_s,
             addresses: [
               {
-                id: participant.addresses.map(&:id).first,
+                id: participant_bart.addresses.map(&:id).first,
                 street_address: '1840 Broad rd',
                 state: 'CA',
                 city: 'sacramento',
@@ -160,7 +198,7 @@ describe 'Screening API' do
                 type: 'Work'
               }
             ],
-            roles: []
+            roles: ['Victim']
           )
         ),
         cross_reports: [
