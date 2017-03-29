@@ -6,6 +6,7 @@ class Screening < ActiveRecord::Base
   has_one :address, through: :screening_address
   has_many :participants
   has_many :cross_reports, dependent: :destroy
+  has_many :allegations, inverse_of: :screening
 
   accepts_nested_attributes_for :address, :cross_reports
 

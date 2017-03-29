@@ -11,13 +11,20 @@ module Api
         render json: ScreeningSerializer.new(screening)
           .as_json(include: ['participants.addresses',
                              'address',
-                             'cross_reports']), status: :created
+                             'cross_reports',
+                             'allegations']), status: :created
       end
 
       def show
         screening = Screening.find(screening_params[:id])
         render json: ScreeningSerializer.new(screening)
-          .as_json(include: ['participants.addresses', 'address', 'cross_reports']), status: :ok
+          .as_json(include:
+            [
+              'participants.addresses',
+              'address',
+              'allegations',
+              'cross_reports'
+            ]), status: :ok
       end
 
       def update
