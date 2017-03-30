@@ -143,4 +143,47 @@ describe 'Participants API' do
       end
     end
   end
+
+  context 'When a participant has allegations' do
+    let(:screening) { Screening.create! }
+    let(:jeff) do
+      Participant.create(
+        screening: screening,
+        first_name: 'Jeff',
+        last_name: 'Winger',
+        roles: ['Perpetrator']
+      )
+    end
+    let(:annie) do
+      Participant.create(
+        screening: screening,
+        first_name: 'Annie',
+        last_name: 'Sullivan',
+        roles: ['Victim']
+      )
+    end
+    before do
+      Allegation.create(
+        screening: screening,
+        perpetrator_id: annie.id,
+        victim_id: jeff.id
+      )
+    end
+
+    describe 'PUT /api/v1/participants/:id' do
+      it 'removes allegations for a participant when a role is removed' do
+        expect do
+          put "/api/v1/participants/#{jeff.id}", params: { roles: [] }
+        end.to change(Allegation, :count).by(-1)
+      end
+    end
+
+    describe 'DELETE api/v1/participants/:id' do
+      it 'deletes related allegations when the participant is deleted' do
+        expect do
+          delete "/api/v1/participants/#{jeff.id}"
+        end.to change(Allegation, :count).by(-1)
+      end
+    end
+  end
 end
