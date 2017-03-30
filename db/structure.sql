@@ -67,6 +67,39 @@ ALTER SEQUENCE addresses_id_seq OWNED BY addresses.id;
 
 
 --
+-- Name: allegations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE allegations (
+    id integer NOT NULL,
+    screening_id character varying,
+    perpetrator_id character varying,
+    victim_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: allegations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE allegations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: allegations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE allegations_id_seq OWNED BY allegations.id;
+
+
+--
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -396,6 +429,13 @@ ALTER TABLE ONLY addresses ALTER COLUMN id SET DEFAULT nextval('addresses_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY allegations ALTER COLUMN id SET DEFAULT nextval('allegations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY cross_reports ALTER COLUMN id SET DEFAULT nextval('cross_reports_id_seq'::regclass);
 
 
@@ -461,6 +501,14 @@ ALTER TABLE ONLY screenings ALTER COLUMN id SET DEFAULT nextval('screenings_id_s
 
 ALTER TABLE ONLY addresses
     ADD CONSTRAINT addresses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: allegations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY allegations
+    ADD CONSTRAINT allegations_pkey PRIMARY KEY (id);
 
 
 --
@@ -552,6 +600,20 @@ ALTER TABLE ONLY screenings
 
 
 --
+-- Name: index_allegations_on_screening_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_allegations_on_screening_id ON allegations USING btree (screening_id);
+
+
+--
+-- Name: index_allegations_on_screening_perpetrator_victim; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_allegations_on_screening_perpetrator_victim ON allegations USING btree (screening_id, perpetrator_id, victim_id);
+
+
+--
 -- Name: index_cross_reports_on_screening_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -629,6 +691,38 @@ CREATE INDEX index_screening_addresses_on_screening_id ON screening_addresses US
 
 
 --
+-- Name: fk_rails_21bacd85b8; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY allegations
+    ADD CONSTRAINT fk_rails_21bacd85b8 FOREIGN KEY (perpetrator_id) REFERENCES participants(id);
+
+
+--
+-- Name: fk_rails_681f7bdf1b; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY allegations
+    ADD CONSTRAINT fk_rails_681f7bdf1b FOREIGN KEY (victim_id) REFERENCES participants(id);
+
+
+--
+-- Name: fk_rails_ae53cbda2a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY cross_reports
+    ADD CONSTRAINT fk_rails_ae53cbda2a FOREIGN KEY (screening_id) REFERENCES screenings(id);
+
+
+--
+-- Name: fk_rails_bb84f1ed75; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY allegations
+    ADD CONSTRAINT fk_rails_bb84f1ed75 FOREIGN KEY (screening_id) REFERENCES screenings(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -671,4 +765,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170324173331'),
 ('20170324184740'),
 ('20170324185122'),
-('20170324204945');
+('20170324204945'),
+('20170329204444');
+
+
