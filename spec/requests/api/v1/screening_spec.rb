@@ -282,21 +282,12 @@ describe 'Screening API' do
             agency_type: 'District attorney',
             agency_name: 'Sacramento Attorney'
           }
-        ],
-        allegations: [
-          {
-            id: nil,
-            screening_id: screening.id,
-            perpetrator_id: bart.id,
-            victim_id: lisa.id
-          }
         ]
       }
+
       expect do
         put "/api/v1/screenings/#{screening.id}", params: updated_params
-      end.to change(Address, :count).by(0).and change(Allegation, :count).by(1)
-
-      allegation = screening.allegations.first
+      end.to change(Address, :count).by(0)
 
       expect(response.status).to eq(200)
       body = JSON.parse(response.body).with_indifferent_access
@@ -343,14 +334,7 @@ describe 'Screening API' do
             first_name: 'Lisa',
             last_name: 'Simpson'
           )
-        ), allegations: array_including(
-          a_hash_including(
-            screening_id: screening.id,
-            perpetrator_id: bart.id,
-            victim_id: lisa.id,
-            id: allegation.id
-          )
-        )
+        ), allegations: []
       )
     end
   end
