@@ -231,6 +231,13 @@ definitions:
           - Placement
           - Homeless
           - Other
+  Allegation:
+    type: object
+    properties:
+      victim_id:
+        type: string
+      perpetrator_id:
+        type: string
   PhoneNumber:
     type: object
     properties:
@@ -245,6 +252,19 @@ definitions:
           - Work
           - Home
           - Other
+  CrossReport:
+    type: object
+    properties:
+      agency_type:
+        type: string
+        enum:
+          - District attorney
+          - Law enforcement
+          - Department of justice
+          - Licensing
+      agency_name:
+        type: string
+        maxLength: 128
   Screening:
     type: object
     properties:
@@ -275,10 +295,18 @@ definitions:
         format: date-time
       report_narrative:
         type: string
+      cross_reports:
+        type: array
+        items:
+          $ref: '#/definitions/CrossReport'
       address:
         $ref: '#/definitions/Address'
       assignee:
         type: string
+      allegations:
+        type: array
+        items:
+          $ref: '#/definitions/Allegation'
   ScreeningResponse:
     allOf:
       - $ref: '#/definitions/Screening'

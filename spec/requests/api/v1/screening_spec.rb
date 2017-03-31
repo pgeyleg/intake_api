@@ -17,7 +17,10 @@ describe 'Screening API' do
         screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Geary'
+        assignee: 'Michael Geary',
+        cross_reports: [
+          { agency_type: 'District attorney', agency_name: 'Sacramento Attorney' }
+        ]
       }
 
       post '/api/v1/screenings', params: screening_params
@@ -43,7 +46,14 @@ describe 'Screening API' do
           state: nil,
           zip: nil
         ),
-        assignee: 'Michael Geary'
+        cross_reports: [
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ],
+        assignee: 'Michael Geary',
+        allegations: []
       )
       expect(body['id']).to_not eq nil
       expect(body[:address][:id]).to_not eq nil
@@ -65,7 +75,13 @@ describe 'Screening API' do
         screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Bastow'
+        assignee: 'Michael Bastow',
+        cross_reports_attributes: [
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ]
       )
 
       address = ScreeningAddress.create!(
@@ -78,15 +94,16 @@ describe 'Screening API' do
         )
       )
 
-      person = Person.create!(first_name: 'Bart', last_name: 'Simpson')
-      participant = Participant.create!(
-        person: person,
+      person_bart = Person.create!(first_name: 'Bart', last_name: 'Simpson')
+      participant_bart = Participant.create!(
+        person: person_bart,
         screening: screening,
         first_name: 'Bart',
         last_name: 'Simpson',
         gender: 'male',
         ssn: '123-23-1234',
         date_of_birth: Date.today,
+        roles: ['Victim'],
         addresses: [
           Address.new(
             street_address: '1840 Broad rd',
@@ -96,6 +113,24 @@ describe 'Screening API' do
             type: 'Work'
           )
         ]
+      )
+
+      person_homer = Person.create!(first_name: 'Homer', last_name: 'Simpson')
+      participant_homer = Participant.create!(
+        person: person_homer,
+        screening: screening,
+        first_name: 'Homer',
+        last_name: 'Simpson',
+        gender: 'male',
+        ssn: '123-45-6789',
+        date_of_birth: 20.years.ago.to_date,
+        roles: ['Perpetrator']
+      )
+
+      allegation = Allegation.create!(
+        screening: screening,
+        perpetrator_id: participant_homer.id,
+        victim_id: participant_bart.id
       )
 
       get "/api/v1/screenings/#{screening.id}"
@@ -124,10 +159,29 @@ describe 'Screening API' do
           state: 'NY',
           zip: '10010'
         ),
+        allegations: array_including(
+          a_hash_including(
+            id: allegation.id,
+            screening_id: screening.id,
+            perpetrator_id: participant_homer.id,
+            victim_id: participant_bart.id
+          )
+        ),
         participants: array_including(
           a_hash_including(
-            id: participant.id,
-            person_id: person.id,
+            id: participant_homer.id,
+            person_id: person_homer.id,
+            screening_id: screening.id,
+            first_name: 'Homer',
+            last_name: 'Simpson',
+            gender: 'male',
+            ssn: '123-45-6789',
+            date_of_birth: 20.years.ago.to_date.to_s,
+            roles: ['Perpetrator']
+          ),
+          a_hash_including(
+            id: participant_bart.id,
+            person_id: person_bart.id,
             screening_id: screening.id,
             first_name: 'Bart',
             last_name: 'Simpson',
@@ -136,7 +190,7 @@ describe 'Screening API' do
             date_of_birth: Date.today.to_s,
             addresses: [
               {
-                id: participant.addresses.map(&:id).first,
+                id: participant_bart.addresses.map(&:id).first,
                 street_address: '1840 Broad rd',
                 state: 'CA',
                 city: 'sacramento',
@@ -144,9 +198,15 @@ describe 'Screening API' do
                 type: 'Work'
               }
             ],
-            roles: []
+            roles: ['Victim']
           )
-        )
+        ),
+        cross_reports: [
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ]
       )
     end
   end
@@ -166,7 +226,13 @@ describe 'Screening API' do
         screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
-        assignee: 'Natina Grace'
+        assignee: 'Natina Grace',
+        cross_reports_attributes: [
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ]
       )
       address = ScreeningAddress.create!(
         screening: screening,
@@ -181,13 +247,15 @@ describe 'Screening API' do
         person: Person.create!,
         screening: screening,
         first_name: 'Bart',
-        last_name: 'Simpson'
+        last_name: 'Simpson',
+        roles: ['Victim']
       )
       lisa = Participant.create!(
         person: Person.create!,
         screening: screening,
         first_name: 'Lisa',
-        last_name: 'Simpson'
+        last_name: 'Simpson',
+        roles: ['Perpetrator']
       )
 
       updated_params = {
@@ -204,7 +272,17 @@ describe 'Screening API' do
           city: 'Fake City',
           state: 'CA',
           zip: '10010'
-        }
+        },
+        cross_reports: [
+          {
+            agency_type: 'Law enforcement',
+            agency_name: 'Sacramento Sheriff'
+          },
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ]
       }
 
       expect do
@@ -235,6 +313,16 @@ describe 'Screening API' do
           state: 'CA',
           zip: '10010'
         ),
+        cross_reports: array_including(
+          a_hash_including(
+            agency_type: 'Law enforcement',
+            agency_name: 'Sacramento Sheriff'
+          ),
+          a_hash_including(
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          )
+        ),
         participants: array_including(
           a_hash_including(
             id: bart.id,
@@ -246,7 +334,7 @@ describe 'Screening API' do
             first_name: 'Lisa',
             last_name: 'Simpson'
           )
-        )
+        ), allegations: []
       )
     end
   end
