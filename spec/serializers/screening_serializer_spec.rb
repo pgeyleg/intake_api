@@ -7,6 +7,13 @@ describe ScreeningSerializer do
     let(:ended_at) { Time.parse('2016-12-31T00:00:00.000Z') }
     let(:incident_date) { Date.parse('2016-11-30') }
     let(:person) { Person.new }
+    let(:cross_report) do
+      CrossReport.new(
+        agency_type: 'District attorney',
+        agency_name: 'Sacramento attorney'
+      )
+    end
+
     let(:participant) do
       Participant.new(
         person: person,
@@ -42,6 +49,7 @@ describe ScreeningSerializer do
         screening_decision: 'promote_to_referral',
         started_at: started_at,
         participants: [participant],
+        cross_reports: [cross_report],
         assignee: 'Michael Geary'
       )
     end
@@ -60,7 +68,7 @@ describe ScreeningSerializer do
 
     it 'returns the attributes of a screening as a hash' do
       expect(described_class.new(screening)
-        .as_json(include: ['participants.addresses', 'address'])).to eq(
+        .as_json(include: ['participants.addresses', 'address', 'cross_reports'])).to eq(
           id: screening.id,
           communication_method: 'email',
           additional_information: 'I have my reasons',
@@ -82,6 +90,10 @@ describe ScreeningSerializer do
             zip: '12333',
             type: 'Placement'
           },
+          cross_reports: [{
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento attorney'
+          }],
           participants: [{
             id: participant.id,
             person_id: person.id,

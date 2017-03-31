@@ -4,27 +4,29 @@ module Api
   module V1
     class ScreeningsController < ApplicationController # :nodoc:
       def create
-        screening = Screening.new(screening_params)
+        screening = Screening.new(transformed_params)
         screening.build_screening_address
         screening.screening_address.build_address
         screening.save!
         render json: ScreeningSerializer.new(screening)
-          .as_json(include: ['participants.addresses', 'address']), status: :created
+          .as_json(include: ['participants.addresses',
+                             'address',
+                             'cross_reports']), status: :created
       end
 
       def show
         screening = Screening.find(screening_params[:id])
         render json: ScreeningSerializer.new(screening)
-          .as_json(include: ['participants.addresses', 'address']), status: :ok
+          .as_json(include: ['participants.addresses', 'address', 'cross_reports']), status: :ok
       end
 
       def update
-        screening = Screening.find(screening_params[:id])
-        screening.assign_attributes(screening_params)
+        screening = Screening.find(transformed_params[:id])
+        screening.assign_attributes(transformed_params)
         screening.address.assign_attributes(address_params)
         screening.save!
         render json: ScreeningSerializer.new(screening)
-          .as_json(include: ['participants.addresses', 'address']), status: :ok
+          .as_json(include: ['participants.addresses', 'address', 'cross_reports']), status: :ok
       end
 
       def index
@@ -46,6 +48,12 @@ module Api
         )
       end
 
+      def transformed_params
+        t_params = screening_params
+        t_params[:cross_reports_attributes] = t_params.delete(:cross_reports)
+        t_params
+      end
+
       def screening_params
         params.permit(
           :additional_information,
@@ -61,7 +69,11 @@ module Api
           :screening_decision_detail,
           :screening_decision,
           :started_at,
-          :assignee
+          :assignee,
+          cross_reports: [
+            :agency_type,
+            :agency_name
+          ]
         )
       end
 

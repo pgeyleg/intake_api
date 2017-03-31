@@ -17,7 +17,10 @@ describe 'Screening API' do
         screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Geary'
+        assignee: 'Michael Geary',
+        cross_reports: [
+          { agency_type: 'District attorney', agency_name: 'Sacramento Attorney' }
+        ]
       }
 
       post '/api/v1/screenings', params: screening_params
@@ -43,6 +46,12 @@ describe 'Screening API' do
           state: nil,
           zip: nil
         ),
+        cross_reports: [
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ],
         assignee: 'Michael Geary'
       )
       expect(body['id']).to_not eq nil
@@ -65,7 +74,13 @@ describe 'Screening API' do
         screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Bastow'
+        assignee: 'Michael Bastow',
+        cross_reports_attributes: [
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ]
       )
 
       address = ScreeningAddress.create!(
@@ -87,6 +102,7 @@ describe 'Screening API' do
         gender: 'male',
         ssn: '123-23-1234',
         date_of_birth: Date.today,
+        roles: [],
         addresses: [
           Address.new(
             street_address: '1840 Broad rd',
@@ -146,7 +162,41 @@ describe 'Screening API' do
             ],
             roles: []
           )
-        )
+        ),
+        cross_reports: [
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ]
+      )
+      expect(body[:address]).to include(
+        id: address.address_id,
+        street_address: '123 Fake St',
+        city: 'Fake City',
+        state: 'NY',
+        zip: '10010'
+      )
+      expect(body[:participants]).to include(
+        id: participant.id,
+        person_id: person.id,
+        screening_id: screening.id,
+        first_name: 'Bart',
+        last_name: 'Simpson',
+        gender: 'male',
+        ssn: '123-23-1234',
+        date_of_birth: Date.today.to_s,
+        roles: [],
+        addresses: [
+          {
+            id: participant.addresses.map(&:id).first,
+            street_address: '1840 Broad rd',
+            state: 'CA',
+            city: 'sacramento',
+            zip: '78495',
+            type: 'Work'
+          }
+        ]
       )
     end
   end
@@ -166,7 +216,13 @@ describe 'Screening API' do
         screening_decision: 'information_to_child_welfare_services',
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
-        assignee: 'Natina Grace'
+        assignee: 'Natina Grace',
+        cross_reports_attributes: [
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ]
       )
       address = ScreeningAddress.create!(
         screening: screening,
@@ -204,7 +260,18 @@ describe 'Screening API' do
           city: 'Fake City',
           state: 'CA',
           zip: '10010'
-        }
+        },
+        cross_reports: [
+          {
+            agency_type: 'Law enforcement',
+            agency_name: 'Sacramento Sheriff'
+          },
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ]
+
       }
 
       expect do
@@ -235,18 +302,28 @@ describe 'Screening API' do
           state: 'CA',
           zip: '10010'
         ),
-        participants: array_including(
-          a_hash_including(
-            id: bart.id,
-            first_name: 'Bart',
-            last_name: 'Simpson'
-          ),
-          a_hash_including(
-            id: lisa.id,
-            first_name: 'Lisa',
-            last_name: 'Simpson'
-          )
-        )
+        cross_reports: [
+          {
+            agency_type: 'Law enforcement',
+            agency_name: 'Sacramento Sheriff'
+          },
+          {
+            agency_type: 'District attorney',
+            agency_name: 'Sacramento Attorney'
+          }
+        ],
+        participants: array_including([
+                                        a_hash_including(
+                                          id: bart.id,
+                                          first_name: 'Bart',
+                                          last_name: 'Simpson'
+                                        ),
+                                        a_hash_including(
+                                          id: lisa.id,
+                                          first_name: 'Lisa',
+                                          last_name: 'Simpson'
+                                        )
+                                      ])
       )
     end
   end
