@@ -366,6 +366,11 @@ describe 'Screening API' do
     end
     before { ScreeningsRepo.client.indices.flush }
 
+    it 'returns 100 records' do
+      expect(ScreeningsRepo).to receive(:search).with(anything, size: 100).and_call_original
+      get '/api/v1/screenings', params: {}
+    end
+
     context 'when params contains response times' do
       it 'returns screenings matching response times' do
         get '/api/v1/screenings', params: { screening_decision_details: %w(immediate 3_days) }

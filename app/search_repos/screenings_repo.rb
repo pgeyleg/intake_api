@@ -40,7 +40,7 @@ class ScreeningsRepo
   end
 
   def self.search_es_by(screening_decision_details, screening_decisions)
-    search(query(screening_decision_details, screening_decisions))
+    search(query(screening_decision_details, screening_decisions), size: 100)
   end
 
   def self.query(screening_decision_details, screening_decisions)
