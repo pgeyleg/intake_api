@@ -34,13 +34,10 @@ describe 'Screening Allegations API' do
           id: address.address_id
         },
         allegations: [
-          {
-            id: nil,
+          FactoryGirl.build(:allegation,
             screening_id: screening.id,
             perpetrator_id: bart.id,
-            victim_id: lisa.id,
-            allegation_types: %w(string1 string2)
-          }
+            victim_id: lisa.id).attributes
         ]
       }
 
@@ -67,9 +64,7 @@ describe 'Screening Allegations API' do
           a_hash_including(
             screening_id: screening.id,
             perpetrator_id: bart.id,
-            victim_id: lisa.id,
-            allegation_types: %w(string1 string2)
-            # id: allegation.id
+            victim_id: lisa.id
           )
         )
       )
@@ -100,25 +95,17 @@ describe 'Screening Allegations API' do
         last_name: 'Simpson',
         roles: ['Perpetrator']
       )
-      allegation = Allegation.create!(
+      allegation = FactoryGirl.create(:allegation,
         screening: screening,
         perpetrator_id: bart.id,
-        victim_id: bart.id,
-        allegation_types: ['one']
-      )
+        victim_id: bart.id)
 
       updated_params = {
         address: {
           id: address.address_id
         },
         allegations: [
-          {
-            id: allegation.id,
-            screening_id: screening.id,
-            perpetrator_id: bart.id,
-            victim_id: lisa.id,
-            allegation_types: ['one']
-          }
+          allegation.attributes.merge('victim_id' => lisa.id)
         ]
       }
 
@@ -176,13 +163,10 @@ describe 'Screening Allegations API' do
         last_name: 'Simpson',
         roles: ['Perpetrator']
       )
-      Allegation.create!(
+      FactoryGirl.create(:allegation,
         screening: screening,
         perpetrator_id: bart.id,
-        victim_id: bart.id,
-        allegation_types: ['one']
-      )
-
+        victim_id: bart.id)
       updated_params = {
         address: {
           id: address.address_id

@@ -56,7 +56,7 @@ describe ScreeningSerializer do
         assignee: 'Michael Geary'
       )
     end
-    let(:allegation) { Allegation.new(screening: screening, allegation_types: ['one']) }
+    let(:allegation) { FactoryGirl.build(:allegation, screening: screening) }
 
     before do
       screening.build_screening_address

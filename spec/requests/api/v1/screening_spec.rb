@@ -127,12 +127,10 @@ describe 'Screening API' do
         roles: ['Perpetrator']
       )
 
-      allegation = Allegation.create!(
+      allegation = FactoryGirl.create(:allegation,
         screening: screening,
         perpetrator_id: participant_homer.id,
-        victim_id: participant_bart.id,
-        allegation_types: ['one']
-      )
+        victim_id: participant_bart.id)
 
       get "/api/v1/screenings/#{screening.id}"
 
