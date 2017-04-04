@@ -32,11 +32,13 @@ describe Participant do
           {
             screening: screening,
             perpetrator_id: participant.id,
-            victim_id: other_participant.id
+            victim_id: other_participant.id,
+            allegation_types: %w(string1 string2)
           }, {
             screening: screening,
             perpetrator_id: other_participant.id,
-            victim_id: participant.id
+            victim_id: participant.id,
+            allegation_types: ['string1']
           }
         ]
       )
@@ -85,15 +87,18 @@ describe Participant do
           {
             screening: screening,
             perpetrator_id: participant.id,
-            victim_id: other_participant.id
+            victim_id: other_participant.id,
+            allegation_types: %w(string1 string2)
           }, {
             screening: screening,
             perpetrator_id: other_participant.id,
-            victim_id: participant.id
+            victim_id: participant.id,
+            allegation_types: %w(string1 string3)
           }, {
             screening: screening,
             perpetrator_id: other_participant.id,
-            victim_id: other_other_participant.id
+            victim_id: other_other_participant.id,
+            allegation_types: ['string1']
           }
         ]
       )

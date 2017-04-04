@@ -76,7 +76,8 @@ CREATE TABLE allegations (
     perpetrator_id character varying,
     victim_id character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    allegation_types character varying[]
 );
 
 
@@ -766,6 +767,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170324184740'),
 ('20170324185122'),
 ('20170324204945'),
-('20170329204444');
+('20170329204444'),
+('20170404204641');
 
 

@@ -130,7 +130,8 @@ describe 'Screening API' do
       allegation = Allegation.create!(
         screening: screening,
         perpetrator_id: participant_homer.id,
-        victim_id: participant_bart.id
+        victim_id: participant_bart.id,
+        allegation_types: ['one']
       )
 
       get "/api/v1/screenings/#{screening.id}"

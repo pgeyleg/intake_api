@@ -166,7 +166,8 @@ describe 'Participants API' do
       Allegation.create(
         screening: screening,
         perpetrator_id: annie.id,
-        victim_id: jeff.id
+        victim_id: jeff.id,
+        allegation_types: ['one']
       )
     end
 

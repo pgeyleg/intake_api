@@ -9,6 +9,7 @@ describe AllegationSerializer do
     let(:allegation) do
       Allegation.new(
         screening: screening,
+        allegation_types: %w(string1 string2),
         perpetrator_id: perpetrator.id,
         victim_id: victim.id
       )
@@ -20,6 +21,7 @@ describe AllegationSerializer do
       expect(described_class.new(allegation).as_json).to eq(
         id: allegation.id,
         screening_id: screening.id,
+        allegation_types: %w(string1 string2),
         perpetrator_id: perpetrator.id,
         victim_id: victim.id
       )

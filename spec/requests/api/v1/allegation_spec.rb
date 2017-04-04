@@ -38,7 +38,8 @@ describe 'Screening Allegations API' do
             id: nil,
             screening_id: screening.id,
             perpetrator_id: bart.id,
-            victim_id: lisa.id
+            victim_id: lisa.id,
+            allegation_types: %w(string1 string2)
           }
         ]
       }
@@ -67,6 +68,7 @@ describe 'Screening Allegations API' do
             screening_id: screening.id,
             perpetrator_id: bart.id,
             victim_id: lisa.id,
+            allegation_types: %w(string1 string2)
             # id: allegation.id
           )
         )
@@ -101,7 +103,8 @@ describe 'Screening Allegations API' do
       allegation = Allegation.create!(
         screening: screening,
         perpetrator_id: bart.id,
-        victim_id: bart.id
+        victim_id: bart.id,
+        allegation_types: ['one']
       )
 
       updated_params = {
@@ -113,7 +116,8 @@ describe 'Screening Allegations API' do
             id: allegation.id,
             screening_id: screening.id,
             perpetrator_id: bart.id,
-            victim_id: lisa.id
+            victim_id: lisa.id,
+            allegation_types: ['one']
           }
         ]
       }
@@ -175,7 +179,8 @@ describe 'Screening Allegations API' do
       Allegation.create!(
         screening: screening,
         perpetrator_id: bart.id,
-        victim_id: bart.id
+        victim_id: bart.id,
+        allegation_types: ['one']
       )
 
       updated_params = {
