@@ -10,4 +10,6 @@ Rails.application.routes.draw do
       resources :screenings
     end
   end
+
+  resources :version, only: :index
 end
