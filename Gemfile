@@ -9,6 +9,8 @@ gem 'rack-cors'
 gem 'rails', '~> 5.0.1'
 
 group :development, :test do
+  gem 'factory_girl_rails'
+  gem 'ffaker'
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-doc'

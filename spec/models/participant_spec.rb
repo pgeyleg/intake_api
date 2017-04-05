@@ -27,19 +27,14 @@ describe Participant do
     end
 
     before do
-      Allegation.create!(
-        [
-          {
-            screening: screening,
-            perpetrator_id: participant.id,
-            victim_id: other_participant.id
-          }, {
-            screening: screening,
-            perpetrator_id: other_participant.id,
-            victim_id: participant.id
-          }
-        ]
-      )
+      FactoryGirl.create(:allegation,
+        screening: screening,
+        perpetrator_id: participant.id,
+        victim_id: other_participant.id)
+      FactoryGirl.create(:allegation,
+        screening: screening,
+        perpetrator_id: other_participant.id,
+        victim_id: participant.id)
     end
 
     it 'does not affect allegations if other values are updated' do
@@ -80,23 +75,18 @@ describe Participant do
     let(:other_other_participant) { Participant.create!(screening: screening) }
 
     before do
-      Allegation.create!(
-        [
-          {
-            screening: screening,
-            perpetrator_id: participant.id,
-            victim_id: other_participant.id
-          }, {
-            screening: screening,
-            perpetrator_id: other_participant.id,
-            victim_id: participant.id
-          }, {
-            screening: screening,
-            perpetrator_id: other_participant.id,
-            victim_id: other_other_participant.id
-          }
-        ]
-      )
+      FactoryGirl.create(:allegation,
+        screening: screening,
+        perpetrator_id: participant.id,
+        victim_id: other_participant.id)
+      FactoryGirl.create(:allegation,
+        screening: screening,
+        perpetrator_id: other_participant.id,
+        victim_id: participant.id)
+      FactoryGirl.create(:allegation,
+        screening: screening,
+        perpetrator_id: other_participant.id,
+        victim_id: other_other_participant.id)
     end
 
     it 'removes all allegations for a participant' do

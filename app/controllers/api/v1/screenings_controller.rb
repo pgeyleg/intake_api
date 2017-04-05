@@ -24,7 +24,8 @@ module Api
         ],
         allegations: [
           :perpetrator_id,
-          :victim_id
+          :victim_id,
+          allegation_types: []
         ]
       ].freeze
 

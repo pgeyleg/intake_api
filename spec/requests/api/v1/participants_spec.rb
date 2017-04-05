@@ -163,11 +163,10 @@ describe 'Participants API' do
       )
     end
     before do
-      Allegation.create(
+      FactoryGirl.create(:allegation,
         screening: screening,
         perpetrator_id: annie.id,
-        victim_id: jeff.id
-      )
+        victim_id: jeff.id)
     end
 
     describe 'PUT /api/v1/participants/:id' do
