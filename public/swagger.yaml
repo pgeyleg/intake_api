@@ -233,7 +233,22 @@ definitions:
           - Other
   Allegation:
     type: object
+    required:
+      - allegation_types
     properties:
+      allegation_types:
+        type: array
+        items:
+          type: string
+        enum:
+          - General neglect
+          - Severe neglect
+          - Physical abuse
+          - Sexual abuse
+          - Emotional abuse
+          - Caretaker absent/incapacity
+          - Exploitation
+          - Sibling at risk
       victim_id:
         type: string
       perpetrator_id:
