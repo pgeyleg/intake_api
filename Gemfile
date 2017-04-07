@@ -9,8 +9,6 @@ gem 'rack-cors'
 gem 'rails', '~> 5.0.1'
 
 group :development, :test do
-  gem 'factory_girl_rails'
-  gem 'ffaker'
   gem 'pry'
   gem 'pry-byebug'
   gem 'pry-doc'
@@ -31,6 +29,9 @@ end
 group :test do
   gem 'ci_reporter_rspec'
   gem 'database_cleaner'
+  gem 'factory_girl_rails'
+  gem 'ffaker'
+  gem 'shoulda-matchers'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

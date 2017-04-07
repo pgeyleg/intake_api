@@ -205,6 +205,8 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.8.1)
+    shoulda-matchers (3.1.1)
+      activesupport (>= 4.0.0)
     slop (3.6.0)
     spring (2.0.1)
       activesupport (>= 4.2)
@@ -257,6 +259,7 @@ DEPENDENCIES
   rails (~> 5.0.1)
   rspec-rails
   rubocop
+  shoulda-matchers
   spring
   spring-watcher-listen (~> 2.0.0)
   timecop
