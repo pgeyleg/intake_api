@@ -176,6 +176,38 @@ ALTER SEQUENCE participant_addresses_id_seq OWNED BY participant_addresses.id;
 
 
 --
+-- Name: participant_phone_numbers; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE participant_phone_numbers (
+    id character varying NOT NULL,
+    participant_id character varying,
+    phone_number_id character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: participant_phone_numbers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE participant_phone_numbers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: participant_phone_numbers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE participant_phone_numbers_id_seq OWNED BY participant_phone_numbers.id;
+
+
+--
 -- Name: participants; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -451,6 +483,13 @@ ALTER TABLE ONLY participant_addresses ALTER COLUMN id SET DEFAULT nextval('part
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY participant_phone_numbers ALTER COLUMN id SET DEFAULT nextval('participant_phone_numbers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY participants ALTER COLUMN id SET DEFAULT nextval('participants_id_seq'::regclass);
 
 
@@ -534,6 +573,14 @@ ALTER TABLE ONLY cross_reports
 
 ALTER TABLE ONLY participant_addresses
     ADD CONSTRAINT participant_addresses_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: participant_phone_numbers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY participant_phone_numbers
+    ADD CONSTRAINT participant_phone_numbers_pkey PRIMARY KEY (id);
 
 
 --
@@ -633,6 +680,20 @@ CREATE INDEX index_participant_addresses_on_address_id ON participant_addresses 
 --
 
 CREATE INDEX index_participant_addresses_on_participant_id ON participant_addresses USING btree (participant_id);
+
+
+--
+-- Name: index_participant_phone_numbers_on_participant_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_participant_phone_numbers_on_participant_id ON participant_phone_numbers USING btree (participant_id);
+
+
+--
+-- Name: index_participant_phone_numbers_on_phone_number_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_participant_phone_numbers_on_phone_number_id ON participant_phone_numbers USING btree (phone_number_id);
 
 
 --
@@ -768,6 +829,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170324185122'),
 ('20170324204945'),
 ('20170329204444'),
-('20170404204641');
+('20170404204641'),
+('20170406164348');
 
 

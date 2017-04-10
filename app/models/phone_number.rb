@@ -2,6 +2,8 @@
 
 # PhoneNumber model which represents a phone number
 class PhoneNumber < ActiveRecord::Base
+  belongs_to :participant, optional: true
+
   self.inheritance_column = nil
   PHONE_NUMBER_TYPES = %w(Cell Home Work Other).freeze
   validates :type,
