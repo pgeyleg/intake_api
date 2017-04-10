@@ -44,6 +44,30 @@ describe 'People API' do
     end
     let(:body) { JSON.parse(response.body).with_indifferent_access }
 
+    context 'remote authentication is enabled' do
+      let(:auth_url) { 'http://test.com' }
+      let(:auth_token) { 'fake_token' }
+      let(:headers) { { 'Authorization' => auth_token } }
+
+      before do
+        allow(ENV).to receive(:fetch).and_call_original
+        allow(ENV).to receive(:fetch).with('AUTHENTICATION_URL').and_return(auth_url)
+        allow(ENV).to receive(:fetch).with('AUTHENTICATION', false).and_return(true)
+        faraday_double = double :faraday, status: http_status
+        allow(Faraday).to receive(:get)
+          .with("#{auth_url}/authn/validate?token=#{auth_token}")
+          .and_return faraday_double
+      end
+
+      context 'the authorization token is not valid' do
+        let(:http_status) { 403 }
+        it 'responds with a 403' do
+          post '/api/v1/people', params: params, headers: headers
+          expect(response.status).to eq 403
+        end
+      end
+    end
+
     it 'creates a person' do
       post '/api/v1/people', params: params
       expect(response.status).to eq(201)

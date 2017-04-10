@@ -3,6 +3,65 @@ require 'rails_helper'
 
 describe 'Screening API' do
   describe 'POST /api/v1/screenings' do
+    context 'remote authentication is enabled' do
+      let(:auth_url) { 'http://test.com' }
+      let(:auth_token) { 'fake_token' }
+      let(:http_status) { 200 }
+      let(:headers) { { 'Authorization' => auth_token } }
+
+      before do
+        allow(ENV).to receive(:fetch).and_call_original
+        allow(ENV).to receive(:fetch).with('AUTHENTICATION_URL').and_return(auth_url)
+        allow(ENV).to receive(:fetch).with('AUTHENTICATION', false).and_return(true)
+        faraday_double = double :faraday, status: http_status
+        allow(Faraday).to receive(:get)
+          .with("#{auth_url}/authn/validate?token=#{auth_token}")
+          .and_return faraday_double
+      end
+
+      it 'gets part of the url from the environment variable' do
+        expect(ENV).to receive(:fetch).with('AUTHENTICATION_URL').and_return(auth_url)
+        get '/api/v1/screenings', headers: headers
+      end
+
+      context 'with a valid token' do
+        let(:http_status) { 200 }
+
+        it 'responds with a 200 status' do
+          get '/api/v1/screenings', headers: headers
+          expect(response.status).to eq 200
+        end
+
+        it 'hits correct action' do
+          expect_any_instance_of(Api::V1::ScreeningsController).to receive(:index)
+          get '/api/v1/screenings', headers: headers
+        end
+      end
+
+      context 'token is invalid' do
+        let(:http_status) { 403 }
+
+        it 'responds with a 403' do
+          get '/api/v1/screenings', headers: headers
+          expect(response.status).to eq 403
+        end
+
+        it 'responds with the correct message' do
+          get '/api/v1/screenings', headers: headers
+          expect(response.body).to eq({ errors: ['Forbidden, request not authorized'] }.to_json)
+        end
+      end
+
+      context 'other errors' do
+        let(:http_status) { 403 }
+
+        it 'responds with 403 for any non-200 response' do
+          get '/api/v1/screenings', headers: headers
+          expect(response.status).to eq 403
+        end
+      end
+    end
+
     it 'creates a screening' do
       screening_params = {
         additional_information: 'I have great reasons',

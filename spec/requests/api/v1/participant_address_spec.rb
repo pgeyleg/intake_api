@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'Participants Addresses API' do
+describe 'Participants Addresses API', skip_auth: true do
   describe 'PUT /api/v1/participants/:id' do
     it 'adds an address if one did not exist before' do
       participant = FactoryGirl.create(
