@@ -4,6 +4,12 @@ require 'rails_helper'
 describe 'Participants API' do
   let(:person) { Person.create! }
   let(:screening) { Screening.create! }
+  let(:phone_number) do
+    FactoryGirl.build(
+      :phone_number,
+      id: nil
+    )
+  end
   let(:participant_params) do
     {
       person_id: person.id,
@@ -28,13 +34,16 @@ describe 'Participants API' do
           zip: '95822',
           type: 'Home'
         }
-      ]
+      ],
+      phone_numbers: [phone_number.as_json]
     }
   end
   context 'a participant does not already exist' do
     describe 'POST /api/v1/participants' do
       it 'creates a participant' do
-        post '/api/v1/participants', params: participant_params
+        expect do
+          post '/api/v1/participants', params: participant_params
+        end.to change(PhoneNumber, :count).by(1)
 
         expect(response.status).to eq(201)
         body = JSON.parse(response.body).with_indifferent_access
@@ -61,10 +70,17 @@ describe 'Participants API' do
               zip: '95822',
               type: 'Home'
             )
+          ),
+          phone_numbers: array_including(
+            a_hash_including(
+              number: phone_number.number,
+              type: phone_number.type
+            )
           )
         )
         expect(body['id']).to_not eq nil
         expect(body['addresses'].first['id']).to_not eq nil
+        expect(body['phone_numbers'].first['id']).to_not eq nil
       end
     end
   end
@@ -80,6 +96,20 @@ describe 'Participants API' do
       )
     end
 
+    let(:phone_number1) do
+      FactoryGirl.build(
+        :phone_number,
+        id: nil
+      )
+    end
+
+    let(:phone_number2) do
+      FactoryGirl.build(
+        :phone_number,
+        id: nil
+      )
+    end
+
     let(:participant) do
       Participant.create!(
         person_id: person.id,
@@ -90,6 +120,7 @@ describe 'Participants API' do
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
         addresses: [address1],
+        phone_numbers: [phone_number1],
         roles: ['Victim', 'Anonymous Reporter']
       )
     end
@@ -111,6 +142,7 @@ describe 'Participants API' do
               type: 'Placement'
             }
           ],
+          phone_numbers: [phone_number2.as_json],
           roles: updated_roles
         }
 
@@ -128,6 +160,12 @@ describe 'Participants API' do
               city: 'Real City',
               zip: '10010',
               type: 'Placement'
+            )
+          ),
+          phone_numbers: array_including(
+            a_hash_including(
+              number: phone_number2.number,
+              type: phone_number2.type
             )
           ),
           roles: updated_roles

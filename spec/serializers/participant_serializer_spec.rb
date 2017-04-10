@@ -26,6 +26,10 @@ describe ParticipantSerializer do
         zip: '78495',
         type: 'Work'
       )
+      participant.phone_numbers.build(
+        number: '1234567891',
+        type: 'Work'
+      )
       participant.save!
     end
 
@@ -46,6 +50,13 @@ describe ParticipantSerializer do
             state: 'CA',
             city: 'sacramento',
             zip: '78495',
+            type: 'Work'
+          }
+        ],
+        phone_numbers: [
+          {
+            id: participant.phone_numbers.ids.first,
+            number: '1234567891',
             type: 'Work'
           }
         ],

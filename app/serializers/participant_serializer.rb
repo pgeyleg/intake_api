@@ -11,4 +11,5 @@ class ParticipantSerializer < ActiveModel::Serializer # :nodoc:
     :roles
 
   has_many :addresses
+  has_many :phone_numbers
 end
