@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'Screening Allegations API' do
+describe 'Screening Allegations API', skip_auth: true do
   describe 'PUT /api/v1/screenings/:id' do
     it 'adds an allegation if one did not exist before' do
       screening = Screening.create!

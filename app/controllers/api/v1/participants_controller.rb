@@ -3,6 +3,8 @@
 module Api
   module V1
     class ParticipantsController < ApplicationController # :nodoc:
+      include AuthenticationConcern
+
       def create
         participant = Participant.new(participant_params)
         participant.addresses.build(addresses_params[:addresses])

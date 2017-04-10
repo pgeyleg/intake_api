@@ -4,6 +4,8 @@
 module Api
   module V1
     class PeopleSearchController < ApplicationController # :nodoc:
+      include AuthenticationConcern
+
       def index
         people = PeopleRepo.search(
           query: {
