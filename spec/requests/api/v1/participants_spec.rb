@@ -97,10 +97,7 @@ describe 'Participants API' do
     end
 
     let(:phone_number1) do
-      FactoryGirl.build(
-        :phone_number,
-        id: nil
-      )
+      FactoryGirl.build(:phone_number)
     end
 
     let(:phone_number2) do

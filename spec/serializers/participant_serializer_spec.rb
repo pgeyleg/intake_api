@@ -45,7 +45,7 @@ describe ParticipantSerializer do
         screening_id: screening.id,
         addresses: [
           {
-            id: participant.addresses.ids.first,
+            id: participant.addresses.first.id,
             street_address: '1840 Broad rd',
             state: 'CA',
             city: 'sacramento',
@@ -55,7 +55,7 @@ describe ParticipantSerializer do
         ],
         phone_numbers: [
           {
-            id: participant.phone_numbers.ids.first,
+            id: participant.phone_numbers.first.id,
             number: '1234567891',
             type: 'Work'
           }

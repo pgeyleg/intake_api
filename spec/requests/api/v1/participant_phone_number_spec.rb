@@ -23,6 +23,7 @@ describe 'Participants Phone Numbers API' do
       expect(body).to match a_hash_including(
         phone_numbers: array_including(
           a_hash_including(
+            :id,
             number: '916-555-1212',
             type: 'Work'
           )
@@ -35,7 +36,6 @@ describe 'Participants Phone Numbers API' do
       participant = FactoryGirl.create(
         :participant,
         first_name: 'Bart',
-        last_name: 'Simpson',
         phone_numbers: [phone_number]
       )
 
@@ -70,7 +70,8 @@ describe 'Participants Phone Numbers API' do
       )
 
       updated_params = {
-        first_name: 'Fred'
+        first_name: 'Fred',
+        phone_numbers: []
       }
 
       expect do
