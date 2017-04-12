@@ -4,7 +4,7 @@
 # person on a screening
 class Participant < ActiveRecord::Base
   validates :screening, presence: true
-  has_many :participant_addresses, inverse_of: :participant
+  has_many :participant_addresses, inverse_of: :participant, dependent: :destroy
   has_many :addresses, through: :participant_addresses
   has_many :participant_phone_numbers, inverse_of: :participant, dependent: :destroy
   has_many :phone_numbers, through: :participant_phone_numbers
