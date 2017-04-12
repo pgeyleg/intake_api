@@ -36,6 +36,7 @@ module Api
         screening.save!
         render json: ScreeningSerializer.new(screening)
           .as_json(include: ['participants.addresses',
+                             'participants.phone_numbers',
                              'address',
                              'cross_reports',
                              'allegations']), status: :created
@@ -47,6 +48,7 @@ module Api
           .as_json(include:
             [
               'participants.addresses',
+              'participants.phone_numbers',
               'address',
               'allegations',
               'cross_reports'
@@ -64,6 +66,7 @@ module Api
           .as_json(include:
         [
           'participants.addresses',
+          'participants.phone_numbers',
           'address',
           'allegations',
           'cross_reports'
@@ -75,7 +78,9 @@ module Api
           screening_decision_details,
           screening_decisions
         ).results
-        render json: screenings.as_json(include: ['participants.addresses', 'address']), status: :ok
+        render json: screenings.as_json(
+          include: ['participants.addresses', 'address', 'participants.phone_numbers']
+        ), status: :ok
       end
 
       private

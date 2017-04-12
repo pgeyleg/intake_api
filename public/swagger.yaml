@@ -39,6 +39,10 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Address'
+      phone_numbers:
+        type: array
+        items:
+          $ref: '#/definitions/PhoneNumber'
       roles:
         type: array
         items:

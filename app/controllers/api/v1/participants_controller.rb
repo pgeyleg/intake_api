@@ -6,6 +6,7 @@ module Api
       def create
         participant = Participant.new(participant_params)
         participant.addresses.build(addresses_params[:addresses])
+        participant.phone_numbers.build(phone_numbers_params[:phone_numbers])
         participant.save!
         render json: participant, status: :created
       end
@@ -14,9 +15,10 @@ module Api
         participant = Participant.find(participant_params[:id])
         participant.update_attributes!(participant_params)
         participant.participant_addresses = update_addresses(participant)
+        participant.participant_phone_numbers = update_phone_numbers(participant)
         participant.save!
         render json: ParticipantSerializer.new(participant)
-          .as_json(include: %w(addresses address)), status: :ok
+          .as_json(include: %w(addresses address phone_numbers phone_number)), status: :ok
       end
 
       def destroy
@@ -25,6 +27,16 @@ module Api
       end
 
       private
+
+      def phone_numbers_params
+        params.permit(
+          phone_numbers: [
+            :id,
+            :number,
+            :type
+          ]
+        )
+      end
 
       def addresses_params
         params.permit(
@@ -66,6 +78,20 @@ module Api
           end
 
           participant_address
+        end
+      end
+
+      def update_phone_numbers(participant)
+        (phone_numbers_params[:phone_numbers] || []).map do |phonenumber_attr|
+          participant_phone_number = participant
+                                     .participant_phone_numbers
+                                     .find_or_initialize_by(phone_number_id: phonenumber_attr[:id])
+          if participant_phone_number.persisted?
+            participant_phone_number.phone_number.update!(phonenumber_attr)
+          else
+            participant_phone_number.build_phone_number(phonenumber_attr)
+          end
+          participant_phone_number
         end
       end
     end
