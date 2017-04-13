@@ -17,6 +17,8 @@ services:
     environment:
       ELASTICSEARCH_URL: 'http://elasticsearch:9200'
       TEST_ELASTICSEARCH_URL: 'http://test_elasticsearch:9200'
+      AUTHENTICATION_URL: 'http://www.example.com/'
+      AUTHENTICATION: 'false'
   elasticsearch:
     image: 'elasticsearch:2.4'
   test_elasticsearch:
