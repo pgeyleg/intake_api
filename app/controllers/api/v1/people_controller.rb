@@ -3,6 +3,8 @@
 module Api
   module V1
     class PeopleController < ApplicationController # :nodoc:
+      include AuthenticationConcern
+
       def create
         person = Person.new(person_params)
         person.addresses.build(addresses_params[:addresses])

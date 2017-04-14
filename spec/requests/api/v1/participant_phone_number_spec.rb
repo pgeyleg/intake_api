@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'Participants Phone Numbers API' do
+describe 'Participants Phone Numbers API', skip_auth: true do
   describe 'PUT /api/v1/participants/:id' do
     it 'adds an phone number if one did not exist before' do
       participant = FactoryGirl.create(

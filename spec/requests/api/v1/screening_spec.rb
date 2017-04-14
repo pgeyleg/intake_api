@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'Screening API' do
+describe 'Screening API', skip_auth: true do
   describe 'POST /api/v1/screenings' do
     it 'creates a screening' do
       screening_params = {

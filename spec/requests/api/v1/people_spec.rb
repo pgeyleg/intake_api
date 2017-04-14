@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'People API' do
+describe 'People API', skip_auth: true do
   describe 'POST /api/v1/people' do
     let(:params) do
       {

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'Participants API' do
+describe 'Participants API', skip_auth: true do
   let(:person) { Person.create! }
   let(:screening) { Screening.create! }
   let(:phone_number) do
@@ -38,6 +38,7 @@ describe 'Participants API' do
       phone_numbers: [phone_number.as_json]
     }
   end
+
   context 'a participant does not already exist' do
     describe 'POST /api/v1/participants' do
       it 'creates a participant' do

@@ -3,6 +3,8 @@
 module Api
   module V1
     class ScreeningsController < ApplicationController # :nodoc:
+      include AuthenticationConcern
+
       PERMITTED_PARAMS = [
         :additional_information,
         :ended_at,

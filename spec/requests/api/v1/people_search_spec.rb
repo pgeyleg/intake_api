@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'People Search API', elasticsearch: true do
+describe 'People Search', elasticsearch: true, skip_auth: true do
   describe 'GET /api/v1/people_search' do
     let!(:deborah) do
       Person.create!(
