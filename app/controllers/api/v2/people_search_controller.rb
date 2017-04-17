@@ -8,14 +8,30 @@ module Api
 
       PEOPLE_SEARCH_PATH = '/_search'
       def index
-        peopleSearch = {
+        people_search = {
+          _source: [
+            'id', 'first_name', 'middle_name', 'last_name', 'name_suffix', 'gender',
+            'date_of_birth', 'ssn', 'languages', 'races', 'ethnicity', 'addresses', 'phone_numbers',
+            'highlight'
+          ],
+          highlight: {
+            order: 'score',
+            number_of_fragments: 3,
+            require_field_match: true,
+            fields: {
+              first_name: { },
+              last_name: { },
+              date_of_birth: { },
+              ssn: { }
+            }
+          },
           query: {
             bool: {
               should: should_query
             }
           }
         }
-        response = API.make_api_call(PEOPLE_SEARCH_PATH, :get, peopleSearch)
+        response = API.make_api_call(PEOPLE_SEARCH_PATH, :get, people_search)
         people = response.body['hits']['hits'].map do |hit|
           hit['_source']
         end
