@@ -4,6 +4,8 @@
 module Api
   module V2
     class PeopleSearchController < ApplicationController # :nodoc:
+      include AuthenticationConcern
+
       PEOPLE_SEARCH_PATH = '/_search'
       def index
         peopleSearch = {
