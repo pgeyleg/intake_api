@@ -6,9 +6,14 @@ module Api
     class PeopleSearchController < ApplicationController # :nodoc:
       include AuthenticationConcern
 
-      PEOPLE_SEARCH_PATH = '/_search'
+      PEOPLE_SEARCH_PATH = '/api/v1/dora/people/_search'
       def index
         people_search = {
+          query: {
+            bool: {
+              should: should_query
+            }
+          },
           _source: [
             'id', 'first_name', 'middle_name', 'last_name', 'name_suffix', 'gender',
             'date_of_birth', 'ssn', 'languages', 'races', 'ethnicity', 'addresses', 'phone_numbers',
@@ -23,11 +28,6 @@ module Api
               last_name: { },
               date_of_birth: { },
               ssn: { }
-            }
-          },
-          query: {
-            bool: {
-              should: should_query
             }
           }
         }

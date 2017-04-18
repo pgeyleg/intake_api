@@ -21,14 +21,14 @@ describe Api::V2::PeopleSearchController do
     let(:query) do
       { bool: { should: [{match: {first_name: 'blah'}}, {match: {last_name: 'blah'}}]}}
     end
-    let(:query_param) do {
+    let(:full_query) do {
+      query: query,
       _source: [
         'id', 'first_name', 'middle_name', 'last_name', 'name_suffix',
         'gender', 'date_of_birth', 'ssn', 'languages', 'races', 'ethnicity',
         'addresses', 'phone_numbers', 'highlight'
       ],
-      highlight: highlight,
-      query: query
+      highlight: highlight
     }
     end
     let(:results) do
@@ -59,7 +59,7 @@ describe Api::V2::PeopleSearchController do
 
     before do
       expect(API).to receive(:make_api_call)
-        .with("/_search", :get, query_param)
+        .with("/api/v1/dora/people/_search", :get, full_query)
         .and_return(response)
     end
 

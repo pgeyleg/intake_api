@@ -12,7 +12,7 @@ module API
   end
 
   def self.people_search_connection(path)
-    @connection ||= Faraday.new(url: ENV.fetch('ELASTICSEARCH_URL')+path) do |connection|
+    @connection ||= Faraday.new(url: ENV.fetch('SEARCH_URL')+path) do |connection|
       ::API.connection_settings connection
     end
   end
@@ -23,10 +23,5 @@ module API
       req.headers['Content-Type'] = CONTENT_TYPE unless method == :get
       req.body = payload.to_json unless payload.nil?
     end
-  # rescue Faraday::Error => e
-    # raise ApiError,
-      # message: e.message,
-      # sent_attributes: payload.to_json,
-      # url: url, method: method
   end
 end
