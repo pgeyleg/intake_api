@@ -18,19 +18,12 @@ describe Api::V2::PeopleSearchController do
         }
       }
     end
-    let(:query) do
-      { bool: { should: [{ match: { first_name: 'blah' } }, { match: { last_name: 'blah' } }] } }
-    end
-    let(:full_query) do
-      {
-        query: query,
-        _source: %w(
-          id first_name middle_name last_name name_suffix
-          gender date_of_birth ssn languages races ethnicity
-          addresses phone_numbers highlight
-        ),
-        highlight: highlight
-      }
+    let(:fields) do
+      %w(
+        id first_name middle_name last_name name_suffix gender
+        date_of_birth ssn languages races ethnicity addresses phone_numbers
+        highlight
+      )
     end
     let(:results) do
       { took: 15,
@@ -58,14 +51,120 @@ describe Api::V2::PeopleSearchController do
     end
     let(:response) { double(:response, body: results.as_json) }
 
-    before do
-      expect(API).to receive(:make_api_call)
-        .with('/api/v1/dora/people/_search', :post, full_query)
-        .and_return(response)
+    let(:name_query) do
+      { bool: { should: [{ match: { first_name: 'blah' } }, { match: { last_name: 'blah' } }] } }
+    end
+    let(:name_search) do
+      {
+        query: name_query,
+        _source: fields,
+        highlight: highlight
+      }
     end
 
-    it 'returns the people results' do
+    it 'creates a search query for names' do
+      expect(API).to receive(:make_api_call)
+        .with('/api/v1/dora/people/_search', :post, name_search)
+        .and_return(response)
       person_results = get :index, params: { search_term: 'blah' }
+      expect(JSON.parse(person_results.body)).to match array_including(
+        a_hash_including(
+          'id' => '1',
+          'first_name' => 'Deborah',
+          'last_name' => 'Harry',
+          'middle_name' => 'Ann',
+          'ssn' => '663298776',
+          'date_of_birth' => '1982-11-23'
+        )
+      )
+    end
+
+    let(:ssn_query) do
+      { bool: { should: [
+        { match: { first_name: '123456789' } },
+        { match: { last_name: '123456789' } },
+        { prefix: { date_of_birth: '1234' } }, 
+        { match: { ssn: '123456789' } }
+      ] } }
+    end
+    let(:ssn_search) do
+      {
+        query: ssn_query,
+        _source: fields,
+        highlight: highlight
+      }
+    end
+
+    it 'creates a search query for ssn' do
+      expect(API).to receive(:make_api_call)
+        .with('/api/v1/dora/people/_search', :post, ssn_search)
+        .and_return(response)
+      person_results = get :index, params: { search_term: '123456789' }
+      expect(JSON.parse(person_results.body)).to match array_including(
+        a_hash_including(
+          'id' => '1',
+          'first_name' => 'Deborah',
+          'last_name' => 'Harry',
+          'middle_name' => 'Ann',
+          'ssn' => '663298776',
+          'date_of_birth' => '1982-11-23'
+        )
+      )
+    end
+
+    let(:birth_year_query) do
+      { bool: { should: [
+        { match: { first_name: '2012' } },
+        { match: { last_name: '2012' } },
+        { prefix: { date_of_birth: '2012' } }
+      ] } }
+    end
+    let(:birth_year_search) do
+      {
+        query: birth_year_query,
+        _source: fields,
+        highlight: highlight
+      }
+    end
+
+    it 'creates a search query for birth year' do
+      expect(API).to receive(:make_api_call)
+        .with('/api/v1/dora/people/_search', :post, birth_year_search)
+        .and_return(response)
+      person_results = get :index, params: { search_term: '2012' }
+      expect(JSON.parse(person_results.body)).to match array_including(
+        a_hash_including(
+          'id' => '1',
+          'first_name' => 'Deborah',
+          'last_name' => 'Harry',
+          'middle_name' => 'Ann',
+          'ssn' => '663298776',
+          'date_of_birth' => '1982-11-23'
+        )
+      )
+    end
+
+    let(:birth_date_query) do
+      { bool: { should: [
+        { match: { first_name: '4/3/2010' } },
+        { match: { last_name: '4/3/2010' } },
+        { match: { date_of_birth: '2010-04-03' } },
+        { prefix: { date_of_birth: '2010' } }
+      ] } }
+    end
+    let(:birth_date_search) do
+      {
+        query: birth_date_query,
+        _source: fields,
+        highlight: highlight
+      }
+    end
+
+    it 'creates a search query for birth date' do
+      expect(API).to receive(:make_api_call)
+        .with('/api/v1/dora/people/_search', :post, birth_date_search)
+        .and_return(response)
+      person_results = get :index, params: { search_term: '4/3/2010' }
       expect(JSON.parse(person_results.body)).to match array_including(
         a_hash_including(
           'id' => '1',
