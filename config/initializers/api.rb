@@ -12,7 +12,7 @@ module API
   end
 
   def self.people_search_connection(path)
-    @connection ||= Faraday.new(url: ENV.fetch('SEARCH_URL')+path) do |connection|
+    @connection ||= Faraday.new(url: ENV.fetch('SEARCH_URL') + path) do |connection|
       ::API.connection_settings connection
     end
   end

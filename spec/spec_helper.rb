@@ -108,7 +108,7 @@ RSpec.configure do |config|
   #   Kernel.srand config.seed
 
   config.around(:each) do |example|
-    WebMock.disable_net_connect!(allow_localhost: true, allow: %{elasticsearch} )
+    WebMock.disable_net_connect!(allow_localhost: true, allow: %(elasticsearch))
     example.run
     WebMock.allow_net_connect!
   end

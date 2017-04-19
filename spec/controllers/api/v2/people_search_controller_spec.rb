@@ -11,30 +11,31 @@ describe Api::V2::PeopleSearchController do
         number_of_fragments: 3,
         require_field_match: true,
         fields: {
-          first_name: { },
-          last_name: { },
-          date_of_birth: { },
-          ssn: { }
+          first_name: {},
+          last_name: {},
+          date_of_birth: {},
+          ssn: {}
         }
       }
     end
     let(:query) do
-      { bool: { should: [{match: {first_name: 'blah'}}, {match: {last_name: 'blah'}}]}}
+      { bool: { should: [{ match: { first_name: 'blah' } }, { match: { last_name: 'blah' } }] } }
     end
-    let(:full_query) do {
-      query: query,
-      _source: [
-        'id', 'first_name', 'middle_name', 'last_name', 'name_suffix',
-        'gender', 'date_of_birth', 'ssn', 'languages', 'races', 'ethnicity',
-        'addresses', 'phone_numbers', 'highlight'
-      ],
-      highlight: highlight
-    }
+    let(:full_query) do
+      {
+        query: query,
+        _source: %w(
+          id first_name middle_name last_name name_suffix
+          gender date_of_birth ssn languages races ethnicity
+          addresses phone_numbers highlight
+        ),
+        highlight: highlight
+      }
     end
     let(:results) do
       { took: 15,
         timed_out: false,
-        _shards: {total: 10, successful: 10, failed: 0},
+        _shards: { total: 10, successful: 10, failed: 0 },
         hits: { total: 1,
                 max_score: 0.19245009,
                 hits: [{ _index: 'people',

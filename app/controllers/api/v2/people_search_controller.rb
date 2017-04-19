@@ -14,22 +14,8 @@ module Api
               should: should_query
             }
           },
-          _source: [
-            'id', 'first_name', 'middle_name', 'last_name', 'name_suffix', 'gender',
-            'date_of_birth', 'ssn', 'languages', 'races', 'ethnicity', 'addresses', 'phone_numbers',
-            'highlight'
-          ],
-          highlight: {
-            order: 'score',
-            number_of_fragments: 3,
-            require_field_match: true,
-            fields: {
-              first_name: { },
-              last_name: { },
-              date_of_birth: { },
-              ssn: { }
-            }
-          }
+          _source: fields,
+          highlight: highlight
         }
         response = API.make_api_call(PEOPLE_SEARCH_PATH, :post, people_search)
         people = response.body['hits']['hits'].map do |hit|
@@ -91,6 +77,28 @@ module Api
         ] | date_of_birth_query
         should_query << { match: { ssn: ssn } } if ssn
         should_query
+      end
+
+      def fields
+         %w(
+          id first_name middle_name last_name name_suffix gender
+          date_of_birth ssn languages races ethnicity addresses phone_numbers
+          highlight
+        )
+      end
+
+      def highlight
+        {
+          order: 'score',
+          number_of_fragments: 3,
+          require_field_match: true,
+          fields: {
+            first_name: {},
+            last_name: {},
+            date_of_birth: {},
+            ssn: {}
+          }
+        }
       end
     end
   end
