@@ -53,13 +53,13 @@ describe Api::V2::PeopleSearchController do
                                     phone_numbers: [],
                                     races: nil,
                                     id: '1',
-                                    first_name: 'Deborah'}}]}}
+                                    first_name: 'Deborah' } }] } }
     end
     let(:response) { double(:response, body: results.as_json) }
 
     before do
       expect(API).to receive(:make_api_call)
-        .with("/api/v1/dora/people/_search", :get, full_query)
+        .with('/api/v1/dora/people/_search', :post, full_query)
         .and_return(response)
     end
 

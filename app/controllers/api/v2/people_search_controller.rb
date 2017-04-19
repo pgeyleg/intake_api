@@ -31,7 +31,7 @@ module Api
             }
           }
         }
-        response = API.make_api_call(PEOPLE_SEARCH_PATH, :get, people_search)
+        response = API.make_api_call(PEOPLE_SEARCH_PATH, :post, people_search)
         people = response.body['hits']['hits'].map do |hit|
           hit['_source']
         end
