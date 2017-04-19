@@ -14,6 +14,28 @@ describe API do
       expect(
         a_request(:get, %r{/api/v1/dora/people/_search})
       ).to have_been_made
+      expect(
+        a_request(:get, %r{/api/v1/dora/people/_search})
+        .with(headers: { 'Content-Type' => 'application/json' })
+      ).not_to have_been_made
+    end
+
+    it 'includes CONTENT_TYPE unless a get' do
+      stub_request(:post, %r{/api/v1/dora/people/_search})
+      API.make_api_call('/api/v1/dora/people/_search', :post)
+      expect(
+        a_request(:post, %r{/api/v1/dora/people/_search})
+        .with(headers: { 'Content-Type' => 'application/json' })
+      ).to have_been_made
+    end
+
+    it 'includes the specified payload' do
+      stub_request(:post, %r{/api/v1/dora/people/_search})
+      API.make_api_call('/api/v1/dora/people/_search', :post, {})
+      expect(
+        a_request(:post, %r{/api/v1/dora/people/_search})
+        .with(body: {})
+      ).to have_been_made
     end
   end
 end

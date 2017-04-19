@@ -29,25 +29,9 @@ describe Api::V2::PeopleSearchController do
       { took: 15,
         timed_out: false,
         _shards: { total: 10, successful: 10, failed: 0 },
-        hits: { total: 1,
+        hits: { total: 0,
                 max_score: 0.19245009,
-                hits: [{ _index: 'people',
-                         _type: 'person',
-                         _id: '1',
-                         _score: 0.19245009,
-                         _source: { addresses: [],
-                                    gender: nil,
-                                    languages: [],
-                                    ethnicity: nil,
-                                    name_suffix: nil,
-                                    date_of_birth: '1982-11-23',
-                                    last_name: 'Harry',
-                                    middle_name: 'Ann',
-                                    ssn: '663298776',
-                                    phone_numbers: [],
-                                    races: nil,
-                                    id: '1',
-                                    first_name: 'Deborah' } }] } }
+                hits: [] } }
     end
     let(:response) { double(:response, body: results.as_json) }
 
@@ -66,24 +50,14 @@ describe Api::V2::PeopleSearchController do
       expect(API).to receive(:make_api_call)
         .with('/api/v1/dora/people/_search', :post, name_search)
         .and_return(response)
-      person_results = get :index, params: { search_term: 'blah' }
-      expect(JSON.parse(person_results.body)).to match array_including(
-        a_hash_including(
-          'id' => '1',
-          'first_name' => 'Deborah',
-          'last_name' => 'Harry',
-          'middle_name' => 'Ann',
-          'ssn' => '663298776',
-          'date_of_birth' => '1982-11-23'
-        )
-      )
+      get :index, params: { search_term: 'blah' }
     end
 
     let(:ssn_query) do
       { bool: { should: [
         { match: { first_name: '123456789' } },
         { match: { last_name: '123456789' } },
-        { prefix: { date_of_birth: '1234' } }, 
+        { prefix: { date_of_birth: '1234' } },
         { match: { ssn: '123456789' } }
       ] } }
     end
@@ -99,17 +73,7 @@ describe Api::V2::PeopleSearchController do
       expect(API).to receive(:make_api_call)
         .with('/api/v1/dora/people/_search', :post, ssn_search)
         .and_return(response)
-      person_results = get :index, params: { search_term: '123456789' }
-      expect(JSON.parse(person_results.body)).to match array_including(
-        a_hash_including(
-          'id' => '1',
-          'first_name' => 'Deborah',
-          'last_name' => 'Harry',
-          'middle_name' => 'Ann',
-          'ssn' => '663298776',
-          'date_of_birth' => '1982-11-23'
-        )
-      )
+      get :index, params: { search_term: '123456789' }
     end
 
     let(:birth_year_query) do
@@ -131,17 +95,7 @@ describe Api::V2::PeopleSearchController do
       expect(API).to receive(:make_api_call)
         .with('/api/v1/dora/people/_search', :post, birth_year_search)
         .and_return(response)
-      person_results = get :index, params: { search_term: '2012' }
-      expect(JSON.parse(person_results.body)).to match array_including(
-        a_hash_including(
-          'id' => '1',
-          'first_name' => 'Deborah',
-          'last_name' => 'Harry',
-          'middle_name' => 'Ann',
-          'ssn' => '663298776',
-          'date_of_birth' => '1982-11-23'
-        )
-      )
+      get :index, params: { search_term: '2012' }
     end
 
     let(:birth_date_query) do
@@ -164,17 +118,7 @@ describe Api::V2::PeopleSearchController do
       expect(API).to receive(:make_api_call)
         .with('/api/v1/dora/people/_search', :post, birth_date_search)
         .and_return(response)
-      person_results = get :index, params: { search_term: '4/3/2010' }
-      expect(JSON.parse(person_results.body)).to match array_including(
-        a_hash_including(
-          'id' => '1',
-          'first_name' => 'Deborah',
-          'last_name' => 'Harry',
-          'middle_name' => 'Ann',
-          'ssn' => '663298776',
-          'date_of_birth' => '1982-11-23'
-        )
-      )
+      get :index, params: { search_term: '4/3/2010' }
     end
   end
 end

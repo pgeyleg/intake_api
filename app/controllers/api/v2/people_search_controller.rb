@@ -80,7 +80,7 @@ module Api
       end
 
       def fields
-         %w(
+        %w(
           id first_name middle_name last_name name_suffix gender
           date_of_birth ssn languages races ethnicity addresses phone_numbers
           highlight
