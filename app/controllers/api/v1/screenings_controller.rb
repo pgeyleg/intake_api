@@ -85,6 +85,18 @@ module Api
         ), status: :ok
       end
 
+      def history_of_involvements
+        screening_id = screening_params[:id]
+        people_ids = Screening.find(screening_params[:id]).participants.pluck(:person_id)
+        screenings = Screening.joins(:participants)
+                              .where(participants: { person_id: people_ids })
+                              .where.not(id: screening_id)
+                              .uniq
+        render json: screenings.as_json(
+          include: %w(participants allegations)
+        ), status: :ok
+      end
+
       private
 
       def address_params
