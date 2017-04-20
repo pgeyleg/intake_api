@@ -470,6 +470,26 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ScreeningResponse'
+  
+  /screenings/{id}/history_of_involvements:
+    get:
+      description: Gets related `Screening` objects for the screening.
+      tags:
+        - screenings
+        - screening
+      parameters:
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: id
+          in: path
+          description: id of the screening
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful response
+          type: array
+          items:
+              $ref: '#/definitions/ScreeningResponse'
 
   /screenings:
     post:
