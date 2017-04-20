@@ -19,6 +19,7 @@ services:
       TEST_ELASTICSEARCH_URL: 'http://test_elasticsearch:9200'
       AUTHENTICATION_URL: 'http://www.example.com/'
       AUTHENTICATION: 'false'
+      SEARCH_URL: 'http://tptsearch'
   elasticsearch:
     image: 'elasticsearch:2.4'
   test_elasticsearch:

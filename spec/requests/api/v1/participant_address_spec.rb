@@ -7,9 +7,9 @@ describe 'Participants Addresses API', skip_auth: true do
       participant = FactoryGirl.create(
         :participant
       )
-      newAddress = FactoryGirl.build(:address)
+      new_address = FactoryGirl.build(:address)
       updated_params = {
-        addresses: [newAddress.as_json]
+        addresses: [new_address.as_json]
       }
 
       expect do
@@ -21,10 +21,10 @@ describe 'Participants Addresses API', skip_auth: true do
       expect(body).to match a_hash_including(
         addresses: array_including(
           a_hash_including(
-            street_address: newAddress.street_address,
-            city: newAddress.city,
-            state: newAddress.state,
-            zip: newAddress.zip
+            street_address: new_address.street_address,
+            city: new_address.city,
+            state: new_address.state,
+            zip: new_address.zip
           )
         )
       )

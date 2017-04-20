@@ -3,6 +3,8 @@ source 'https://rubygems.org'
 
 gem 'active_model_serializers'
 gem 'elasticsearch-persistence'
+gem 'faraday'
+gem 'faraday_middleware'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rack-cors'
@@ -32,6 +34,7 @@ group :test do
   gem 'factory_girl_rails'
   gem 'ffaker'
   gem 'shoulda-matchers'
+  gem 'webmock'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

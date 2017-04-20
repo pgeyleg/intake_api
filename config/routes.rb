@@ -9,6 +9,9 @@ Rails.application.routes.draw do
       resources :people_search, only: [:index]
       resources :screenings
     end
+    namespace :v2 do
+      resources :people_search, only: [:index]
+    end
   end
 
   resources :version, only: :index
