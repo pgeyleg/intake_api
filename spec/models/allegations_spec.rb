@@ -2,6 +2,8 @@
 require 'rails_helper'
 
 describe Allegation do
+  it { is_expected.to be_versioned }
+
   describe 'validations' do
     describe 'allegations_types' do
       it 'cannot be an empty array' do

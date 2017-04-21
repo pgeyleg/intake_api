@@ -3,6 +3,8 @@
 # Person Address model which represents
 # the join model between person and address
 class PersonAddress < ActiveRecord::Base
+  has_paper_trail
+
   belongs_to :person
   belongs_to :address
 

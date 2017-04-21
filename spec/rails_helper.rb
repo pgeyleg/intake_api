@@ -9,6 +9,7 @@ require 'spec_helper'
 require 'rspec/rails'
 require 'shoulda-matchers'
 require 'database_cleaner'
+require 'paper_trail/frameworks/rspec'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
