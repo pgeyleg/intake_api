@@ -28,6 +28,8 @@ class ScreeningsRepo
       indexes :screening_decision
       indexes :started_at
       indexes :assignee
+      indexes :safety_information
+      indexes :safety_alerts
     end
   end
 

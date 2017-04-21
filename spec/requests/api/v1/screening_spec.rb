@@ -18,6 +18,8 @@ describe 'Screening API', skip_auth: true do
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Michael Geary',
+        safety_alerts: ['Remote location'],
+        safety_information: 'This is a dangerous place',
         cross_reports: [
           { agency_type: 'District attorney', agency_name: 'Sacramento Attorney' }
         ]
@@ -53,7 +55,9 @@ describe 'Screening API', skip_auth: true do
           }
         ],
         assignee: 'Michael Geary',
-        allegations: []
+        allegations: [],
+        safety_alerts: ['Remote location'],
+        safety_information: 'This is a dangerous place'
       )
       expect(body['id']).to_not eq nil
       expect(body[:address][:id]).to_not eq nil
@@ -76,6 +80,8 @@ describe 'Screening API', skip_auth: true do
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Michael Bastow',
+        safety_alerts: ['Remote location'],
+        safety_information: 'This is a dangerous place',
         cross_reports_attributes: [
           {
             agency_type: 'District attorney',
@@ -151,6 +157,8 @@ describe 'Screening API', skip_auth: true do
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Michael Bastow',
+        safety_information: 'This is a dangerous place',
+        safety_alerts: array_including('Remote location'),
         address: a_hash_including(
           id: address.address_id,
           street_address: '123 Fake St',
@@ -226,6 +234,8 @@ describe 'Screening API', skip_auth: true do
         started_at: '2016-08-03T01:00:00.000Z',
         report_narrative: 'Narrative 123 test',
         assignee: 'Natina Grace',
+        safety_alerts: ['Remote location'],
+        safety_information: 'This is a dangerous place',
         cross_reports_attributes: [
           {
             agency_type: 'District attorney',
@@ -272,6 +282,8 @@ describe 'Screening API', skip_auth: true do
           state: 'CA',
           zip: '10010'
         },
+        safety_alerts: ['Gang alerts', 'Firearms in Home'],
+        safety_information: 'I swear this place is bad news',
         cross_reports: [
           {
             agency_type: 'Law enforcement',
@@ -312,6 +324,11 @@ describe 'Screening API', skip_auth: true do
           state: 'CA',
           zip: '10010'
         ),
+        safety_alerts: array_including(
+          'Gang alerts',
+          'Firearms in Home'
+        ),
+        safety_information: 'I swear this place is bad news',
         cross_reports: array_including(
           a_hash_including(
             agency_type: 'Law enforcement',

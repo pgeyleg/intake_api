@@ -428,7 +428,9 @@ CREATE TABLE screenings (
     report_narrative text,
     assignee character varying,
     additional_information character varying,
-    screening_decision_detail character varying
+    screening_decision_detail character varying,
+    safety_information text,
+    safety_alerts character varying[]
 );
 
 
@@ -888,6 +890,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170329204444'),
 ('20170404204641'),
 ('20170406164348'),
+('20170421154927'),
 ('20170421230453');
 
 
