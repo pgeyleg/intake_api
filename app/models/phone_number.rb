@@ -2,6 +2,8 @@
 
 # PhoneNumber model which represents a phone number
 class PhoneNumber < ActiveRecord::Base
+  has_paper_trail
+
   belongs_to :participant, optional: true
 
   self.inheritance_column = nil

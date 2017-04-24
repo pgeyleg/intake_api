@@ -2,6 +2,8 @@
 require 'rails_helper'
 
 describe Participant do
+  it { is_expected.to be_versioned }
+
   it 'is valid without a person_id' do
     participant = described_class.new(person_id: nil)
     participant.valid?
