@@ -36,43 +36,21 @@ module Api
         screening.build_screening_address
         screening.screening_address.build_address
         screening.save!
-        render json: ScreeningSerializer.new(screening)
-          .as_json(include: ['participants.addresses',
-                             'participants.phone_numbers',
-                             'address',
-                             'cross_reports',
-                             'allegations']), status: :created
+        render json: serialized_screening_json(screening), status: :created
       end
 
       def show
         screening = Screening.find(screening_params[:id])
-        render json: ScreeningSerializer.new(screening)
-          .as_json(include:
-            [
-              'participants.addresses',
-              'participants.phone_numbers',
-              'address',
-              'allegations',
-              'cross_reports'
-            ]), status: :ok
+        render json: serialized_screening_json(screening), status: :ok
       end
 
       def update
         screening = Screening.find(transformed_params[:id])
-
         screening.allegations.destroy_all
         screening.assign_attributes(transformed_params)
         screening.address.assign_attributes(address_params)
         screening.save!
-        render json: ScreeningSerializer.new(screening)
-          .as_json(include:
-        [
-          'participants.addresses',
-          'participants.phone_numbers',
-          'address',
-          'allegations',
-          'cross_reports'
-        ]), status: :ok
+        render json: serialized_screening_json(screening), status: :ok
       end
 
       def index
@@ -82,6 +60,18 @@ module Api
         ).results
         render json: screenings.as_json(
           include: ['participants.addresses', 'address', 'participants.phone_numbers']
+        ), status: :ok
+      end
+
+      def history_of_involvements
+        screening_id = screening_params[:id]
+        people_ids = Screening.find(screening_params[:id]).participants.pluck(:person_id)
+        screenings = Screening.joins(:participants)
+                              .where(participants: { person_id: people_ids })
+                              .where.not(id: screening_id)
+                              .uniq
+        render json: screenings.as_json(
+          include: %w(participants allegations)
         ), status: :ok
       end
 
@@ -113,6 +103,17 @@ module Api
 
       def screening_decisions
         params[:screening_decisions]
+      end
+
+      def serialized_screening_json(screening)
+        ScreeningSerializer.new(screening).as_json(include:
+        [
+          'participants.addresses',
+          'participants.phone_numbers',
+          'address',
+          'allegations',
+          'cross_reports'
+        ])
       end
     end
   end

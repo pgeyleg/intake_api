@@ -7,7 +7,11 @@ Rails.application.routes.draw do
       resources :participants, only: [:create, :destroy, :update]
       resources :people
       resources :people_search, only: [:index]
-      resources :screenings
+      resources :screenings do
+        member do
+          get :history_of_involvements
+        end
+      end
     end
     namespace :v2 do
       resources :people_search, only: [:index]
