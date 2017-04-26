@@ -18,13 +18,24 @@ module Api
           highlight: highlight
         }
         response = API.make_api_call(PEOPLE_SEARCH_PATH, :post, people_search)
-        people = response.body['hits']['hits'].map do |hit|
-          hit['_source']
+        people = response.body['hits']['hits'].map do |document|
+          person_with_highlights(document)
         end
         render json: people
       end
 
       private
+
+      def person_with_highlights(document)
+        highlight = {}
+        if document['highlight']
+          highlight = document['highlight'].each_with_object({}) do |(k, v), memo|
+            memo[k] = v.first
+            memo
+          end
+        end
+        document['_source'].merge(highlight: highlight)
+      end
 
       def ssn
         ssn = params[:search_term].match(/\d{3}-?\d{2}-?\d{4}/)
