@@ -4,6 +4,7 @@ FactoryGirl.define do
     name { FFaker::Lorem.words(3).join(' ') }
     started_at { 4.days.ago }
     ended_at { 3.days.ago }
+    sequence(:reference) { |n| "NRJDJ#{n}" }
     incident_county do
       %w(
         alameda
@@ -96,6 +97,10 @@ FactoryGirl.define do
         Online
         Phone
       ).sample
+    end
+
+    trait :with_address do
+      address
     end
   end
 end

@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 FactoryGirl.define do
   factory :address, class: Address do
-    type { %w(Home School Work Placement Homeless Other).sample }
-    zip { %w(22070 95832 31123 00321).sample }
+    zip { FFaker::AddressUS.zip_code }
+    street_address { FFaker::Address.street_address }
+    type { Address::ADDRESS_TYPES.sample }
+    city { FFaker::Address.city }
+    state { FFaker::AddressUS.us_state_abbr }
   end
 end

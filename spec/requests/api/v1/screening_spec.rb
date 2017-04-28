@@ -68,7 +68,6 @@ describe 'Screening API', skip_auth: true do
     it 'returns a JSON representation of the screening' do
       screening = FactoryGirl.create(
         :screening,
-        reference: '123ABC',
         screening_decision_detail: 'immediate',
         screening_decision: 'information_to_child_welfare_services',
         safety_alerts: ['Remote location'],
@@ -142,7 +141,7 @@ describe 'Screening API', skip_auth: true do
         location_type: screening.location_type,
         communication_method: screening.communication_method,
         name: screening.name,
-        reference: '123ABC',
+        reference: screening.reference,
         screening_decision_detail: 'immediate',
         screening_decision: 'information_to_child_welfare_services',
         safety_information: 'This is a dangerous place',
