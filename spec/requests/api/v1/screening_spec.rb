@@ -66,20 +66,11 @@ describe 'Screening API', skip_auth: true do
 
   describe 'GET /api/v1/screenings/:id' do
     it 'returns a JSON representation of the screening' do
-      screening = Screening.create!(
-        ended_at: '2016-08-03T01:00:00.000Z',
-        additional_information: 'I have great reasons',
-        incident_county: 'sacramento',
-        incident_date: '2016-08-02',
-        location_type: 'Foster Home',
-        communication_method: 'Phone',
-        name: 'The Rocky Horror Show',
+      screening = FactoryGirl.create(
+        :screening,
         reference: '123ABC',
         screening_decision_detail: 'immediate',
         screening_decision: 'information_to_child_welfare_services',
-        started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Bastow',
         safety_alerts: ['Remote location'],
         safety_information: 'This is a dangerous place',
         cross_reports_attributes: [
@@ -144,21 +135,21 @@ describe 'Screening API', skip_auth: true do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to match a_hash_including(
         id: screening.id,
-        incident_county: 'sacramento',
-        ended_at: '2016-08-03T01:00:00.000Z',
-        additional_information: 'I have great reasons',
-        incident_date: '2016-08-02',
-        location_type: 'Foster Home',
-        communication_method: 'Phone',
-        name: 'The Rocky Horror Show',
+        incident_county: screening.incident_county,
+        ended_at: screening.ended_at.iso8601(3),
+        additional_information: screening.additional_information,
+        incident_date: screening.incident_date.to_s(:db),
+        location_type: screening.location_type,
+        communication_method: screening.communication_method,
+        name: screening.name,
         reference: '123ABC',
         screening_decision_detail: 'immediate',
         screening_decision: 'information_to_child_welfare_services',
-        started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Bastow',
         safety_information: 'This is a dangerous place',
         safety_alerts: array_including('Remote location'),
+        started_at: screening.started_at.iso8601(3),
+        report_narrative: screening.report_narrative,
+        assignee: screening.assignee,
         address: a_hash_including(
           id: address.address_id,
           street_address: '123 Fake St',
@@ -220,20 +211,11 @@ describe 'Screening API', skip_auth: true do
 
   describe 'PUT /api/v1/screenings/:id' do
     it 'updates attributes of a screening' do
-      screening = Screening.create!(
-        ended_at: '2016-08-03T01:00:00.000Z',
-        incident_county: 'sacramento',
-        additional_information: 'I have great reasons',
-        incident_date: '2016-08-02',
-        location_type: 'Foster Home',
-        communication_method: 'Phone',
-        name: 'The Rocky Horror Show',
+      screening = FactoryGirl.create(
+        :screening,
         reference: '123ABC',
         screening_decision_detail: '3_days',
         screening_decision: 'information_to_child_welfare_services',
-        started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test',
-        assignee: 'Natina Grace',
         safety_alerts: ['Remote location'],
         safety_information: 'This is a dangerous place',
         cross_reports_attributes: [
@@ -304,19 +286,19 @@ describe 'Screening API', skip_auth: true do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to match a_hash_including(
         id: screening.id,
-        ended_at: '2016-08-03T01:00:00.000Z',
-        additional_information: 'This is my new, more comprehensive reasoning',
-        incident_county: 'mendocino',
-        incident_date: '2016-08-02',
-        location_type: 'Foster Home',
-        communication_method: 'Phone',
-        name: 'Some new name',
+        additional_information: updated_params[:additional_information],
+        assignee: updated_params[:assignee],
+        communication_method: screening.communication_method,
+        ended_at: screening.ended_at.iso8601(3),
+        incident_county: updated_params[:incident_county],
+        incident_date: screening.incident_date.to_s(:db),
+        location_type: screening.location_type,
+        name: updated_params[:name],
         reference: '123ABC',
-        screening_decision_detail: 'immediate',
+        report_narrative: updated_params[:report_narrative],
         screening_decision: 'screen_out',
-        started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Updated Narrative',
-        assignee: 'Natina Sheridan',
+        screening_decision_detail: 'immediate',
+        started_at: screening.started_at.iso8601(3),
         address: a_hash_including(
           id: address.address_id,
           street_address: '123 Real St',
@@ -357,7 +339,8 @@ describe 'Screening API', skip_auth: true do
 
   describe 'GET /api/v1/screenings', elasticsearch: true do
     let!(:little_shop_of_horrors) do
-      Screening.create!(
+      FactoryGirl.create(
+        :screening,
         reference: 'ABCDEF',
         name: 'Little Shop Of Horrors',
         screening_decision_detail: 'immediate',
@@ -365,7 +348,8 @@ describe 'Screening API', skip_auth: true do
       )
     end
     let!(:the_shining) do
-      Screening.create!(
+      FactoryGirl.create(
+        :screening,
         reference: 'HIJKLM',
         name: 'The Shining',
         screening_decision_detail: '3_days',
@@ -373,7 +357,8 @@ describe 'Screening API', skip_auth: true do
       )
     end
     let!(:it_follows) do
-      Screening.create!(
+      FactoryGirl.create(
+        :screening,
         reference: 'NOPQRS',
         name: 'It Follows',
         screening_decision_detail: '5_days',
