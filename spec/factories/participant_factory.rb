@@ -8,5 +8,13 @@ FactoryGirl.define do
     ssn { FFaker::SSN.ssn }
     date_of_birth { 12.years.ago.to_date }
     roles { Array.new(1) { Participant::ROLE_TYPES.sample } }
+
+    trait :with_address do
+      addresses { build_list :address, 1 }
+    end
+
+    trait :with_phone_number do
+      phone_numbers { build_list :phone_number, 1 }
+    end
   end
 end
