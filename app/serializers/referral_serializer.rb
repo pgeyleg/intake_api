@@ -13,6 +13,7 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     :name,
     :reference,
     :report_narrative,
+    :response_time,
     :screening_decision,
     :screening_decision_detail,
     :started_at
@@ -42,5 +43,9 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
         inform_date: '1996-01-01' # This field is not currently being captured
       }
     end
+  end
+
+  def response_time
+    object.screening_decision_detail
   end
 end

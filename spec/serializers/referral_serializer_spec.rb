@@ -7,7 +7,7 @@ describe ReferralSerializer do
       screening = FactoryGirl.create(:screening)
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
-        # response_time: screening.screening_decision_detail,
+        response_time: screening.screening_decision_detail,
         additional_information: screening.additional_information,
         assignee: screening.assignee,
         communication_method: screening.communication_method,

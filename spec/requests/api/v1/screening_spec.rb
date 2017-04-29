@@ -490,4 +490,134 @@ describe 'Screening API', skip_auth: true do
       end
     end
   end
+
+  describe 'POST /api/v1/screenings/:id/submit' do
+    let(:victim) do
+      FactoryGirl.build(
+        :participant,
+        roles: ['Victim'],
+        screening: nil
+      )
+    end
+    let(:perpetrator) do
+      FactoryGirl.build(
+        :participant,
+        roles: ['Perpetrator'],
+        screening: nil
+      )
+    end
+    let(:allegation) do
+      FactoryGirl.build(
+        :allegation,
+        victim: victim,
+        perpetrator: perpetrator,
+        screening: nil,
+        allegation_types: ['General neglect']
+      )
+    end
+    let(:cross_report) { FactoryGirl.build(:cross_report) }
+    let(:screening) do
+      FactoryGirl.create(
+        :screening,
+        :with_address,
+        screening_decision: 'promote_to_referral',
+        screening_decision_detail: '3_days',
+        participants: [victim, perpetrator],
+        cross_reports: [cross_report],
+        allegations: [allegation]
+      )
+    end
+
+    before do
+      allow(ENV).to receive(:fetch).with('SEARCH_URL')
+        .and_return('http://referral_api_url')
+      stub_request(:post, /referrals/)
+        .and_return(body: {message: 'Successfully created referral'}.to_json, status: 200)
+    end
+
+    it 'POSTS the transformed screening to create referral API' do
+      post submit_api_v1_screening_path(screening)
+      expect(
+        a_request(:post, /referrals/)
+        .with(body: hash_including(
+          id: screening.id,
+          ended_at: screening.ended_at.iso8601(3),
+          incident_county: screening.incident_county,
+          incident_date: screening.incident_date.to_s(:db),
+          location_type: screening.location_type,
+          communication_method: screening.communication_method,
+          name: screening.name,
+          report_narrative: screening.report_narrative,
+          reference: screening.reference,
+          response_time: screening.screening_decision_detail,
+          screening_decision: screening.screening_decision,
+          screening_decision_detail: screening.screening_decision_detail,
+          started_at: screening.started_at.iso8601(3),
+          assignee: screening.assignee,
+          additional_information: screening.additional_information,
+          address: {
+            id: screening.address.id,
+            city: screening.address.city,
+            state: screening.address.state,
+            street_address: screening.address.street_address,
+            zip: screening.address.zip,
+            type: screening.address.type
+          },
+          participants: [{
+            id: perpetrator.id,
+            first_name: perpetrator.first_name,
+            last_name: perpetrator.last_name,
+            gender: perpetrator.gender,
+            ssn: perpetrator.ssn,
+            date_of_birth: perpetrator.date_of_birth.to_s(:db),
+            addresses: [],
+            screening_id: screening.id,
+            person_id: nil,
+            roles: perpetrator.roles
+          }, {
+            id: victim.id,
+            first_name: victim.first_name,
+            last_name: victim.last_name,
+            gender: victim.gender,
+            ssn: victim.ssn,
+            date_of_birth: victim.date_of_birth.to_s(:db),
+            addresses: [],
+            screening_id: screening.id,
+            person_id: nil,
+            roles: victim.roles
+          }],
+          cross_reports: [{
+            agency_type: cross_report.agency_type,
+            agency_name: cross_report.agency_name,
+            method: 'Telephone Report', # This field is not currently being captured
+            inform_date: '1996-01-01' # This field is not currently being captured
+          }],
+          allegations: [{
+            victim_person_id: victim.id,
+            perpetrator_person_id: perpetrator.id,
+            type: allegation.allegation_types.first,
+            county: screening.incident_county
+          }]
+        ))
+      ).to have_been_made
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe 'POST /api/v1/screenings/:id/submit with errors' do
+    let(:screening) { FactoryGirl.create(:screening) }
+
+    before do
+      allow(ENV).to receive(:fetch).with('SEARCH_URL')
+        .and_return('http://referral_api_url')
+      stub_request(:post, /referrals/)
+        .and_return(body: {message: 'Unable to validate ScreeningToReferral'}.to_json, status: 422)
+    end
+
+    it 'returns status code and response body' do
+      post submit_api_v1_screening_path(screening)
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)['message']).to eq('Unable to validate ScreeningToReferral')
+    end
+  end
 end
