@@ -59,7 +59,7 @@ module Api
         screenings = ScreeningsRepo.search_es_by(screening_decision_details, screening_decisions)
                                    .results
         render json: screenings.as_json(
-          include: ['participants.addresses', 'address', 'participants.phone_numbers']
+          include: %w(participants.addresses address participants.phone_numbers)
         ), status: :ok
       end
 
