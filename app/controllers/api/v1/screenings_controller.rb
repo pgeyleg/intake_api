@@ -76,6 +76,15 @@ module Api
         render json: screenings.as_json(include: %w(participants allegations)), status: :ok
       end
 
+      def submit
+        screening = Screening.find(screening_params[:id])
+        payload = ReferralSerializer.new(screening).as_json(
+          include: %w(participants.addresses address)
+        )
+        response = API.make_api_call('/api/v1/referrals', :post, payload)
+        render json: response.body, status: response.status
+      end
+
       private
 
       def address_params

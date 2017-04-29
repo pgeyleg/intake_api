@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :screenings do
         member do
           get :history_of_involvements
+          post :submit
         end
       end
     end
