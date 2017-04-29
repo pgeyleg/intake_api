@@ -7,12 +7,7 @@ describe ScreeningSerializer do
     let(:ended_at) { Time.parse('2016-12-31T00:00:00.000Z') }
     let(:incident_date) { Date.parse('2016-11-30') }
     let(:person) { Person.new }
-    let(:cross_report) do
-      CrossReport.new(
-        agency_type: 'District attorney',
-        agency_name: 'Sacramento attorney'
-      )
-    end
+    let(:cross_report) { FactoryGirl.build(:cross_report) }
 
     let(:participant) do
       Participant.new(
@@ -112,8 +107,8 @@ describe ScreeningSerializer do
         ),
         cross_reports: array_including(
           a_hash_including(
-            agency_type: 'District attorney',
-            agency_name: 'Sacramento attorney'
+            agency_type: cross_report.agency_type,
+            agency_name: cross_report.agency_name
           )
         ),
         participants: array_including(a_hash_including(

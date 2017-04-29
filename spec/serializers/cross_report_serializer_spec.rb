@@ -3,12 +3,11 @@ require 'rails_helper'
 
 describe CrossReportSerializer do
   describe 'as_json' do
-    let(:screening) { Screening.create }
     let(:cross_report) do
-      CrossReport.new(
+      FactoryGirl.build(
+        :cross_report,
         agency_type: 'District attorney',
-        agency_name: 'Sacramento attorney',
-        screening: screening
+        agency_name: 'Sacramento attorney'
       )
     end
 
