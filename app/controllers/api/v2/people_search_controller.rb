@@ -93,7 +93,10 @@ module Api
       def fields
         %w(
           id first_name middle_name last_name name_suffix gender
-          date_of_birth ssn languages races ethnicity addresses phone_numbers
+          date_of_birth ssn languages races ethnicity
+          addresses.id addresses.street_address
+          addresses.city addresses.state addresses.zip addresses.type
+          phone_numbers.id phone_numbers.number phone_numbers.type
           highlight
         )
       end
