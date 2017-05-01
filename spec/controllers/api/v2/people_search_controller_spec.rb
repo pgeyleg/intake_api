@@ -81,7 +81,13 @@ describe Api::V2::PeopleSearchController do
               should: [
                 { match: { first_name: '123456789' } },
                 { match: { last_name: '123456789' } },
-                { prefix: { date_of_birth: '1234' } },
+                { range: {
+                  date_of_birth: {
+                    gte: '1234||/y',
+                    lte: '1234||/y',
+                    format: 'yyyy'
+                  }
+                } },
                 { match: { ssn: '123456789' } }
               ]
             }
@@ -101,7 +107,13 @@ describe Api::V2::PeopleSearchController do
               should: [
                 { match: { first_name: '2012' } },
                 { match: { last_name: '2012' } },
-                { prefix: { date_of_birth: '2012' } }
+                { range: {
+                  date_of_birth: {
+                    gte: '2012||/y',
+                    lte: '2012||/y',
+                    format: 'yyyy'
+                  }
+                } }
               ]
             }
           }
@@ -121,7 +133,13 @@ describe Api::V2::PeopleSearchController do
                 { match: { first_name: '4/3/2010' } },
                 { match: { last_name: '4/3/2010' } },
                 { match: { date_of_birth: '2010-04-03' } },
-                { prefix: { date_of_birth: '2010' } }
+                { range: {
+                  date_of_birth: {
+                    gte: '2010||/y',
+                    lte: '2010||/y',
+                    format: 'yyyy'
+                  }
+                } }
               ]
             }
           }
@@ -141,7 +159,13 @@ describe Api::V2::PeopleSearchController do
                 { match: { first_name: '2010-04-03' } },
                 { match: { last_name: '2010-04-03' } },
                 { match: { date_of_birth: '2010-04-03' } },
-                { prefix: { date_of_birth: '2010' } }
+                { range: {
+                  date_of_birth: {
+                    gte: '2010||/y',
+                    lte: '2010||/y',
+                    format: 'yyyy'
+                  }
+                } }
               ]
             }
           }

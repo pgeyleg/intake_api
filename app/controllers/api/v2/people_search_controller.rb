@@ -77,7 +77,21 @@ module Api
         query = [date_of_birth_year_month_day, date_of_birth_month_day_year].compact.map do |date|
           { match: { date_of_birth: date } }
         end
-        query << { prefix: { date_of_birth: date_of_birth_year } } if date_of_birth_year
+
+        birth_year = date_of_birth_year
+        if birth_year
+          birth_year_query = {
+            range: {
+              date_of_birth: {
+                gte: "#{birth_year}||/y",
+                lte: "#{birth_year}||/y",
+                format: 'yyyy'
+              }
+            }
+          }
+          query << birth_year_query
+        end
+
         query
       end
 
