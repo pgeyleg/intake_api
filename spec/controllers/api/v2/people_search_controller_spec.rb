@@ -55,75 +55,6 @@ describe Api::V2::PeopleSearchController do
         get :index, params: { search_term: search_term }
       end
 
-      context 'when search criteria provided is a string' do
-        let(:search_term) { 'blah' }
-        let(:query) do
-          {
-            bool: {
-              should: [
-                { match: { first_name: 'blah' } },
-                { match: { last_name: 'blah' } }
-              ]
-            }
-          }
-        end
-
-        it 'creates a search query for names' do
-          assert_response :success
-        end
-      end
-
-      context 'when search criteria is ten digit string' do
-        let(:search_term) { '123456789' }
-        let(:query) do
-          {
-            bool: {
-              should: [
-                { match: { first_name: '123456789' } },
-                { match: { last_name: '123456789' } },
-                { range: {
-                  date_of_birth: {
-                    gte: '1234||/y',
-                    lte: '1234||/y',
-                    format: 'yyyy'
-                  }
-                } },
-                { match: { ssn: '123456789' } }
-              ]
-            }
-          }
-        end
-
-        it 'creates a search query for ssn' do
-          assert_response :success
-        end
-      end
-
-      context 'when search criteria is a four digit string' do
-        let(:search_term) { '2012' }
-        let(:query) do
-          {
-            bool: {
-              should: [
-                { match: { first_name: '2012' } },
-                { match: { last_name: '2012' } },
-                { range: {
-                  date_of_birth: {
-                    gte: '2012||/y',
-                    lte: '2012||/y',
-                    format: 'yyyy'
-                  }
-                } }
-              ]
-            }
-          }
-        end
-
-        it 'creates a search query for birth year' do
-          assert_response :success
-        end
-      end
-
       context 'when search criteria is a date (mm/dd/yyyy)' do
         let(:search_term) { '4/3/2010' }
         let(:query) do
@@ -132,32 +63,6 @@ describe Api::V2::PeopleSearchController do
               should: [
                 { match: { first_name: '4/3/2010' } },
                 { match: { last_name: '4/3/2010' } },
-                { match: { date_of_birth: '2010-04-03' } },
-                { range: {
-                  date_of_birth: {
-                    gte: '2010||/y',
-                    lte: '2010||/y',
-                    format: 'yyyy'
-                  }
-                } }
-              ]
-            }
-          }
-        end
-
-        it 'creates a search query for birth date' do
-          assert_response :success
-        end
-      end
-
-      context 'when search criteria is a date (yyyy-mm-dd)' do
-        let(:search_term) { '2010-04-03' }
-        let(:query) do
-          {
-            bool: {
-              should: [
-                { match: { first_name: '2010-04-03' } },
-                { match: { last_name: '2010-04-03' } },
                 { match: { date_of_birth: '2010-04-03' } },
                 { range: {
                   date_of_birth: {
