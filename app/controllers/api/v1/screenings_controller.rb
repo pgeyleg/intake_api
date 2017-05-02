@@ -20,6 +20,8 @@ module Api
         :screening_decision,
         :started_at,
         :assignee,
+        :safety_information,
+        safety_alerts: [],
         cross_reports: [
           :agency_type,
           :agency_name

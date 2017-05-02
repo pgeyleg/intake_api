@@ -13,7 +13,9 @@ class ScreeningSerializer < ActiveModel::Serializer # :nodoc:
     :screening_decision_detail,
     :screening_decision,
     :started_at,
-    :assignee
+    :assignee,
+    :safety_information,
+    :safety_alerts
 
   has_one :address
   has_many :participants, serializer: ParticipantSerializer

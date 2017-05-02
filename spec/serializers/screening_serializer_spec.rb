@@ -52,6 +52,8 @@ describe ScreeningSerializer do
         screening_decision: 'promote_to_referral',
         started_at: started_at,
         participants: [participant, other_participant],
+        safety_alerts: ['Gang activity'],
+        safety_information: 'This is an unsafe location',
         cross_reports: [cross_report],
         assignee: 'Michael Geary'
       )
@@ -103,6 +105,10 @@ describe ScreeningSerializer do
           city: 'Albatros',
           zip: '12333',
           type: 'Placement'
+        ),
+        safety_information: 'This is an unsafe location',
+        safety_alerts: array_including(
+          'Gang activity'
         ),
         cross_reports: array_including(
           a_hash_including(
