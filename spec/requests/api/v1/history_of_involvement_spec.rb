@@ -16,6 +16,23 @@ describe 'History of Allegations API', skip_auth: true do
       end
     end
 
+    context 'there is a participant who is unknown on both screenings' do
+      before do
+        FactoryGirl.create(
+          :screening,
+          participants: [FactoryGirl.build(:participant, person_id: nil)]
+        )
+        current_screening.participants << FactoryGirl.create(:participant, person: nil)
+        current_screening.save!
+      end
+
+      it 'returns an empty array' do
+        get history_of_involvements_api_v1_screening_path(id: current_screening.id)
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)).to eq([])
+      end
+    end
+
     context 'there are participants on the current screening' do
       let!(:lana_current_participant) do
         FactoryGirl.create :participant,

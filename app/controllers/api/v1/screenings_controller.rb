@@ -56,36 +56,30 @@ module Api
       end
 
       def index
-        screenings = ScreeningsRepo.search_es_by(
-          screening_decision_details,
-          screening_decisions
-        ).results
+        screenings = ScreeningsRepo.search_es_by(screening_decision_details, screening_decisions)
+                                   .results
         render json: screenings.as_json(
           include: ['participants.addresses', 'address', 'participants.phone_numbers']
         ), status: :ok
       end
 
-      def history_of_involvements
+      def history_of_involvements # rubocop:disable Metrics/AbcSize
         screening_id = screening_params[:id]
-        people_ids = Screening.find(screening_params[:id]).participants.pluck(:person_id)
+        people_ids = Screening.find(screening_params[:id])
+                              .participants
+                              .pluck(:person_id)
+                              .compact
         screenings = Screening.joins(:participants)
                               .where(participants: { person_id: people_ids })
                               .where.not(id: screening_id)
                               .uniq
-        render json: screenings.as_json(
-          include: %w(participants allegations)
-        ), status: :ok
+        render json: screenings.as_json(include: %w(participants allegations)), status: :ok
       end
 
       private
 
       def address_params
-        params.require(:address).permit(
-          :street_address,
-          :city,
-          :state,
-          :zip
-        )
+        params.require(:address).permit(:street_address, :city, :state, :zip)
       end
 
       def transformed_params
