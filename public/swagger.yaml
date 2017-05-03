@@ -506,6 +506,31 @@ paths:
           items:
               $ref: '#/definitions/ScreeningResponse'
 
+  /screenings/{id}/submit:
+    post:
+      description: Posts the transformed `Screening` to the create Referral API.
+      tags:
+        - screenings
+        - screening
+      parameters:
+        - $ref: '#/parameters/AuthorizationHeader'
+        - name: id
+          in: path
+          description: id of the screening
+          required: true
+          type: string
+      responses:
+        200:
+          description: successful response
+        400:
+          description: Unable to process JSON 
+        406:
+          description: Accept Header not supported
+        409:
+          description: Conflict - already exists
+        422:
+          description: Unable to validate ScreeningToReferral
+
   /screenings:
     post:
       description: Creates a new screening

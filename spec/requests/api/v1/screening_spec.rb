@@ -66,20 +66,10 @@ describe 'Screening API', skip_auth: true do
 
   describe 'GET /api/v1/screenings/:id' do
     it 'returns a JSON representation of the screening' do
-      screening = Screening.create!(
-        ended_at: '2016-08-03T01:00:00.000Z',
-        additional_information: 'I have great reasons',
-        incident_county: 'sacramento',
-        incident_date: '2016-08-02',
-        location_type: 'Foster Home',
-        communication_method: 'Phone',
-        name: 'The Rocky Horror Show',
-        reference: '123ABC',
+      screening = FactoryGirl.create(
+        :screening,
         screening_decision_detail: 'immediate',
         screening_decision: 'information_to_child_welfare_services',
-        started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Bastow',
         safety_alerts: ['Remote location'],
         safety_information: 'This is a dangerous place',
         cross_reports_attributes: [
@@ -144,21 +134,21 @@ describe 'Screening API', skip_auth: true do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to match a_hash_including(
         id: screening.id,
-        incident_county: 'sacramento',
-        ended_at: '2016-08-03T01:00:00.000Z',
-        additional_information: 'I have great reasons',
-        incident_date: '2016-08-02',
-        location_type: 'Foster Home',
-        communication_method: 'Phone',
-        name: 'The Rocky Horror Show',
-        reference: '123ABC',
+        incident_county: screening.incident_county,
+        ended_at: screening.ended_at.iso8601(3),
+        additional_information: screening.additional_information,
+        incident_date: screening.incident_date.to_s(:db),
+        location_type: screening.location_type,
+        communication_method: screening.communication_method,
+        name: screening.name,
+        reference: screening.reference,
         screening_decision_detail: 'immediate',
         screening_decision: 'information_to_child_welfare_services',
-        started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test',
-        assignee: 'Michael Bastow',
         safety_information: 'This is a dangerous place',
         safety_alerts: array_including('Remote location'),
+        started_at: screening.started_at.iso8601(3),
+        report_narrative: screening.report_narrative,
+        assignee: screening.assignee,
         address: a_hash_including(
           id: address.address_id,
           street_address: '123 Fake St',
@@ -220,20 +210,11 @@ describe 'Screening API', skip_auth: true do
 
   describe 'PUT /api/v1/screenings/:id' do
     it 'updates attributes of a screening' do
-      screening = Screening.create!(
-        ended_at: '2016-08-03T01:00:00.000Z',
-        incident_county: 'sacramento',
-        additional_information: 'I have great reasons',
-        incident_date: '2016-08-02',
-        location_type: 'Foster Home',
-        communication_method: 'Phone',
-        name: 'The Rocky Horror Show',
+      screening = FactoryGirl.create(
+        :screening,
         reference: '123ABC',
         screening_decision_detail: '3_days',
         screening_decision: 'information_to_child_welfare_services',
-        started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Narrative 123 test',
-        assignee: 'Natina Grace',
         safety_alerts: ['Remote location'],
         safety_information: 'This is a dangerous place',
         cross_reports_attributes: [
@@ -304,19 +285,19 @@ describe 'Screening API', skip_auth: true do
       body = JSON.parse(response.body).with_indifferent_access
       expect(body).to match a_hash_including(
         id: screening.id,
-        ended_at: '2016-08-03T01:00:00.000Z',
-        additional_information: 'This is my new, more comprehensive reasoning',
-        incident_county: 'mendocino',
-        incident_date: '2016-08-02',
-        location_type: 'Foster Home',
-        communication_method: 'Phone',
-        name: 'Some new name',
+        additional_information: updated_params[:additional_information],
+        assignee: updated_params[:assignee],
+        communication_method: screening.communication_method,
+        ended_at: screening.ended_at.iso8601(3),
+        incident_county: updated_params[:incident_county],
+        incident_date: screening.incident_date.to_s(:db),
+        location_type: screening.location_type,
+        name: updated_params[:name],
         reference: '123ABC',
-        screening_decision_detail: 'immediate',
+        report_narrative: updated_params[:report_narrative],
         screening_decision: 'screen_out',
-        started_at: '2016-08-03T01:00:00.000Z',
-        report_narrative: 'Updated Narrative',
-        assignee: 'Natina Sheridan',
+        screening_decision_detail: 'immediate',
+        started_at: screening.started_at.iso8601(3),
         address: a_hash_including(
           id: address.address_id,
           street_address: '123 Real St',
@@ -357,7 +338,8 @@ describe 'Screening API', skip_auth: true do
 
   describe 'GET /api/v1/screenings', elasticsearch: true do
     let!(:little_shop_of_horrors) do
-      Screening.create!(
+      FactoryGirl.create(
+        :screening,
         reference: 'ABCDEF',
         name: 'Little Shop Of Horrors',
         screening_decision_detail: 'immediate',
@@ -365,7 +347,8 @@ describe 'Screening API', skip_auth: true do
       )
     end
     let!(:the_shining) do
-      Screening.create!(
+      FactoryGirl.create(
+        :screening,
         reference: 'HIJKLM',
         name: 'The Shining',
         screening_decision_detail: '3_days',
@@ -373,7 +356,8 @@ describe 'Screening API', skip_auth: true do
       )
     end
     let!(:it_follows) do
-      Screening.create!(
+      FactoryGirl.create(
+        :screening,
         reference: 'NOPQRS',
         name: 'It Follows',
         screening_decision_detail: '5_days',
@@ -504,6 +488,137 @@ describe 'Screening API', skip_auth: true do
           )
         )
       end
+    end
+  end
+
+  describe 'POST /api/v1/screenings/:id/submit' do
+    let(:victim) do
+      FactoryGirl.build(
+        :participant,
+        roles: ['Victim'],
+        screening: nil
+      )
+    end
+    let(:perpetrator) do
+      FactoryGirl.build(
+        :participant,
+        roles: ['Perpetrator'],
+        screening: nil
+      )
+    end
+    let(:allegation) do
+      FactoryGirl.build(
+        :allegation,
+        victim: victim,
+        perpetrator: perpetrator,
+        screening: nil,
+        allegation_types: ['General neglect']
+      )
+    end
+    let(:cross_report) { FactoryGirl.build(:cross_report) }
+    let(:screening) do
+      FactoryGirl.create(
+        :screening,
+        :with_address,
+        screening_decision: 'promote_to_referral',
+        screening_decision_detail: '3_days',
+        participants: [victim, perpetrator],
+        cross_reports: [cross_report],
+        allegations: [allegation]
+      )
+    end
+
+    before do
+      allow(ENV).to receive(:fetch).with('SEARCH_URL')
+        .and_return('http://referral_api_url')
+      stub_request(:post, /referrals/)
+        .and_return(body: { message: 'Successfully created referral' }.to_json, status: 200)
+    end
+
+    it 'POSTS the transformed screening to create referral API' do
+      post submit_api_v1_screening_path(screening)
+      expect(
+        a_request(:post, /referrals/)
+        .with(body: hash_including(
+          id: screening.id,
+          ended_at: screening.ended_at.iso8601(3),
+          incident_county: screening.incident_county,
+          incident_date: screening.incident_date.to_s(:db),
+          location_type: screening.location_type,
+          communication_method: screening.communication_method,
+          name: screening.name,
+          report_narrative: screening.report_narrative,
+          reference: screening.reference,
+          response_time: screening.screening_decision_detail,
+          screening_decision: screening.screening_decision,
+          screening_decision_detail: screening.screening_decision_detail,
+          started_at: screening.started_at.iso8601(3),
+          assignee: screening.assignee,
+          additional_information: screening.additional_information,
+          address: {
+            city: screening.address.city,
+            state: screening.address.state,
+            street_address: screening.address.street_address,
+            zip: screening.address.zip,
+            type: screening.address.type
+          },
+          participants: [{
+            id: perpetrator.id,
+            first_name: perpetrator.first_name,
+            last_name: perpetrator.last_name,
+            gender: perpetrator.gender,
+            ssn: perpetrator.ssn,
+            date_of_birth: perpetrator.date_of_birth.to_s(:db),
+            addresses: [],
+            screening_id: screening.id,
+            person_id: nil,
+            roles: perpetrator.roles
+          }, {
+            id: victim.id,
+            first_name: victim.first_name,
+            last_name: victim.last_name,
+            gender: victim.gender,
+            ssn: victim.ssn,
+            date_of_birth: victim.date_of_birth.to_s(:db),
+            addresses: [],
+            screening_id: screening.id,
+            person_id: nil,
+            roles: victim.roles
+          }],
+          cross_reports: [{
+            agency_type: cross_report.agency_type,
+            agency_name: cross_report.agency_name,
+            method: 'Telephone Report', # This field is not currently being captured
+            inform_date: '1996-01-01' # This field is not currently being captured
+          }],
+          allegations: [{
+            victim_person_id: victim.id,
+            perpetrator_person_id: perpetrator.id,
+            type: allegation.allegation_types.first,
+            county: screening.incident_county
+          }]
+        ))
+      ).to have_been_made
+      expect(response.status).to eq(200)
+    end
+  end
+
+  describe 'POST /api/v1/screenings/:id/submit with errors' do
+    let(:screening) { FactoryGirl.create(:screening) }
+
+    before do
+      allow(ENV).to receive(:fetch).with('SEARCH_URL')
+        .and_return('http://referral_api_url')
+      stub_request(:post, /referrals/)
+        .and_return(
+          body: { message: 'Unable to validate ScreeningToReferral' }.to_json, status: 422
+        )
+    end
+
+    it 'returns status code and response body' do
+      post submit_api_v1_screening_path(screening)
+      expect(response.status).to eq(422)
+      expect(JSON.parse(response.body)['message']).to eq('Unable to validate ScreeningToReferral')
     end
   end
 end

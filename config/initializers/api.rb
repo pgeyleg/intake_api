@@ -11,14 +11,14 @@ module API
     connection
   end
 
-  def self.people_search_connection(path)
-    @connection ||= Faraday.new(url: ENV.fetch('SEARCH_URL') + path) do |connection|
+  def self.tpt_connection
+    @connection ||= Faraday.new(url: ENV.fetch('SEARCH_URL')) do |connection|
       ::API.connection_settings connection
     end
   end
 
   def self.make_api_call(url, method, payload = nil)
-    people_search_connection(url).send(method) do |req|
+    tpt_connection.send(method) do |req|
       req.url url
       req.headers['Content-Type'] = CONTENT_TYPE unless method == :get
       req.body = payload.to_json unless payload.nil?

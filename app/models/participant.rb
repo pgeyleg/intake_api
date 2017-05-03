@@ -13,6 +13,14 @@ class Participant < ActiveRecord::Base
   belongs_to :screening
   belongs_to :person, optional: true
 
+  ROLE_TYPES = [
+    'Anonymous Reporter',
+    'Mandated Reporter',
+    'Non-mandated Reporter',
+    'Perpetrator',
+    'Victim'
+  ].freeze
+
   after_update do |participant|
     unless participant.roles.include?('Victim')
       Allegation.where(victim_id: participant.id).destroy_all

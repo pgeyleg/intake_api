@@ -58,7 +58,8 @@ describe 'History of Allegations API', skip_auth: true do
             screening: old_screening,
             person: lana,
             first_name: 'Lana',
-            last_name: 'Kane'
+            last_name: 'Kane',
+            roles: []
         end
 
         it 'returns the old screening, but not the current screening' do
@@ -71,7 +72,8 @@ describe 'History of Allegations API', skip_auth: true do
           let!(:archer_old_participant) do
             FactoryGirl.create :participant,
               screening: old_screening,
-              person: archer
+              person: archer,
+              roles: []
           end
           let!(:old_allegation) do
             FactoryGirl.create :allegation,

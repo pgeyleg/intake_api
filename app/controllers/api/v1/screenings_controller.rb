@@ -59,7 +59,7 @@ module Api
         screenings = ScreeningsRepo.search_es_by(screening_decision_details, screening_decisions)
                                    .results
         render json: screenings.as_json(
-          include: ['participants.addresses', 'address', 'participants.phone_numbers']
+          include: %w(participants.addresses address participants.phone_numbers)
         ), status: :ok
       end
 
@@ -74,6 +74,15 @@ module Api
                               .where.not(id: screening_id)
                               .uniq
         render json: screenings.as_json(include: %w(participants allegations)), status: :ok
+      end
+
+      def submit
+        screening = Screening.find(screening_params[:id])
+        payload = ReferralSerializer.new(screening).as_json(
+          include: %w(participants.addresses address)
+        )
+        response = API.make_api_call('/api/v1/referrals', :post, payload)
+        render json: response.body, status: response.status
       end
 
       private
@@ -104,11 +113,8 @@ module Api
       def serialized_screening_json(screening)
         ScreeningSerializer.new(screening).as_json(include:
         [
-          'participants.addresses',
-          'participants.phone_numbers',
-          'address',
-          'allegations',
-          'cross_reports'
+          'participants.addresses', 'participants.phone_numbers',
+          'address', 'allegations', 'cross_reports'
         ])
       end
     end
