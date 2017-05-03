@@ -113,11 +113,8 @@ module Api
       def serialized_screening_json(screening)
         ScreeningSerializer.new(screening).as_json(include:
         [
-          'participants.addresses',
-          'participants.phone_numbers',
-          'address',
-          'allegations',
-          'cross_reports'
+          'participants.addresses', 'participants.phone_numbers',
+          'address', 'allegations', 'cross_reports'
         ])
       end
     end

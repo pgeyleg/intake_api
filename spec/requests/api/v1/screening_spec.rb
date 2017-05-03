@@ -532,7 +532,7 @@ describe 'Screening API', skip_auth: true do
       allow(ENV).to receive(:fetch).with('SEARCH_URL')
         .and_return('http://referral_api_url')
       stub_request(:post, /referrals/)
-        .and_return(body: {message: 'Successfully created referral'}.to_json, status: 200)
+        .and_return(body: { message: 'Successfully created referral' }.to_json, status: 200)
     end
 
     it 'POSTS the transformed screening to create referral API' do
@@ -556,7 +556,6 @@ describe 'Screening API', skip_auth: true do
           assignee: screening.assignee,
           additional_information: screening.additional_information,
           address: {
-            id: screening.address.id,
             city: screening.address.city,
             state: screening.address.state,
             street_address: screening.address.street_address,
@@ -611,7 +610,9 @@ describe 'Screening API', skip_auth: true do
       allow(ENV).to receive(:fetch).with('SEARCH_URL')
         .and_return('http://referral_api_url')
       stub_request(:post, /referrals/)
-        .and_return(body: {message: 'Unable to validate ScreeningToReferral'}.to_json, status: 422)
+        .and_return(
+          body: { message: 'Unable to validate ScreeningToReferral' }.to_json, status: 422
+        )
     end
 
     it 'returns status code and response body' do

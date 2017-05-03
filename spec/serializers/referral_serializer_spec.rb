@@ -30,13 +30,15 @@ describe ReferralSerializer do
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
         address: a_hash_including(
-          id: screening.address.id,
           city: screening.address.city,
           state: screening.address.state,
           street_address: screening.address.street_address,
           zip: screening.address.zip,
           type: screening.address.type
         )
+      )
+      expect(as_json).to_not match a_hash_including(
+        address: a_hash_including(:id)
       )
     end
 
@@ -123,7 +125,6 @@ describe ReferralSerializer do
             date_of_birth: participant_one.date_of_birth,
             addresses: array_including(
               a_hash_including(
-                id: participant_one.addresses.first.id,
                 city: participant_one.addresses.first.city,
                 state: participant_one.addresses.first.state,
                 street_address: participant_one.addresses.first.street_address,
@@ -145,13 +146,23 @@ describe ReferralSerializer do
             addresses: [],
             screening_id: screening.id,
             person_id: nil,
-            roles: participant_two.roles,
-            phone_numbers: array_including(
-              a_hash_including(
-                id: participant_two.phone_numbers.first.id,
-                number: participant_two.phone_numbers.first.number,
-                type: participant_two.phone_numbers.first.type
-              )
+            roles: participant_two.roles
+          )
+        )
+      )
+    end
+
+    it 'returns the referral participant address attributes without id' do
+      participant_one = FactoryGirl.build(:participant, :with_address)
+      screening = FactoryGirl.create(:screening, participants: [participant_one])
+      as_json = described_class.new(screening).as_json(
+        include: %w(participants.addresses address participants.phone_numbers)
+      )
+      expect(as_json).to_not match a_hash_including(
+        participants: array_including(
+          a_hash_including(
+            addresses: array_including(
+              a_hash_including(:id)
             )
           )
         )

@@ -18,8 +18,8 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     :screening_decision_detail,
     :started_at
 
-  has_one :address
-  has_many :participants, serializer: ParticipantSerializer
+  has_one :address, serializer: ReferralAddressSerializer
+  has_many :participants, serializer: ReferralParticipantSerializer
 
   def allegations
     object.allegations.map do |allegation|
