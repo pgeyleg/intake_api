@@ -3,10 +3,10 @@ require 'rails_helper'
 
 describe 'History of Allegations API', skip_auth: true do
   describe 'GET /api/v1/history_of_involvement' do
-    let(:lana) { create :person }
-    let(:archer) { create :person }
-    let(:cyril) { create :person }
-    let!(:current_screening) { create :screening }
+    let(:lana) { FactoryGirl.create :person }
+    let(:archer) { FactoryGirl.create :person }
+    let(:cyril) { FactoryGirl.create :person }
+    let!(:current_screening) { FactoryGirl.create :screening }
 
     context 'there are no participants on the screening' do
       it 'returns an empty array' do
@@ -16,14 +16,31 @@ describe 'History of Allegations API', skip_auth: true do
       end
     end
 
+    context 'there is a participant who is unknown on both screenings' do
+      before do
+        FactoryGirl.create(
+          :screening,
+          participants: [FactoryGirl.build(:participant, person_id: nil)]
+        )
+        current_screening.participants << FactoryGirl.create(:participant, person: nil)
+        current_screening.save!
+      end
+
+      it 'returns an empty array' do
+        get history_of_involvements_api_v1_screening_path(id: current_screening.id)
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)).to eq([])
+      end
+    end
+
     context 'there are participants on the current screening' do
       let!(:lana_current_participant) do
-        create :participant,
+        FactoryGirl.create :participant,
           screening: current_screening,
           person: lana
       end
       let!(:archer_current_participant) do
-        create :participant,
+        FactoryGirl.create :participant,
           screening: current_screening,
           person: archer
       end
@@ -35,9 +52,9 @@ describe 'History of Allegations API', skip_auth: true do
       end
 
       context 'and there are one or more old screenings for the participants' do
-        let(:old_screening) { create :screening }
+        let(:old_screening) { FactoryGirl.create :screening }
         let!(:lana_old_participant) do
-          create :participant,
+          FactoryGirl.create :participant,
             screening: old_screening,
             person: lana,
             first_name: 'Lana',
@@ -52,12 +69,12 @@ describe 'History of Allegations API', skip_auth: true do
 
         context 'and those participants have shared history' do
           let!(:archer_old_participant) do
-            create :participant,
+            FactoryGirl.create :participant,
               screening: old_screening,
               person: archer
           end
           let!(:old_allegation) do
-            create :allegation,
+            FactoryGirl.create :allegation,
               screening: old_screening,
               victim_id: lana_old_participant.id,
               perpetrator_id: archer_old_participant.id
@@ -100,9 +117,9 @@ describe 'History of Allegations API', skip_auth: true do
 
           context 'and those participants have multiple separate histories' do
             before do
-              5.times { create :participant, person: lana }
-              5.times { create :participant, person: archer }
-              5.times { create :participant, person: cyril }
+              5.times { FactoryGirl.create :participant, person: lana }
+              5.times { FactoryGirl.create :participant, person: archer }
+              5.times { FactoryGirl.create :participant, person: cyril }
             end
 
             it 'returns all possible screenings' do
