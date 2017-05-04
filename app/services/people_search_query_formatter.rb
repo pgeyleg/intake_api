@@ -22,8 +22,8 @@ class PeopleSearchQueryFormatter # :nodoc:
 
   def should_query
     should_query = [
-      { match: { first_name: search_term } },
-      { match: { last_name: search_term } }
+      { prefix: { first_name: search_term } },
+      { prefix: { last_name: search_term } }
     ] | date_of_birth_query
     should_query << { match: { ssn: ssn } } if ssn
     should_query

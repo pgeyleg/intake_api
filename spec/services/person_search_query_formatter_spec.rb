@@ -19,8 +19,8 @@ describe PeopleSearchQueryFormatter do
 
   let(:query) do
     [
-      { match: { first_name: '' } },
-      { match: { last_name: '' } }
+      { prefix: { first_name: '' } },
+      { prefix: { last_name: '' } }
     ]
   end
 
@@ -57,8 +57,8 @@ describe PeopleSearchQueryFormatter do
     let(:search_term) { 'blah' }
     let(:query) do
       [
-        { match: { first_name: 'blah' } },
-        { match: { last_name: 'blah' } }
+        { prefix: { first_name: 'blah' } },
+        { prefix: { last_name: 'blah' } }
       ]
     end
 
@@ -71,8 +71,8 @@ describe PeopleSearchQueryFormatter do
     let(:search_term) { '123456789' }
     let(:query) do
       [
-        { match: { first_name: '123456789' } },
-        { match: { last_name: '123456789' } },
+        { prefix: { first_name: '123456789' } },
+        { prefix: { last_name: '123456789' } },
         { range: {
           date_of_birth: {
             gte: '1234||/y',
@@ -93,8 +93,8 @@ describe PeopleSearchQueryFormatter do
     let(:search_term) { '2012' }
     let(:query) do
       [
-        { match: { first_name: '2012' } },
-        { match: { last_name: '2012' } },
+        { prefix: { first_name: '2012' } },
+        { prefix: { last_name: '2012' } },
         { range: {
           date_of_birth: {
             gte: '2012||/y',
@@ -114,8 +114,8 @@ describe PeopleSearchQueryFormatter do
     let(:search_term) { '4/3/2010' }
     let(:query) do
       [
-        { match: { first_name: '4/3/2010' } },
-        { match: { last_name: '4/3/2010' } },
+        { prefix: { first_name: '4/3/2010' } },
+        { prefix: { last_name: '4/3/2010' } },
         { match: { date_of_birth: '2010-04-03' } },
         { range: {
           date_of_birth: {
@@ -136,8 +136,8 @@ describe PeopleSearchQueryFormatter do
     let(:search_term) { '2010-04-03' }
     let(:query) do
       [
-        { match: { first_name: '2010-04-03' } },
-        { match: { last_name: '2010-04-03' } },
+        { prefix: { first_name: '2010-04-03' } },
+        { prefix: { last_name: '2010-04-03' } },
         { match: { date_of_birth: '2010-04-03' } },
         { range: {
           date_of_birth: {

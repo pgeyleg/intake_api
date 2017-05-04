@@ -61,8 +61,8 @@ describe Api::V2::PeopleSearchController do
           {
             bool: {
               should: [
-                { match: { first_name: '4/3/2010' } },
-                { match: { last_name: '4/3/2010' } },
+                { prefix: { first_name: '4/3/2010' } },
+                { prefix: { last_name: '4/3/2010' } },
                 { match: { date_of_birth: '2010-04-03' } },
                 { range: {
                   date_of_birth: {
