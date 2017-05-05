@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 class PersonRepository # :nodoc:
   def self.find(ids)
-    response = API.make_api_call('/api/v1/dora/people/_search', :post, search_query(ids))
+    ids_as_array = ids.is_a?(Array) ? ids : [ids]
+    response = API.make_api_call('/api/v1/dora/people/_search', :post, search_query(ids_as_array))
     response.body.deep_symbolize_keys[:hits][:hits]
   end
 

@@ -41,7 +41,7 @@ describe PersonRepository do
         .and_return(response)
     end
 
-    context 'searching with no id' do
+    context 'searching with no ids' do
       let(:ids) { [] }
       let(:id_string) { '' }
       let(:hits) { [] }
@@ -52,7 +52,18 @@ describe PersonRepository do
       end
     end
 
-    context 'searching by one id' do
+    context 'searching by one id as a string' do
+      let(:ids) { '123456788' }
+      let(:id_string) { '123456788' }
+      let(:hits) { [{ id: '123456788' }] }
+
+      it 'returns the existing person' do
+        people = described_class.find(ids)
+        expect(people.first[:id]).to eq('123456788')
+      end
+    end
+
+    context 'searching by one id in an array' do
       let(:ids) { ['123456788'] }
       let(:id_string) { '123456788' }
       let(:hits) { [{ id: '123456788' }] }
