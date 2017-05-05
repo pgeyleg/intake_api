@@ -22,7 +22,7 @@ describe PersonRepository do
     let(:response) { double(:response, body: response_body) }
 
     before do
-      fields = %w(id)
+      fields = %w(id screenings)
       query = {
         query: {
           bool: {

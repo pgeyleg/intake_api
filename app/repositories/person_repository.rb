@@ -28,7 +28,7 @@ class PersonRepository # :nodoc:
     end
 
     def fields
-      %w(id)
+      %w(id screenings)
     end
   end
 end
