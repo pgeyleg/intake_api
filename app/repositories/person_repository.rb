@@ -12,18 +12,23 @@ class PersonRepository # :nodoc:
     def search_query(ids)
       id_string = ids.join(' || ')
       {
-        'query': {
-          'bool': {
-            'must': [
+        query: {
+          bool: {
+            must: [
               {
-                'match': {
-                  'id': id_string
+                match: {
+                  id: id_string
                 }
               }
             ]
           }
-        }
+        },
+        _source: fields
       }
+    end
+
+    def self.fields
+      %w(id)
     end
   end
 end

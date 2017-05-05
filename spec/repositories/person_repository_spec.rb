@@ -22,18 +22,20 @@ describe PersonRepository do
     let(:response) { double(:response, body: response_body) }
 
     before do
+      fields = %w(id)
       query = {
-        'query': {
-          'bool': {
-            'must': [
+        query: {
+          bool: {
+            must: [
               {
-                'match': {
-                  'id': id_string
+                match: {
+                  id: id_string
                 }
               }
             ]
           }
-        }
+        },
+        _source: fields
       }
 
       expect(API).to receive(:make_api_call)
