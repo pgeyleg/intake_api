@@ -3,7 +3,7 @@ class PeopleSearchQueryFormatter # :nodoc:
   attr_reader :search_term
 
   def initialize(search_term = '')
-    @search_term = search_term
+    @search_term = search_term.downcase
   end
 
   def format_query

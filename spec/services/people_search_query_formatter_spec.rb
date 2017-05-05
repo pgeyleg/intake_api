@@ -54,7 +54,7 @@ describe PeopleSearchQueryFormatter do
   end
 
   context 'when search criteria provided is non-numeric text' do
-    let(:search_term) { 'blah' }
+    let(:search_term) { 'Blah' }
     let(:query) do
       [
         { prefix: { first_name: 'blah' } },
