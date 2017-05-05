@@ -29,7 +29,7 @@ describe PersonRepository do
             must: [
               {
                 match: {
-                  id: id_string
+                  id: id_query_criteria
                 }
               }
             ]
@@ -45,7 +45,7 @@ describe PersonRepository do
 
     context 'searching with no ids' do
       let(:ids) { [] }
-      let(:id_string) { '' }
+      let(:id_query_criteria) { '' }
       let(:hits) { [] }
 
       it 'returns an empty set' do
@@ -56,7 +56,7 @@ describe PersonRepository do
 
     context 'searching by one id as a string' do
       let(:ids) { '123456788' }
-      let(:id_string) { '123456788' }
+      let(:id_query_criteria) { '123456788' }
       let(:hits) { [{ id: '123456788' }] }
 
       it 'returns the existing person' do
@@ -67,7 +67,7 @@ describe PersonRepository do
 
     context 'searching by one id in an array' do
       let(:ids) { ['123456788'] }
-      let(:id_string) { '123456788' }
+      let(:id_query_criteria) { '123456788' }
       let(:hits) { [{ id: '123456788' }] }
 
       it 'returns the existing person' do
@@ -78,7 +78,7 @@ describe PersonRepository do
 
     context 'searching by multiple ids' do
       let(:ids) { %w(123456788 123456780) }
-      let(:id_string) { '123456788 || 123456780' }
+      let(:id_query_criteria) { '123456788 || 123456780' }
       let(:hits) { [{ id: '123456788' }, { id: '123456780' }] }
 
       it 'returns the existing person' do

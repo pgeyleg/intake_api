@@ -10,14 +10,14 @@ class PersonRepository # :nodoc:
     private
 
     def search_query(ids)
-      id_string = ids.join(' || ')
+      id_query_criteria = ids.join(' || ')
       {
         query: {
           bool: {
             must: [
               {
                 match: {
-                  id: id_string
+                  id: id_query_criteria
                 }
               }
             ]
@@ -27,7 +27,7 @@ class PersonRepository # :nodoc:
       }
     end
 
-    def self.fields
+    def fields
       %w(id)
     end
   end
