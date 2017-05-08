@@ -38,6 +38,11 @@ describe Api::V2::PeopleSearchController do
       }
     end
 
+    before do
+      expect(Rails.configuration).to receive(:intake_api)
+        .and_return(people_search_path: 'person_search_path')
+    end
+
     context 'when search results are empty' do
       let(:search_response) { double(:search_response, body: empty_results) }
       let(:empty_results) do
@@ -50,7 +55,7 @@ describe Api::V2::PeopleSearchController do
 
       before do
         expect(API).to receive(:make_api_call)
-          .with('/api/v1/dora/people/_search', :post, search_body)
+          .with('person_search_path', :post, search_body)
           .and_return(search_response)
         get :index, params: { search_term: search_term }
       end

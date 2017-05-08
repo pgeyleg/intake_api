@@ -6,10 +6,10 @@ module Api
     class PeopleSearchController < ApplicationController # :nodoc:
       include AuthenticationConcern
 
-      PEOPLE_SEARCH_PATH = '/api/v1/dora/people/_search'
       def index
+        people_search_path = Rails.configuration.intake_api[:people_search_path]
         people_search = PeopleSearchQueryFormatter.new(params[:search_term]).format_query
-        response = API.make_api_call(PEOPLE_SEARCH_PATH, :post, people_search)
+        response = API.make_api_call(people_search_path, :post, people_search)
         people = response.body['hits']['hits'].map do |document|
           person_with_highlights(document)
         end

@@ -2,7 +2,8 @@
 class PersonRepository # :nodoc:
   def self.find(ids)
     ids_as_array = ids.is_a?(Array) ? ids : [ids]
-    response = API.make_api_call('/api/v1/dora/people/_search', :post, search_query(ids_as_array))
+    people_search_path = Rails.configuration.intake_api[:people_search_path]
+    response = API.make_api_call(people_search_path, :post, search_query(ids_as_array))
     response.body.deep_symbolize_keys[:hits][:hits]
   end
 
