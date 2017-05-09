@@ -21,6 +21,7 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
 
   has_one :address, serializer: ReferralAddressSerializer
   has_many :participants, serializer: ReferralParticipantSerializer
+  has_many :cross_reports, serializer: ReferralCrossReportSerializer
 
   def allegations
     object.allegations.map do |allegation|
@@ -33,17 +34,6 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
         }
       end
     end.flatten
-  end
-
-  def cross_reports
-    object.cross_reports.map do |cross_report|
-      {
-        agency_type: cross_report.agency_type,
-        agency_name: cross_report.agency_name,
-        method: 'Telephone Report', # This field is not currently being captured
-        inform_date: '1996-01-01' # This field is not currently being captured
-      }
-    end
   end
 
   def response_time

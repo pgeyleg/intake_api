@@ -76,7 +76,7 @@ module Api
       def submit
         screening = Screening.find(screening_params[:id])
         payload = ReferralSerializer.new(screening).as_json(
-          include: %w[participants.addresses address]
+          include: %w[participants.addresses address cross_reports]
         )
         response = API.make_api_call('/api/v1/referrals', :post, payload)
         if response.status == 201
