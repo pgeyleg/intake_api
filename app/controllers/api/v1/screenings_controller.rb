@@ -63,10 +63,8 @@ module Api
         ), status: :ok
       end
 
-      def history_of_involvements # rubocop:disable Metrics/AbcSize
-        people_ids = Screening.find(screening_params[:id])
-                              .participants.pluck(:person_id).compact
-
+      def history_of_involvements
+        people_ids = Screening.find(screening_params[:id]).people_ids
         screenings = []
 
         if people_ids.present?
@@ -80,8 +78,7 @@ module Api
 
       def relationships
         participants = Screening.find(screening_params[:id]).participants
-        people_ids = Screening.find(screening_params[:id])
-                              .participants.pluck(:person_id).compact
+        people_ids = Screening.find(screening_params[:id]).people_ids
 
         results = []
         if people_ids.present?

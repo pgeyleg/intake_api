@@ -23,4 +23,8 @@ class Screening < ActiveRecord::Base
     cross_reports.destroy_all
     super(*attrs)
   end
+
+  def people_ids
+    participants.pluck(:person_id).compact
+  end
 end
