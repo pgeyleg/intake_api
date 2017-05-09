@@ -1,135 +1,206 @@
 # frozen_string_literal: true
 require 'rails_helper'
 
-describe 'History of Allegations API', skip_auth: true do
+describe 'History of Involvement API', skip_auth: true do
   describe 'GET /api/v1/history_of_involvement' do
-    let(:lana) { FactoryGirl.create :person }
-    let(:archer) { FactoryGirl.create :person }
-    let(:cyril) { FactoryGirl.create :person }
-    let!(:current_screening) { FactoryGirl.create :screening }
+    let(:screening) { FactoryGirl.create :screening }
 
-    context 'there are no participants on the screening' do
-      it 'returns an empty array' do
-        get history_of_involvements_api_v1_screening_path(id: current_screening.id)
+    context 'no participants in the screening' do
+      it 'should return an empty array' do
+        expect(PersonRepository).to_not receive(:find).with(anything)
+        get history_of_involvements_api_v1_screening_path(id: screening.id)
         expect(response.status).to eq(200)
         expect(JSON.parse(response.body)).to eq([])
       end
     end
 
-    context 'there is a participant who is unknown on both screenings' do
-      before do
+    context 'no participants on the screening have people ids' do
+      let!(:participant) { FactoryGirl.create :participant, screening: screening }
+
+      it 'should return an empty array' do
+        expect(PersonRepository).to_not receive(:find).with(anything)
+        get history_of_involvements_api_v1_screening_path(id: screening.id)
+        expect(response.status).to eq(200)
+        expect(JSON.parse(response.body)).to eq([])
+      end
+    end
+
+    context 'one participant with a person id exists on the screening' do
+      let(:person) { FactoryGirl.create :person }
+      let!(:participant) do
         FactoryGirl.create(
-          :screening,
-          participants: [FactoryGirl.build(:participant, person_id: nil)]
+          :participant,
+          person: person,
+          screening: screening
         )
-        current_screening.participants << FactoryGirl.create(:participant, person: nil)
-        current_screening.save!
       end
 
-      it 'returns an empty array' do
-        get history_of_involvements_api_v1_screening_path(id: current_screening.id)
+      before do
+        expect(PersonRepository).to receive(:find).with([person.id])
+          .and_return(person_repository_response)
+        get history_of_involvements_api_v1_screening_path(id: screening.id)
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)).to eq([])
+      end
+
+      context 'one participant with a person id has no people search results' do
+        let(:person_repository_response) { [] }
+
+        it 'should return an empty array' do
+          expect(JSON.parse(response.body)).to eq([])
+        end
+      end
+
+      context 'screenings is missing from the person repository response' do
+        let(:person_repository_response) do
+          [
+            {
+              _source: {
+                id: participant.id
+              }
+            }
+          ]
+        end
+
+        it 'returns an empty array' do
+          expect(JSON.parse(response.body, symbolize_names: true)).to eq([])
+        end
+      end
+
+      context 'one participant has no screening history' do
+        let(:person_repository_response) do
+          [
+            {
+              _source: {
+                id: participant.id,
+                screenings: []
+              }
+            }
+          ]
+        end
+
+        it 'returns an empty array' do
+          expect(JSON.parse(response.body, symbolize_names: true)).to eq([])
+        end
+      end
+
+      context 'one participant has one screening history' do
+        let(:screenings) { [{ id: '123456789' }] }
+        let(:person_repository_response) do
+          [
+            {
+              _source: {
+                id: participant.id,
+                screenings: screenings
+              }
+            }
+          ]
+        end
+
+        it 'should return the relevant screening information' do
+          expect(JSON.parse(response.body, symbolize_names: true))
+            .to match array_including(screenings)
+        end
       end
     end
 
-    context 'there are participants on the current screening' do
-      let!(:lana_current_participant) do
-        FactoryGirl.create :participant,
-          screening: current_screening,
-          person: lana
-      end
-      let!(:archer_current_participant) do
-        FactoryGirl.create :participant,
-          screening: current_screening,
-          person: archer
+    context 'two participants exist on the screening' do
+      let(:person1) { FactoryGirl.create :person }
+      let!(:participant1) do
+        FactoryGirl.create(
+          :participant,
+          person: person1,
+          screening: screening
+        )
       end
 
-      it 'returns an empty set when no old screenings exist for the screening participants' do
-        get history_of_involvements_api_v1_screening_path(id: current_screening.id)
+      let(:person2) { FactoryGirl.create :person }
+      let!(:participant2) do
+        FactoryGirl.create(
+          :participant,
+          person: person2,
+          screening: screening
+        )
+      end
+
+      before do
+        expect(PersonRepository).to receive(:find).with(array_including(person1.id, person2.id))
+          .and_return(person_repository_response)
+        get history_of_involvements_api_v1_screening_path(id: screening.id)
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body)).to eq([])
       end
 
-      context 'and there are one or more old screenings for the participants' do
-        let(:old_screening) { FactoryGirl.create :screening }
-        let!(:lana_old_participant) do
-          FactoryGirl.create :participant,
-            screening: old_screening,
-            person: lana,
-            first_name: 'Lana',
-            last_name: 'Kane',
-            roles: []
+      context 'two participants have different screenings' do
+        let(:person_repository_response) do
+          [
+            {
+              _source: {
+                id: participant1.id,
+                screenings: [{ id: '123456789' }]
+              }
+            },
+            {
+              _source: {
+                id: participant2.id,
+                screenings: [{ id: '987654321' }]
+              }
+            }
+          ]
         end
+        let(:screenings) { [{ id: '123456789' }, { id: '987654321' }] }
 
-        it 'returns the old screening, but not the current screening' do
-          get history_of_involvements_api_v1_screening_path(id: current_screening.id)
-          expect(response.status).to eq(200)
-          expect(JSON.parse(response.body).length).to eq(1)
+        it 'should return the relevant screening information' do
+          expect(JSON.parse(response.body, symbolize_names: true))
+            .to match array_including(screenings)
         end
+      end
 
-        context 'and those participants have shared history' do
-          let!(:archer_old_participant) do
-            FactoryGirl.create :participant,
-              screening: old_screening,
-              person: archer,
-              roles: []
-          end
-          let!(:old_allegation) do
-            FactoryGirl.create :allegation,
-              screening: old_screening,
-              victim_id: lana_old_participant.id,
-              perpetrator_id: archer_old_participant.id
-          end
+      context 'two participants share a screening' do
+        let(:person_repository_response) do
+          [
+            {
+              _source: {
+                id: participant1.id,
+                screenings: [{ id: '123456789' }, { id: '456789123' }]
+              }
+            },
+            {
+              _source: {
+                id: participant2.id,
+                screenings: [{ id: '987654321' }, { id: '456789123' }]
+              }
+            }
+          ]
+        end
+        let(:screenings) { [{ id: '123456789' }, { id: '987654321' }, { id: '456789123' }] }
 
-          it 'does not include duplicate screenings in the response' do
-            get history_of_involvements_api_v1_screening_path(id: current_screening.id)
-            expect(response.status).to eq(200)
-            expect(JSON.parse(response.body).length).to eq(1)
-          end
+        it 'should return the relevant screening information' do
+          expect(JSON.parse(response.body, symbolize_names: true))
+            .to match array_including(screenings)
+        end
+      end
 
-          it 'includes participants and allegations in the response' do
-            get history_of_involvements_api_v1_screening_path(id: current_screening.id)
-            expect(response.status).to eq(200)
+      context 'two participants are present, one with screenings and one without' do
+        let(:person_repository_response) do
+          [
+            {
+              _source: {
+                id: participant1.id,
+                screenings: [{ id: '123456789' }, { id: '456789123' }]
+              }
+            },
+            {
+              _source: {
+                id: participant2.id,
+                screenings: []
+              }
+            }
+          ]
+        end
+        let(:screenings) { [{ id: '123456789' }, { id: '456789123' }] }
 
-            body = JSON.parse(response.body).map(&:deep_symbolize_keys)
-            expect(body).to match array_including(
-              a_hash_including(
-                id: old_screening.id,
-                participants: array_including(
-                  a_hash_including(
-                    id: lana_old_participant.id,
-                    first_name: 'Lana',
-                    last_name: 'Kane',
-                    roles: []
-                  ),
-                  a_hash_including(
-                    id: archer_old_participant.id,
-                    roles: []
-                  )
-                ),
-                allegations: array_including(
-                  a_hash_including(
-                    id: old_allegation.id
-                  )
-                )
-              )
-            )
-          end
-
-          context 'and those participants have multiple separate histories' do
-            before do
-              5.times { FactoryGirl.create :participant, person: lana }
-              5.times { FactoryGirl.create :participant, person: archer }
-              5.times { FactoryGirl.create :participant, person: cyril }
-            end
-
-            it 'returns all possible screenings' do
-              get history_of_involvements_api_v1_screening_path(id: current_screening.id)
-              expect(response.status).to eq(200)
-              expect(JSON.parse(response.body).length).to eq(11)
-            end
-          end
+        it 'should return the relevant screening information' do
+          expect(JSON.parse(response.body, symbolize_names: true))
+            .to match array_including(screenings)
         end
       end
     end

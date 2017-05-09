@@ -64,16 +64,18 @@ module Api
       end
 
       def history_of_involvements # rubocop:disable Metrics/AbcSize
-        screening_id = screening_params[:id]
         people_ids = Screening.find(screening_params[:id])
-                              .participants
-                              .pluck(:person_id)
-                              .compact
-        screenings = Screening.joins(:participants)
-                              .where(participants: { person_id: people_ids })
-                              .where.not(id: screening_id)
-                              .uniq
-        render json: screenings.as_json(include: %w(participants allegations)), status: :ok
+                              .participants.pluck(:person_id).compact
+
+        screenings = []
+
+        if people_ids.present?
+          screenings = PersonRepository.find(people_ids)
+                                       .map { |result| result[:_source][:screenings] }
+                                       .flatten.uniq { |screening| screening[:id] }.compact
+        end
+
+        render json: screenings, status: :ok
       end
 
       def submit

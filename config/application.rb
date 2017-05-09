@@ -33,5 +33,9 @@ module CasebookApi
     config.active_record.schema_format = :sql
     config.logger = Logger.new(STDOUT)
     config.log_level = :debug
+
+    config.intake_api = {
+      people_search_path: ENV.fetch('PEOPLE_SEARCH_PATH', '/api/v1/dora/people/_search')
+    }
   end
 end

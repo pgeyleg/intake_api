@@ -22,7 +22,10 @@ describe PersonRepository do
     let(:response) { double(:response, body: response_body) }
 
     before do
-      fields = %w(id)
+      expect(Rails.configuration).to receive(:intake_api)
+        .and_return(people_search_path: 'person_search_path')
+
+      fields = %w(id screenings)
       query = {
         query: {
           bool: {
@@ -39,7 +42,7 @@ describe PersonRepository do
       }
 
       expect(API).to receive(:make_api_call)
-        .with('/api/v1/dora/people/_search', :post, query)
+        .with('person_search_path', :post, query)
         .and_return(response)
     end
 
