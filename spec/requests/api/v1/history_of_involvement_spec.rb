@@ -203,6 +203,30 @@ describe 'History of Involvement API', skip_auth: true do
             .to match array_including(screenings)
         end
       end
+
+      context 'two participants are present, one has no screenings in the search response' do
+        let(:person_repository_response) do
+          [
+            {
+              _source: {
+                id: participant1.id,
+                screenings: [{ id: '123456789' }, { id: '456789123' }]
+              }
+            },
+            {
+              _source: {
+                id: participant2.id
+              }
+            }
+          ]
+        end
+        let(:screenings) { [{ id: '123456789' }, { id: '456789123' }] }
+
+        it 'should return the relevant screening information' do
+          expect(JSON.parse(response.body, symbolize_names: true))
+            .to match array_including(screenings)
+        end
+      end
     end
   end
 end
