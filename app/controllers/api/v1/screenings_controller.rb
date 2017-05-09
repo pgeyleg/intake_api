@@ -72,7 +72,7 @@ module Api
         if people_ids.present?
           screenings = PersonRepository.find(people_ids)
                                        .map { |result| result[:_source][:screenings] }
-                                       .flatten.uniq { |screening| screening[:id] }.compact
+                                       .flatten.compact.uniq { |screening| screening[:id] }
         end
 
         render json: screenings, status: :ok
