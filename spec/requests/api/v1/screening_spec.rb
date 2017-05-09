@@ -529,17 +529,16 @@ describe 'Screening API', skip_auth: true do
         allegations: [allegation]
       )
     end
+    let(:referral_id) { FFaker::Guid.guid }
     let(:response_body) do
-      {
-        legacy_id: FFaker::Guid.guid
-      }.to_json
+      { legacy_id: referral_id }.to_json
     end
 
     before do
       allow(ENV).to receive(:fetch).with('SEARCH_URL')
         .and_return('http://referral_api_url')
       stub_request(:post, %r{/api/v1/referrals})
-        .and_return(body: response_body, status: 201)
+        .and_return(body: response_body, status: 201, headers: { 'Content-Type' => 'json' })
     end
 
     it 'POSTS the transformed screening to create referral API' do
@@ -613,7 +612,7 @@ describe 'Screening API', skip_auth: true do
         ))
       ).to have_been_made
       expect(response.status).to eq(201)
-      expect(response.body).to eq(response_body)
+      expect(response.body).to eq({ referral_id: referral_id }.to_json)
     end
   end
 
@@ -625,7 +624,8 @@ describe 'Screening API', skip_auth: true do
         .and_return('http://referral_api_url')
       stub_request(:post, %r{/api/v1/referrals})
         .and_return(
-          body: { message: 'Unable to validate ScreeningToReferral' }.to_json, status: 422
+          body: { message: 'Unable to validate ScreeningToReferral' }.to_json,
+          status: 422, headers: { 'Content-Type' => 'json' }
         )
     end
 

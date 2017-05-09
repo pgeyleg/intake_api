@@ -372,6 +372,11 @@ definitions:
             type: array
             items:
               $ref: '#/definitions/ParticipantResponse'
+  ScreeningSubmitResponse:
+    type: object
+    properties:
+      referral_id:
+        type: string
 
 parameters:
   AuthorizationHeader:
@@ -540,8 +545,9 @@ paths:
           required: true
           type: string
       responses:
-        200:
-          description: successful response
+        201:
+          description: Successful response
+            $ref: '#/definitions/ScreeningSubmitResponse'
         400:
           description: Unable to process JSON 
         406:

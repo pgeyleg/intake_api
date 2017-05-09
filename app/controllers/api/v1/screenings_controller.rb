@@ -79,7 +79,12 @@ module Api
           include: %w[participants.addresses address]
         )
         response = API.make_api_call('/api/v1/referrals', :post, payload)
-        render json: response.body, status: response.status
+        if response.status == 201
+          referral_id = response.body['legacy_id']
+          render json: { referral_id: referral_id }, status: response.status
+        else
+          render json: response.body, status: response.status
+        end
       end
 
       private
