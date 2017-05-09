@@ -503,6 +503,7 @@ describe 'Screening API', skip_auth: true do
     let(:perpetrator) do
       FactoryGirl.build(
         :participant,
+        addresses: [FactoryGirl.build(:address)],
         roles: ['Perpetrator'],
         screening: nil
       )
@@ -520,7 +521,7 @@ describe 'Screening API', skip_auth: true do
     let(:screening) do
       FactoryGirl.create(
         :screening,
-        :with_address,
+        address: FactoryGirl.build(:address, type: nil), # incident address doesnt have type
         screening_decision: 'promote_to_referral',
         screening_decision_detail: '3_days',
         participants: [victim, perpetrator],
@@ -561,7 +562,7 @@ describe 'Screening API', skip_auth: true do
             state: screening.address.state,
             street_address: screening.address.street_address,
             zip: screening.address.zip,
-            type: screening.address.type
+            type: 'Other' # incident address doesn't have type
           },
           participants: [{
             id: perpetrator.id,
@@ -570,7 +571,13 @@ describe 'Screening API', skip_auth: true do
             gender: perpetrator.gender,
             ssn: perpetrator.ssn,
             date_of_birth: perpetrator.date_of_birth.to_s(:db),
-            addresses: [],
+            addresses: [{
+              city: perpetrator.addresses.first.city,
+              state: perpetrator.addresses.first.state,
+              street_address: perpetrator.addresses.first.street_address,
+              zip: perpetrator.addresses.first.zip,
+              type: perpetrator.addresses.first.type
+            }],
             screening_id: screening.id,
             person_id: nil,
             roles: perpetrator.roles

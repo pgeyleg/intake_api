@@ -11,5 +11,5 @@ class ReferralParticipantSerializer < ActiveModel::Serializer # :nodoc:
     :screening_id,
     :roles
 
-  has_many :addresses, serializer: ReferralAddressSerializer
+  has_many :addresses, serializer: ReferralParticipantAddressSerializer
 end

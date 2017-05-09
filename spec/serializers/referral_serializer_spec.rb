@@ -26,7 +26,7 @@ describe ReferralSerializer do
       )
     end
 
-    it 'returns the referral address attribues' do
+    it "returns the referral address attribues with 'Other' as address type" do
       screening = FactoryGirl.create(:screening, :with_address)
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
@@ -35,7 +35,7 @@ describe ReferralSerializer do
           state: screening.address.state,
           street_address: screening.address.street_address,
           zip: screening.address.zip,
-          type: screening.address.type
+          type: 'Other'
         )
       )
       expect(as_json).to_not match a_hash_including(
