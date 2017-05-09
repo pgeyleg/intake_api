@@ -35,7 +35,7 @@ module CasebookApi
     config.log_level = :debug
 
     config.intake_api = {
-      people_search_path: ENV.fetch('PEOPLE_SEARCH_PATH')
+      people_search_path: ENV.fetch('PEOPLE_SEARCH_PATH', '/api/v1/dora/people/_search')
     }
   end
 end
