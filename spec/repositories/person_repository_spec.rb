@@ -26,7 +26,7 @@ describe PersonRepository do
       expect(Rails.configuration).to receive(:intake_api)
         .and_return(people_search_path: 'person_search_path')
 
-      fields = %w[id screenings]
+      fields = %w[id relationships screenings]
       query = {
         query: {
           bool: {

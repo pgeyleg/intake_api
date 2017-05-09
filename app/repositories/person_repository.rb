@@ -30,7 +30,7 @@ class PersonRepository # :nodoc:
     end
 
     def fields
-      %w[id screenings]
+      %w[id relationships screenings]
     end
   end
 end

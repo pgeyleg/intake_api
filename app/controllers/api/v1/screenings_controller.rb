@@ -78,6 +78,29 @@ module Api
         render json: screenings, status: :ok
       end
 
+      def relationships
+        participants = Screening.find(screening_params[:id]).participants
+        people_ids = Screening.find(screening_params[:id])
+                              .participants.pluck(:person_id).compact
+
+        results = []
+        if people_ids.present?
+          results = PersonRepository.find(people_ids).map { |result| result[:_source] }.flatten
+        end
+
+        participant_data = participants.map do |participant|
+          result = results.find { |r| r[:id] == participant.person_id }
+          relationships = result && result[:relationships] ? result[:relationships] : []
+          {
+            id: participant.id,
+            first_name: participant.first_name,
+            last_name: participant.last_name,
+            relationships: relationships
+          }
+        end
+        render json: participant_data.to_json, status: :ok
+      end
+
       def submit
         screening = Screening.find(screening_params[:id])
         payload = ReferralSerializer.new(screening).as_json(
