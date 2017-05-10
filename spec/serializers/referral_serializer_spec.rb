@@ -73,11 +73,15 @@ describe ReferralSerializer do
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
         allegations: [{
+          legacy_id: nil,
+          legacy_source_table: nil,
           victim_person_id: victim.id,
           perpetrator_person_id: perpetrator.id,
           type: 'General neglect',
           county: screening.incident_county
         }, {
+          legacy_id: nil,
+          legacy_source_table: nil,
           victim_person_id: victim.id,
           perpetrator_person_id: perpetrator.id,
           type: 'Sexual abuse',

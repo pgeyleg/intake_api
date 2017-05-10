@@ -614,6 +614,8 @@ describe 'Screening API', skip_auth: true do
             inform_date: '1996-01-01' # This field is not currently being captured
           }],
           allegations: [{
+            legacy_id: nil,
+            legacy_source_table: nil,
             victim_person_id: victim.id,
             perpetrator_person_id: perpetrator.id,
             type: allegation.allegation_types.first,

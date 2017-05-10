@@ -29,6 +29,8 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     object.allegations.map do |allegation|
       allegation.allegation_types.map do |type|
         {
+          legacy_id: nil,
+          legacy_source_table: nil,
           victim_person_id: allegation.victim.id,
           perpetrator_person_id: allegation.perpetrator.id,
           type: type,
