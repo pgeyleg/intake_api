@@ -55,9 +55,7 @@ describe 'History of Involvement API', skip_auth: true do
         let(:person_repository_response) do
           [
             {
-              _source: {
-                id: participant.id
-              }
+              id: participant.id
             }
           ]
         end
@@ -71,10 +69,8 @@ describe 'History of Involvement API', skip_auth: true do
         let(:person_repository_response) do
           [
             {
-              _source: {
-                id: participant.id,
-                screenings: []
-              }
+              id: participant.id,
+              screenings: []
             }
           ]
         end
@@ -89,10 +85,8 @@ describe 'History of Involvement API', skip_auth: true do
         let(:person_repository_response) do
           [
             {
-              _source: {
-                id: participant.id,
-                screenings: screenings
-              }
+              id: participant.id,
+              screenings: screenings
             }
           ]
         end
@@ -134,16 +128,12 @@ describe 'History of Involvement API', skip_auth: true do
         let(:person_repository_response) do
           [
             {
-              _source: {
-                id: participant1.id,
-                screenings: [{ id: '123456789' }]
-              }
+              id: participant1.id,
+              screenings: [{ id: '123456789' }]
             },
             {
-              _source: {
-                id: participant2.id,
-                screenings: [{ id: '987654321' }]
-              }
+              id: participant2.id,
+              screenings: [{ id: '987654321' }]
             }
           ]
         end
@@ -159,16 +149,12 @@ describe 'History of Involvement API', skip_auth: true do
         let(:person_repository_response) do
           [
             {
-              _source: {
-                id: participant1.id,
-                screenings: [{ id: '123456789' }, { id: '456789123' }]
-              }
+              id: participant1.id,
+              screenings: [{ id: '123456789' }, { id: '456789123' }]
             },
             {
-              _source: {
-                id: participant2.id,
-                screenings: [{ id: '987654321' }, { id: '456789123' }]
-              }
+              id: participant2.id,
+              screenings: [{ id: '987654321' }, { id: '456789123' }]
             }
           ]
         end
@@ -184,16 +170,12 @@ describe 'History of Involvement API', skip_auth: true do
         let(:person_repository_response) do
           [
             {
-              _source: {
-                id: participant1.id,
-                screenings: [{ id: '123456789' }, { id: '456789123' }]
-              }
+              id: participant1.id,
+              screenings: [{ id: '123456789' }, { id: '456789123' }]
             },
             {
-              _source: {
-                id: participant2.id,
-                screenings: []
-              }
+              id: participant2.id,
+              screenings: []
             }
           ]
         end
@@ -209,15 +191,11 @@ describe 'History of Involvement API', skip_auth: true do
         let(:person_repository_response) do
           [
             {
-              _source: {
-                id: participant1.id,
-                screenings: [{ id: '123456789' }, { id: '456789123' }]
-              }
+              id: participant1.id,
+              screenings: [{ id: '123456789' }, { id: '456789123' }]
             },
             {
-              _source: {
-                id: participant2.id
-              }
+              id: participant2.id
             }
           ]
         end
