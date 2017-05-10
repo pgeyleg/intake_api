@@ -27,4 +27,14 @@ class Screening < ActiveRecord::Base
   def people_ids
     participants.pluck(:person_id).compact
   end
+
+  def participants_with_relationships
+    ids = people_ids
+    results = people_ids.present? ? PersonRepository.find(ids) : []
+    participants.each do |participant|
+      result = results.find { |r| r[:id] == participant.person_id }
+      relationships = result && result[:relationships] ? result[:relationships] : []
+      participant.relationships = relationships
+    end
+  end
 end

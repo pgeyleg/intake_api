@@ -77,20 +77,7 @@ module Api
       end
 
       def relationships
-        people_ids = Screening.find(screening_params[:id]).people_ids
-
-        results = []
-        if people_ids.present?
-          results = PersonRepository.find(people_ids).map { |result| result[:_source] }.flatten
-        end
-
-        participants = Screening.find(screening_params[:id]).participants.map do |participant|
-          result = results.find { |r| r[:id] == participant.person_id }
-          relationships = result && result[:relationships] ? result[:relationships] : []
-          participant.relationships = relationships.as_json
-          participant
-        end
-
+        participants = Screening.find(screening_params[:id]).participants_with_relationships
         render json: participants.as_json(methods: :relationships), status: :ok
       end
 
