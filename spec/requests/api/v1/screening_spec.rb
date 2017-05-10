@@ -564,6 +564,8 @@ describe 'Screening API', skip_auth: true do
           assignee: screening.assignee,
           additional_information: screening.additional_information,
           address: {
+            legacy_id: nil,
+            legacy_source_table: nil,
             city: screening.address.city,
             state: screening.address.state,
             street_address: screening.address.street_address,

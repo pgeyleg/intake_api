@@ -33,6 +33,8 @@ describe ReferralSerializer do
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
         address: a_hash_including(
+          legacy_id: nil,
+          legacy_source_table: nil,
           city: screening.address.city,
           state: screening.address.state,
           street_address: screening.address.street_address,
