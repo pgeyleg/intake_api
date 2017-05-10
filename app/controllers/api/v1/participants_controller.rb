@@ -63,6 +63,7 @@ module Api
           :person_id,
           :screening_id,
           :ssn,
+          languages: [],
           roles: []
         )
       end

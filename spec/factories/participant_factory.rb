@@ -9,7 +9,7 @@ FactoryGirl.define do
     ssn { FFaker::SSN.ssn }
     date_of_birth { 12.years.ago.to_date }
     roles { Array.new(1) { Participant::ROLE_TYPES.sample } }
-
+    languages { %w[Turkish German English Spanish Russian].sample(rand(0..2)) }
     trait :with_address do
       addresses { build_list :address, 1 }
     end

@@ -17,6 +17,7 @@ describe 'Participants API', skip_auth: true do
       screening_id: screening.id,
       first_name: 'Walter',
       last_name: 'White',
+      languages: %w[English Hmong],
       gender: 'female',
       date_of_birth: '1990-03-30',
       ssn: '345-12-2345',
@@ -55,6 +56,7 @@ describe 'Participants API', skip_auth: true do
           first_name: 'Walter',
           last_name: 'White',
           gender: 'female',
+          languages: %w[English Hmong],
           date_of_birth: '1990-03-30',
           ssn: '345-12-2345',
           addresses: array_including(
@@ -110,11 +112,13 @@ describe 'Participants API', skip_auth: true do
     end
 
     let(:participant) do
-      Participant.create!(
+      FactoryGirl.create(
+        :participant,
         person_id: person.id,
         screening_id: screening.id,
         first_name: 'Walter',
         last_name: 'White',
+        languages: %w[English Hmong],
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
@@ -126,6 +130,7 @@ describe 'Participants API', skip_auth: true do
     let(:updated_first_name) { 'Marge' }
     let(:updated_last_name) { 'Simpson' }
     let(:updated_roles) { ['Victim'] }
+    let(:updated_languages) { ['Spanish'] }
 
     describe 'PUT /api/v1/participants/:id' do
       it 'updates a participant' do
@@ -142,6 +147,7 @@ describe 'Participants API', skip_auth: true do
             }
           ],
           phone_numbers: [phone_number2.as_json],
+          languages: updated_languages,
           roles: updated_roles
         }
 
@@ -152,6 +158,7 @@ describe 'Participants API', skip_auth: true do
         expect(body).to include(
           first_name: updated_first_name,
           last_name: updated_last_name,
+          languages: updated_languages,
           addresses: array_including(
             a_hash_including(
               street_address: '321 real st',
