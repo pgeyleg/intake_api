@@ -28,6 +28,18 @@ class Screening < ActiveRecord::Base
     participants.pluck(:person_id).compact
   end
 
+  def history_of_involvements
+    ids = people_ids
+    if ids.present?
+      PersonRepository
+        .find(ids)
+        .map { |result| result[:screenings] }
+        .flatten.compact.uniq { |screening| screening[:id] }
+    else
+      []
+    end
+  end
+
   def participants_with_relationships
     ids = people_ids
     results = people_ids.present? ? PersonRepository.find(ids) : []

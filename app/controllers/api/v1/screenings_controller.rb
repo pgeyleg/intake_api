@@ -64,16 +64,8 @@ module Api
       end
 
       def history_of_involvements
-        people_ids = Screening.find(screening_params[:id]).people_ids
-        screenings = []
-
-        if people_ids.present?
-          screenings = PersonRepository.find(people_ids)
-                                       .map { |result| result[:screenings] }
-                                       .flatten.compact.uniq { |screening| screening[:id] }
-        end
-
-        render json: screenings, status: :ok
+        history = Screening.find(screening_params[:id]).history_of_involvements
+        render json: history, status: :ok
       end
 
       def relationships
