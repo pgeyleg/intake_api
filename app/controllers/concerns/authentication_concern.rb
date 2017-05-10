@@ -6,7 +6,7 @@ module AuthenticationConcern # :nodoc:
   extend ActiveSupport::Concern
 
   included do
-    before_filter :authenticate_request, unless: -> { ENV.fetch('AUTHENTICATION') == 'false' }
+    before_action :authenticate_request, unless: -> { ENV.fetch('AUTHENTICATION') == 'false' }
 
     private
 
