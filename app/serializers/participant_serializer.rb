@@ -3,7 +3,9 @@
 class ParticipantSerializer < ActiveModel::Serializer # :nodoc:
   attributes :id,
     :first_name,
+    :middle_name,
     :last_name,
+    :name_suffix,
     :gender,
     :ssn,
     :date_of_birth,

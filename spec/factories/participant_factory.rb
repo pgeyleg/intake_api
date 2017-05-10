@@ -10,6 +10,8 @@ FactoryGirl.define do
     date_of_birth { 12.years.ago.to_date }
     roles { Array.new(1) { Participant::ROLE_TYPES.sample } }
     languages { %w[Turkish German English Spanish Russian].sample(rand(0..2)) }
+    middle_name { FFaker::Name.last_name }
+    name_suffix { FFaker::Name.suffix }
     trait :with_address do
       addresses { build_list :address, 1 }
     end

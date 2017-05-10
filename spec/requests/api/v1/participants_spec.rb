@@ -16,7 +16,9 @@ describe 'Participants API', skip_auth: true do
       person_id: person.id,
       screening_id: screening.id,
       first_name: 'Walter',
+      middle_name: 'Williams',
       last_name: 'White',
+      name_suffix: 'Sr.',
       languages: %w[English Hmong],
       gender: 'female',
       date_of_birth: '1990-03-30',
@@ -57,6 +59,8 @@ describe 'Participants API', skip_auth: true do
           last_name: 'White',
           gender: 'female',
           languages: %w[English Hmong],
+          middle_name: 'Williams',
+          name_suffix: 'Sr.',
           date_of_birth: '1990-03-30',
           ssn: '345-12-2345',
           addresses: array_including(
@@ -119,6 +123,8 @@ describe 'Participants API', skip_auth: true do
         first_name: 'Walter',
         last_name: 'White',
         languages: %w[English Hmong],
+        middle_name: 'Williams',
+        name_suffix: 'Sr.',
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
@@ -131,12 +137,16 @@ describe 'Participants API', skip_auth: true do
     let(:updated_last_name) { 'Simpson' }
     let(:updated_roles) { ['Victim'] }
     let(:updated_languages) { ['Spanish'] }
+    let(:updated_middle_name) { 'Johnson' }
+    let(:updated_name_suffix) { 'DDS' }
 
     describe 'PUT /api/v1/participants/:id' do
       it 'updates a participant' do
         updated_params = {
           first_name: updated_first_name,
+          middle_name: 'Johnson',
           last_name: updated_last_name,
+          name_suffix: updated_name_suffix,
           addresses: [
             {
               street_address: '321 real st',
@@ -157,7 +167,9 @@ describe 'Participants API', skip_auth: true do
         body = JSON.parse(response.body).with_indifferent_access
         expect(body).to include(
           first_name: updated_first_name,
+          middle_name: updated_middle_name,
           last_name: updated_last_name,
+          name_suffix: updated_name_suffix,
           languages: updated_languages,
           addresses: array_including(
             a_hash_including(

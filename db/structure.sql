@@ -221,7 +221,9 @@ CREATE TABLE participants (
     screening_id character varying,
     person_id character varying,
     roles character varying[] DEFAULT '{}'::character varying[],
-    languages character varying[] DEFAULT '{}'::character varying[]
+    languages character varying[] DEFAULT '{}'::character varying[],
+    middle_name character varying,
+    name_suffix character varying
 );
 
 
@@ -893,6 +895,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170406164348'),
 ('20170421154927'),
 ('20170421230453'),
-('20170510205736');
+('20170510205736'),
+('20170510222245');
 
 

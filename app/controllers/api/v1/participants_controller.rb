@@ -60,6 +60,8 @@ module Api
           :first_name,
           :gender,
           :last_name,
+          :middle_name,
+          :name_suffix,
           :person_id,
           :screening_id,
           :ssn,

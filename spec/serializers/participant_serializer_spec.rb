@@ -9,7 +9,9 @@ describe ParticipantSerializer do
     let(:participant) do
       Participant.new(
         first_name: 'Robert',
+        middle_name: 'Wadsworth',
         last_name: 'Smith',
+        name_suffix: 'PhD',
         gender: 'male',
         languages: %w[Turkish German],
         ssn: '111223333',
@@ -39,7 +41,9 @@ describe ParticipantSerializer do
       expect(described_class.new(participant).as_json).to eq(
         id: participant.id,
         first_name: 'Robert',
+        middle_name: 'Wadsworth',
         last_name: 'Smith',
+        name_suffix: 'PhD',
         gender: 'male',
         languages: %w[Turkish German],
         ssn: '111223333',
