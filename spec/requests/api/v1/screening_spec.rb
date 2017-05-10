@@ -547,6 +547,8 @@ describe 'Screening API', skip_auth: true do
         a_request(:post, %r{/api/v1/referrals})
         .with(body: hash_including(
           id: screening.id,
+          legacy_id: nil,
+          legacy_source_table: nil,
           ended_at: screening.ended_at.iso8601(3),
           incident_county: screening.incident_county,
           incident_date: screening.incident_date.to_s(:db),

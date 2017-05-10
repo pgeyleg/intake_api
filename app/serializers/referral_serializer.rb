@@ -10,6 +10,8 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     :id,
     :incident_county,
     :incident_date,
+    :legacy_id,
+    :legacy_source_table,
     :location_type,
     :name,
     :reference,
@@ -38,5 +40,13 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
 
   def response_time
     object.screening_decision_detail
+  end
+
+  def legacy_id
+    nil
+  end
+
+  def legacy_source_table
+    nil
   end
 end

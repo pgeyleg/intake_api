@@ -14,6 +14,8 @@ describe ReferralSerializer do
         communication_method: screening.communication_method,
         ended_at: screening.ended_at,
         id: screening.id,
+        legacy_id: nil,
+        legacy_source_table: nil,
         incident_county: screening.incident_county,
         incident_date: screening.incident_date,
         location_type: screening.location_type,
