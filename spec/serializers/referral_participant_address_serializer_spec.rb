@@ -6,13 +6,15 @@ describe ReferralParticipantAddressSerializer do
   describe 'as_json' do
     let(:address) { FactoryGirl.build(:address) }
 
-    it 'returns all attributes of a address except id' do
+    it 'returns all attributes of a address with legacy id and table' do
       expect(described_class.new(address).as_json).to eq(
-        street_address: address.street_address,
-        state: address.state,
         city: address.city,
-        zip: address.zip,
-        type: address.type
+        legacy_id: nil,
+        legacy_source_table: nil,
+        state: address.state,
+        street_address: address.street_address,
+        type: address.type,
+        zip: address.zip
       )
     end
   end

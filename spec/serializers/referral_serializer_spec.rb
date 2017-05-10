@@ -123,6 +123,8 @@ describe ReferralSerializer do
         participants: array_including(
           a_hash_including(
             id: participant_one.id,
+            legacy_id: nil,
+            legacy_source_table: nil,
             first_name: participant_one.first_name,
             last_name: participant_one.last_name,
             gender: participant_one.gender,
@@ -143,6 +145,8 @@ describe ReferralSerializer do
           ),
           a_hash_including(
             id: participant_two.id,
+            legacy_id: nil,
+            legacy_source_table: nil,
             first_name: participant_two.first_name,
             last_name: participant_two.last_name,
             gender: participant_two.gender,

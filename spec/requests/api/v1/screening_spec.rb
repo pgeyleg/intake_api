@@ -574,6 +574,8 @@ describe 'Screening API', skip_auth: true do
           },
           participants: [{
             id: perpetrator.id,
+            legacy_id: nil,
+            legacy_source_table: nil,
             first_name: perpetrator.first_name,
             last_name: perpetrator.last_name,
             gender: perpetrator.gender,
@@ -591,6 +593,8 @@ describe 'Screening API', skip_auth: true do
             roles: perpetrator.roles
           }, {
             id: victim.id,
+            legacy_id: nil,
+            legacy_source_table: nil,
             first_name: victim.first_name,
             last_name: victim.last_name,
             gender: victim.gender,
