@@ -23,6 +23,9 @@ describe 'Participants API', skip_auth: true do
       gender: 'female',
       date_of_birth: '1990-03-30',
       ssn: '345-12-2345',
+      races: [
+        { 'race' => 'Asian', 'race_detail' => 'Korean' }
+      ],
       addresses: [
         {
           street_address: '123 fake st',
@@ -63,6 +66,9 @@ describe 'Participants API', skip_auth: true do
           name_suffix: 'Sr.',
           date_of_birth: '1990-03-30',
           ssn: '345-12-2345',
+          races: [
+            { 'race' => 'Asian', 'race_detail' => 'Korean' }
+          ],
           addresses: array_including(
             a_hash_including(
               street_address: '123 fake st',
@@ -128,6 +134,9 @@ describe 'Participants API', skip_auth: true do
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
+        races: [
+          { 'race' => 'Asian', 'race_detail' => 'Korean' }
+        ],
         addresses: [address1],
         phone_numbers: [phone_number1],
         roles: ['Victim', 'Anonymous Reporter']
@@ -139,6 +148,12 @@ describe 'Participants API', skip_auth: true do
     let(:updated_languages) { ['Spanish'] }
     let(:updated_middle_name) { 'Johnson' }
     let(:updated_name_suffix) { 'DDS' }
+    let(:updated_races) do
+      [
+        { 'race' => 'White', 'race_detail' => 'Armenian' },
+        { 'race' => 'Asian', 'race_detail' => 'Korean' }
+      ]
+    end
 
     describe 'PUT /api/v1/participants/:id' do
       it 'updates a participant' do
@@ -147,6 +162,7 @@ describe 'Participants API', skip_auth: true do
           middle_name: 'Johnson',
           last_name: updated_last_name,
           name_suffix: updated_name_suffix,
+          races: updated_races,
           addresses: [
             {
               street_address: '321 real st',
@@ -171,6 +187,7 @@ describe 'Participants API', skip_auth: true do
           last_name: updated_last_name,
           name_suffix: updated_name_suffix,
           languages: updated_languages,
+          races: updated_races,
           addresses: array_including(
             a_hash_including(
               street_address: '321 real st',

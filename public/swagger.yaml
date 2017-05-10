@@ -47,6 +47,51 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/PhoneNumber'
+      races:
+        type: array
+        items:
+          type: object
+          properties:
+            race:
+              type: string
+              enum:
+                - White
+                - Black or African American
+                - Asian
+                - American Indian or Alaskan Native
+                - Native Hawaiian or Other Pacific Islander
+                - Unknown
+                - Abandoned
+                - Declined to answer
+            race_detail:
+              type: string
+              enum:
+                - Armenian
+                - Central American
+                - European
+                - Middle Eastern
+                - Romanian
+                - Black
+                - Ethiopian
+                - Caribbean
+                - Asian Indian
+                - Cambodian
+                - Chinese
+                - Filipino
+                - Hmong
+                - Japanese
+                - Korean
+                - Laotian
+                - Other Asian
+                - Vietnamese
+                - American Indian
+                - Alaskan Native
+                - Guamanian
+                - Hawaiian
+                - Other Asian/Pacific Islander
+                - Other Pacific Islander
+                - Polynesian
+                - Samoan
       languages:
         type: array
         items:

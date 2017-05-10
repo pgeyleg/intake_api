@@ -11,6 +11,7 @@ class ParticipantSerializer < ActiveModel::Serializer # :nodoc:
     :date_of_birth,
     :languages,
     :person_id,
+    :races,
     :screening_id,
     :roles
 

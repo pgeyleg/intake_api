@@ -18,6 +18,9 @@ describe ParticipantSerializer do
         date_of_birth: Date.parse('1955-01-31'),
         person: person,
         screening: screening,
+        races: [
+          { race: 'Asian', race_detail: 'Korean' }
+        ],
         roles: ['Victim']
       )
     end
@@ -50,6 +53,9 @@ describe ParticipantSerializer do
         date_of_birth: Date.parse('1955-01-31'),
         person_id: person.id,
         screening_id: screening.id,
+        races: [
+          { 'race' => 'Asian', 'race_detail' => 'Korean' }
+        ],
         addresses: [
           {
             id: participant.addresses.first.id,

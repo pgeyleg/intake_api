@@ -66,6 +66,7 @@ module Api
           :screening_id,
           :ssn,
           languages: [],
+          races: %i[race race_detail],
           roles: []
         )
       end

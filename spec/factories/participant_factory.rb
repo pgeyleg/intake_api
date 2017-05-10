@@ -12,6 +12,16 @@ FactoryGirl.define do
     languages { %w[Turkish German English Spanish Russian].sample(rand(0..2)) }
     middle_name { FFaker::Name.last_name }
     name_suffix { FFaker::Name.suffix }
+    races do
+      Array.new(rand(0..2)) do
+        race = ['White', 'Black or African American', 'Asian', 'Unknown'].sample
+        race_detail = %w[European Caribbean Korean Ethiopian].sample
+        {
+          race: race,
+          race_detail: race_detail
+        }
+      end
+    end
     trait :with_address do
       addresses { build_list :address, 1 }
     end
