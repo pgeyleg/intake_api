@@ -140,6 +140,8 @@ describe ReferralSerializer do
             date_of_birth: participant_one.date_of_birth,
             addresses: array_including(
               a_hash_including(
+                legacy_id: nil,
+                legacy_source_table: nil,
                 city: participant_one.addresses.first.city,
                 state: participant_one.addresses.first.state,
                 street_address: participant_one.addresses.first.street_address,

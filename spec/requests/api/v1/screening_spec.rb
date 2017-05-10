@@ -582,6 +582,8 @@ describe 'Screening API', skip_auth: true do
             ssn: perpetrator.ssn,
             date_of_birth: perpetrator.date_of_birth.to_s(:db),
             addresses: [{
+              legacy_id: nil,
+              legacy_source_table: nil,
               city: perpetrator.addresses.first.city,
               state: perpetrator.addresses.first.state,
               street_address: perpetrator.addresses.first.street_address,

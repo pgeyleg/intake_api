@@ -1,9 +1,19 @@
 # frozen_string_literal: true
 
 class ReferralParticipantAddressSerializer < ActiveModel::Serializer # :nodoc:
-  attributes :street_address,
+  attributes :city,
+    :legacy_id,
+    :legacy_source_table,
     :state,
-    :city,
-    :zip,
-    :type
+    :street_address,
+    :type,
+    :zip
+
+  def legacy_id
+    nil
+  end
+
+  def legacy_source_table
+    nil
+  end
 end
