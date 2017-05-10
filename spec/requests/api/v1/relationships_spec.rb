@@ -26,15 +26,15 @@ describe 'Relationships API', skip_auth: true do
         expect(PersonRepository).to_not receive(:find).with(anything)
         get relationships_api_v1_screening_path(id: screening.id)
         expect(response.status).to eq(200)
-        expect(JSON.parse(response.body, symbolize_names: true)).to eq(
-          [
-            {
+        expect(JSON.parse(response.body, symbolize_names: true)).to match(
+          array_including(
+            a_hash_including(
               id: participant.id,
               first_name: participant.first_name,
               last_name: participant.last_name,
               relationships: []
-            }
-          ]
+            )
+          )
         )
       end
     end
@@ -60,15 +60,15 @@ describe 'Relationships API', skip_auth: true do
         let(:person_repository_response) { [] }
 
         it 'should return an empty array' do
-          expect(JSON.parse(response.body, symbolize_names: true)).to eq(
-            [
-              {
+          expect(JSON.parse(response.body, symbolize_names: true)).to match(
+            array_including(
+              a_hash_including(
                 id: participant.id,
                 first_name: participant.first_name,
                 last_name: participant.last_name,
                 relationships: []
-              }
-            ]
+              )
+            )
           )
         end
       end
@@ -77,15 +77,15 @@ describe 'Relationships API', skip_auth: true do
         let(:person_repository_response) { [{ _source: { id: participant.person_id } }] }
 
         it 'should return an empty array' do
-          expect(JSON.parse(response.body, symbolize_names: true)).to eq(
-            [
-              {
+          expect(JSON.parse(response.body, symbolize_names: true)).to match(
+            array_including(
+              a_hash_including(
                 id: participant.id,
                 first_name: participant.first_name,
                 last_name: participant.last_name,
                 relationships: []
-              }
-            ]
+              )
+            )
           )
         end
       end
@@ -102,15 +102,15 @@ describe 'Relationships API', skip_auth: true do
         end
 
         it 'should return an empty array' do
-          expect(JSON.parse(response.body, symbolize_names: true)).to eq(
-            [
-              {
+          expect(JSON.parse(response.body, symbolize_names: true)).to match(
+            array_including(
+              a_hash_including(
                 id: participant.id,
                 first_name: participant.first_name,
                 last_name: participant.last_name,
                 relationships: [{ related_person_id: 'rel_1_id' }]
-              }
-            ]
+              )
+            )
           )
         end
       end
@@ -164,20 +164,21 @@ describe 'Relationships API', skip_auth: true do
       it 'should associate each person with the proper relationships' do
         expect(JSON.parse(response.body, symbolize_names: true)).to match(
           array_including(
-            {
+            a_hash_including(
               id: participant1.id,
               first_name: participant1.first_name,
               last_name: participant1.last_name,
               relationships: [{ related_person_id: 'rel_1_id' }]
-            },
-            id: participant2.id,
-            first_name: participant2.first_name,
-            last_name: participant2.last_name,
-            relationships:
-[
-  { related_person_id: 'rel_2_id' },
-  { related_person_id: 'rel_3_id' }
-]
+            ),
+            a_hash_including(
+              id: participant2.id,
+              first_name: participant2.first_name,
+              last_name: participant2.last_name,
+              relationships:  [
+                { related_person_id: 'rel_2_id' },
+                { related_person_id: 'rel_3_id' }
+              ]
+            )
           )
         )
       end

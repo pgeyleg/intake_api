@@ -77,7 +77,6 @@ module Api
       end
 
       def relationships
-        participants = Screening.find(screening_params[:id]).participants
         people_ids = Screening.find(screening_params[:id]).people_ids
 
         results = []
@@ -85,17 +84,14 @@ module Api
           results = PersonRepository.find(people_ids).map { |result| result[:_source] }.flatten
         end
 
-        participant_data = participants.map do |participant|
+        participants = Screening.find(screening_params[:id]).participants.map do |participant|
           result = results.find { |r| r[:id] == participant.person_id }
           relationships = result && result[:relationships] ? result[:relationships] : []
-          {
-            id: participant.id,
-            first_name: participant.first_name,
-            last_name: participant.last_name,
-            relationships: relationships
-          }
+          participant.relationships = relationships.as_json
+          participant
         end
-        render json: participant_data.to_json, status: :ok
+
+        render json: participants.as_json(methods: :relationships), status: :ok
       end
 
       def submit
