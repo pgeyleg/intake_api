@@ -74,14 +74,10 @@ module Api
       end
 
       def submit
-        screening = Screening.find(screening_params[:id])
-        payload = ReferralSerializer.new(screening).as_json(
-          include: %w[participants.addresses address cross_reports]
-        )
-        response = API.make_api_call(tpt_api_v1_referrals_path, :post, payload)
+        response = CreateReferral.new.call(screening_id: screening_params[:id])
         if response.status == 201
-          referral_id = response.body['legacy_id']
-          render json: { referral_id: referral_id }, status: response.status
+          render json: { referral_id: response.body['legacy_id'] },
+                 status: response.status
         else
           render json: response.body, status: response.status
         end
