@@ -22,4 +22,8 @@ Rails.application.routes.draw do
   end
 
   resources :version, only: :index
+
+  scope host: ENV.fetch('SEARCH_URL') do
+    post '/api/v1/referrals' => 'dev#null', as: :tpt_api_v1_referrals
+  end
 end

@@ -78,7 +78,7 @@ module Api
         payload = ReferralSerializer.new(screening).as_json(
           include: %w[participants.addresses address cross_reports]
         )
-        response = API.make_api_call('/api/v1/referrals', :post, payload)
+        response = API.make_api_call(tpt_api_v1_referrals_path, :post, payload)
         if response.status == 201
           referral_id = response.body['legacy_id']
           render json: { referral_id: referral_id }, status: response.status
