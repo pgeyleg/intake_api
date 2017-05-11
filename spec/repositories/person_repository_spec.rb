@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PersonRepository do
@@ -25,7 +26,7 @@ describe PersonRepository do
       expect(Rails.configuration).to receive(:intake_api)
         .and_return(people_search_path: 'person_search_path')
 
-      fields = %w(id screenings)
+      fields = %w[id screenings]
       query = {
         query: {
           bool: {
@@ -80,7 +81,7 @@ describe PersonRepository do
     end
 
     context 'searching by multiple ids' do
-      let(:ids) { %w(123456788 123456780) }
+      let(:ids) { %w[123456788 123456780] }
       let(:id_query_criteria) { '123456788 || 123456780' }
       let(:hits) { [{ id: '123456788' }, { id: '123456780' }] }
 

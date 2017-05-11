@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Participant do
@@ -25,7 +26,7 @@ describe Participant do
       )
     end
     let(:other_participant) do
-      Participant.create!(screening: screening, roles: %w(Victim Perpetrator))
+      Participant.create!(screening: screening, roles: %w[Victim Perpetrator])
     end
 
     before do

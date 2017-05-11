@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe PersonSerializer do
@@ -12,7 +13,7 @@ describe PersonSerializer do
         gender: 'male',
         ssn: '321021222',
         date_of_birth: Date.parse('1955-01-31'),
-        languages: %w(Turkish German),
+        languages: %w[Turkish German],
         races: [
           { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
@@ -43,7 +44,7 @@ describe PersonSerializer do
         middle_name: 'Maurice',
         name_suffix: 'Jr',
         ssn: '321021222',
-        languages: %w(Turkish German),
+        languages: %w[Turkish German],
         races: [
           { 'race' => 'White', 'race_detail' => 'Armenian' },
           { 'race' => 'Asian' }

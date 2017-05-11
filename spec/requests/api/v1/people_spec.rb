@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'People API', skip_auth: true do
@@ -34,7 +35,7 @@ describe 'People API', skip_auth: true do
           { number: '917-901-8765', type: 'Home' },
           { number: '916-101-1234', type: 'Cell' }
         ],
-        languages: %w(Hmong Japanese German),
+        languages: %w[Hmong Japanese German],
         races: [
           { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
@@ -122,7 +123,7 @@ describe 'People API', skip_auth: true do
       person = Person.new(
         first_name: 'Walter',
         last_name: 'White',
-        languages: %w(Hmong Japanese German)
+        languages: %w[Hmong Japanese German]
       )
       person.addresses.build(street_address: '123 fake street')
       person.phone_numbers.build(number: '111-111-1111')
@@ -165,7 +166,7 @@ describe 'People API', skip_auth: true do
           number: '444-444-4444',
           type: 'Cell'
         }],
-        languages: %w(Japanese English),
+        languages: %w[Japanese English],
         races: [
           { race: 'White', race_detail: 'Armenian' },
           { race: 'Asian' }
@@ -266,7 +267,7 @@ describe 'People API', skip_auth: true do
       person = Person.new(
         first_name: 'James',
         last_name: 'Rosling',
-        languages: %w(Hmong Japanese German)
+        languages: %w[Hmong Japanese German]
       )
       person.addresses.build(
         [

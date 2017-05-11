@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ScreeningSerializer < ActiveModel::Serializer # :nodoc:
   attributes :id,
     :additional_information,

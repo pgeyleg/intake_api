@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "#{Rails.root}/lib/elasticsearch_wrapper"
 
 # PeopleRepo is the Repository object for accessing People ES index
@@ -25,7 +26,7 @@ class PeopleRepo
             autocomplete: {
               type: 'custom',
               tokenizer: 'standard',
-              filter: %w(lowercase autocomplete_filter)
+              filter: %w[lowercase autocomplete_filter]
             }
           }
         }

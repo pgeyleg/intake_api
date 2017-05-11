@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe Api::V2::PeopleSearchController do
@@ -19,7 +20,7 @@ describe Api::V2::PeopleSearchController do
       }
     end
     let(:fields) do
-      %w(
+      %w[
         id first_name middle_name last_name name_suffix gender
         date_of_birth ssn languages races ethnicity
         addresses.id addresses.street_address
@@ -28,7 +29,7 @@ describe Api::V2::PeopleSearchController do
         phone_numbers.id phone_numbers.number
         phone_numbers.type
         highlight
-      )
+      ]
     end
     let(:search_body) do
       {

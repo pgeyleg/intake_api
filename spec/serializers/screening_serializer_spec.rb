@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ScreeningSerializer do
@@ -26,7 +27,7 @@ describe ScreeningSerializer do
             type: 'Work'
           )
         ],
-        roles: %w(Perpetrator Victim)
+        roles: %w[Perpetrator Victim]
       )
     end
 
@@ -130,7 +131,7 @@ describe ScreeningSerializer do
                                             type: 'Work'
                                           )
                                         ),
-                                        roles: %w(Perpetrator Victim)
+                                        roles: %w[Perpetrator Victim]
         ), a_hash_including(
              id: other_participant.id,
              screening_id: screening.id

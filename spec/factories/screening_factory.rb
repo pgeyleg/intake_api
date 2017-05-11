@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 FactoryGirl.define do
   factory :screening do
     name { FFaker::Lorem.words(3).join(' ') }
@@ -6,7 +7,7 @@ FactoryGirl.define do
     ended_at { 3.days.ago }
     sequence(:reference) { |n| "NRJDJ#{n}" }
     incident_county do
-      %w(
+      %w[
         alameda
         alpine
         amador
@@ -65,7 +66,7 @@ FactoryGirl.define do
         ventura
         yolo
         yuba
-      ).sample
+      ].sample
     end
     assignee { FFaker::Name.name }
     report_narrative { FFaker::Lorem.paragraph }
@@ -90,13 +91,13 @@ FactoryGirl.define do
     end
     additional_information { FFaker::Lorem.paragraph }
     communication_method do
-      %w(
+      %w[
         Email
         Fax
         Mail
         Online
         Phone
-      ).sample
+      ].sample
     end
 
     trait :with_address do

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Allegation model
 class Allegation < ActiveRecord::Base
   has_paper_trail

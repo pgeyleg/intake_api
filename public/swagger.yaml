@@ -14,6 +14,104 @@ consumes:
 produces:
   - application/json
 definitions:
+  Ethnicity:
+    type: object
+    properties:
+      hispanic_latino_origin:
+        type: string
+        enum:
+          - Yes
+          - No
+          - Unknown
+          - Abandoned
+          - Declined to answer
+      ethnicity_detail:
+        type: string
+        enum:
+          - Hispanic
+          - Mexican
+          - Central American
+          - South American
+  Races:
+    type: object
+    properties:
+      race:
+        type: string
+        enum:
+          - White
+          - Black or African American
+          - Asian
+          - American Indian or Alaskan Native
+          - Native Hawaiian or Other Pacific Islander
+          - Unknown
+          - Abandoned
+          - Declined to answer
+      race_detail:
+        type: string
+        enum:
+          - Armenian
+          - Central American
+          - European
+          - Middle Eastern
+          - Romanian
+          - Black
+          - Ethiopian
+          - Caribbean
+          - Asian Indian
+          - Cambodian
+          - Chinese
+          - Filipino
+          - Hmong
+          - Japanese
+          - Korean
+          - Laotian
+          - Other Asian
+          - Vietnamese
+          - American Indian
+          - Alaskan Native
+          - Guamanian
+          - Hawaiian
+          - Other Asian/Pacific Islander
+          - Other Pacific Islander
+          - Polynesian
+          - Samoan
+  Languages:
+    type: string
+    enum:
+      - American Sign Language
+      - Arabic
+      - Armenian
+      - Cambodian
+      - Cantonese
+      - English
+      - Farsi
+      - Filipino
+      - French
+      - German
+      - Hawaiian
+      - Hebrew
+      - Hmong
+      - Ilacano
+      - Indochinese
+      - Italian
+      - Japanese
+      - Korean
+      - Lao
+      - Mandarin
+      - Mien
+      - Other Chinese
+      - Other Non-English
+      - Polish
+      - Portuguese
+      - Romanian
+      - Russian
+      - Samoan
+      - Sign Language (Not ASL)
+      - Spanish
+      - Tagalog
+      - Thai
+      - Turkish
+      - Vietnamese
   Participant:
     type: object
     properties:
@@ -23,7 +121,11 @@ definitions:
         type: string
       first_name:
         type: string
+      middle_name:
+        type: string
       last_name:
+        type: string
+      name_suffix:
         type: string
       gender:
         type: string
@@ -43,6 +145,16 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/PhoneNumber'
+      races:
+        type: array
+        items:
+          $ref: '#/definitions/Races'
+      ethnicity:
+        $ref: '#/definitions/Ethnicity'
+      languages:
+        type: array
+        items:
+          $ref: '#/definitions/Languages'
       roles:
         type: array
         items:
@@ -89,105 +201,13 @@ definitions:
       languages:
         type: array
         items:
-          type: string
-          enum:
-            - American Sign Language
-            - Arabic
-            - Armenian
-            - Cambodian
-            - Cantonese
-            - English
-            - Farsi
-            - Filipino
-            - French
-            - German
-            - Hawaiian
-            - Hebrew
-            - Hmong
-            - Ilacano
-            - Indochinese
-            - Italian
-            - Japanese
-            - Korean
-            - Lao
-            - Mandarin
-            - Mien
-            - Other Chinese
-            - Other Non-English
-            - Polish
-            - Portuguese
-            - Romanian
-            - Russian
-            - Samoan
-            - Sign Language (Not ASL)
-            - Spanish
-            - Tagalog
-            - Thai
-            - Turkish
-            - Vietnamese
+          $ref: '#/definitions/Languages'
       races:
         type: array
         items:
-          type: object
-          properties:
-            race:
-              type: string
-              enum:
-                - White
-                - Black or African American
-                - Asian
-                - American Indian or Alaskan Native
-                - Native Hawaiian or Other Pacific Islander
-                - Unknown
-                - Abandoned
-                - Declined to answer
-            race_detail:
-              type: string
-              enum:
-                - Armenian
-                - Central American
-                - European
-                - Middle Eastern
-                - Romanian
-                - Black
-                - Ethiopian
-                - Caribbean
-                - Asian Indian
-                - Cambodian
-                - Chinese
-                - Filipino
-                - Hmong
-                - Japanese
-                - Korean
-                - Laotian
-                - Other Asian
-                - Vietnamese
-                - American Indian
-                - Alaskan Native
-                - Guamanian
-                - Hawaiian
-                - Other Asian/Pacific Islander
-                - Other Pacific Islander
-                - Polynesian
-                - Samoan
+          $ref: '#/definitions/Races'
       ethnicity:
-        type: object
-        properties:
-          hispanic_latino_origin:
-            type: string
-            enum:
-              - Yes
-              - No
-              - Unknown
-              - Abandoned
-              - Declined to answer
-          ethnicity_detail:
-            type: string
-            enum:
-              - Hispanic
-              - Mexican
-              - Central American
-              - South American
+        $ref: '#/definitions/Ethnicity'
       addresses:
         type: array
         items:

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'Participants API', skip_auth: true do
@@ -15,10 +16,17 @@ describe 'Participants API', skip_auth: true do
       person_id: person.id,
       screening_id: screening.id,
       first_name: 'Walter',
+      middle_name: 'Williams',
       last_name: 'White',
+      name_suffix: 'Sr.',
+      languages: %w[English Hmong],
       gender: 'female',
       date_of_birth: '1990-03-30',
       ssn: '345-12-2345',
+      races: [
+        { 'race' => 'Asian', 'race_detail' => 'Korean' }
+      ],
+      ethnicity: { hispanic_latino_origin: 'Yes', ethnicity_detail: 'Mexican' },
       addresses: [
         {
           street_address: '123 fake st',
@@ -54,8 +62,15 @@ describe 'Participants API', skip_auth: true do
           first_name: 'Walter',
           last_name: 'White',
           gender: 'female',
+          languages: %w[English Hmong],
+          middle_name: 'Williams',
+          name_suffix: 'Sr.',
           date_of_birth: '1990-03-30',
           ssn: '345-12-2345',
+          races: [
+            { 'race' => 'Asian', 'race_detail' => 'Korean' }
+          ],
+          ethnicity: { 'hispanic_latino_origin' => 'Yes', 'ethnicity_detail' => 'Mexican' },
           addresses: array_including(
             a_hash_including(
               street_address: '123 fake st',
@@ -109,14 +124,22 @@ describe 'Participants API', skip_auth: true do
     end
 
     let(:participant) do
-      Participant.create!(
+      FactoryGirl.create(
+        :participant,
         person_id: person.id,
         screening_id: screening.id,
         first_name: 'Walter',
         last_name: 'White',
+        languages: %w[English Hmong],
+        middle_name: 'Williams',
+        name_suffix: 'Sr.',
         gender: 'female',
         date_of_birth: '1990-03-30',
         ssn: '345-12-2345',
+        races: [
+          { 'race' => 'Asian', 'race_detail' => 'Korean' }
+        ],
+        ethnicity: { hispanic_latino_origin: 'Yes', ethnicity_detail: 'Mexican' },
         addresses: [address1],
         phone_numbers: [phone_number1],
         roles: ['Victim', 'Anonymous Reporter']
@@ -125,12 +148,28 @@ describe 'Participants API', skip_auth: true do
     let(:updated_first_name) { 'Marge' }
     let(:updated_last_name) { 'Simpson' }
     let(:updated_roles) { ['Victim'] }
+    let(:updated_languages) { ['Spanish'] }
+    let(:updated_middle_name) { 'Johnson' }
+    let(:updated_name_suffix) { 'DDS' }
+    let(:updated_races) do
+      [
+        { 'race' => 'White', 'race_detail' => 'Armenian' },
+        { 'race' => 'Asian', 'race_detail' => 'Korean' }
+      ]
+    end
+    let(:updated_ethnicity) do
+      { 'hispanic_latino_origin' => 'No', 'ethnicity_detail' => nil }
+    end
 
     describe 'PUT /api/v1/participants/:id' do
       it 'updates a participant' do
         updated_params = {
           first_name: updated_first_name,
+          middle_name: 'Johnson',
           last_name: updated_last_name,
+          name_suffix: updated_name_suffix,
+          races: updated_races,
+          ethnicity: updated_ethnicity,
           addresses: [
             {
               street_address: '321 real st',
@@ -141,6 +180,7 @@ describe 'Participants API', skip_auth: true do
             }
           ],
           phone_numbers: [phone_number2.as_json],
+          languages: updated_languages,
           roles: updated_roles
         }
 
@@ -150,7 +190,12 @@ describe 'Participants API', skip_auth: true do
         body = JSON.parse(response.body).with_indifferent_access
         expect(body).to include(
           first_name: updated_first_name,
+          middle_name: updated_middle_name,
           last_name: updated_last_name,
+          name_suffix: updated_name_suffix,
+          languages: updated_languages,
+          races: updated_races,
+          ethnicity: updated_ethnicity,
           addresses: array_including(
             a_hash_including(
               street_address: '321 real st',
