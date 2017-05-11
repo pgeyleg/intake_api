@@ -10,6 +10,8 @@ describe ReferralCrossReportSerializer do
       expect(described_class.new(cross_report).as_json).to eq(
         agency_type: cross_report.agency_type,
         agency_name: cross_report.agency_name,
+        legacy_id: nil,
+        legacy_source_table: nil,
         method: 'Telephone Report', # This field is not currently being captured
         inform_date: '1996-01-01' # This field is not currently being captured
       )

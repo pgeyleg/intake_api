@@ -606,6 +606,8 @@ describe 'Screening API', skip_auth: true do
             roles: victim.roles
           }],
           cross_reports: [{
+            legacy_id: nil,
+            legacy_source_table: nil,
             agency_type: cross_report.agency_type,
             agency_name: cross_report.agency_name,
             method: 'Telephone Report', # This field is not currently being captured

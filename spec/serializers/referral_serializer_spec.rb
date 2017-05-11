@@ -96,11 +96,15 @@ describe ReferralSerializer do
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
         cross_reports: [{
+          legacy_id: nil,
+          legacy_source_table: nil,
           agency_type: cross_report_one.agency_type,
           agency_name: cross_report_one.agency_name,
           method: 'Telephone Report', # This field is not currently being captured
           inform_date: '1996-01-01' # This field is not currently being captured
         }, {
+          legacy_id: nil,
+          legacy_source_table: nil,
           agency_type: cross_report_two.agency_type,
           agency_name: cross_report_two.agency_name,
           method: 'Telephone Report', # This field is not currently being captured
