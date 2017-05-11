@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe ReferralSerializer do
@@ -112,7 +113,7 @@ describe ReferralSerializer do
         participants: [participant_one, participant_two]
       )
       as_json = described_class.new(screening).as_json(
-        include: %w(participants.addresses address participants.phone_numbers)
+        include: %w[participants.addresses address participants.phone_numbers]
       )
       expect(as_json).to match a_hash_including(
         participants: array_including(
@@ -156,7 +157,7 @@ describe ReferralSerializer do
       participant_one = FactoryGirl.build(:participant, :with_address)
       screening = FactoryGirl.create(:screening, participants: [participant_one])
       as_json = described_class.new(screening).as_json(
-        include: %w(participants.addresses address participants.phone_numbers)
+        include: %w[participants.addresses address participants.phone_numbers]
       )
       expect(as_json).to_not match a_hash_including(
         participants: array_including(

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'Screening Active Record and Elastic Search integration' do

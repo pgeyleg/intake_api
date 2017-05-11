@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "#{Rails.root}/lib/elasticsearch_wrapper"
 
 # ScreeningsRepo is the Repository object for accessing Screenings ES index

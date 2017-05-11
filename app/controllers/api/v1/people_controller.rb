@@ -31,13 +31,13 @@ module Api
 
       def addresses_params
         params.permit(
-          addresses: [
-            :id,
-            :street_address,
-            :city,
-            :state,
-            :zip,
-            :type
+          addresses: %i[
+            id
+            street_address
+            city
+            state
+            zip
+            type
           ]
         )
       end
@@ -52,23 +52,23 @@ module Api
           :date_of_birth,
           :ssn,
           languages: [],
-          races: [
-            :race,
-            :race_detail
+          races: %i[
+            race
+            race_detail
           ],
-          ethnicity: [
-            :hispanic_latino_origin,
-            :ethnicity_detail
+          ethnicity: %i[
+            hispanic_latino_origin
+            ethnicity_detail
           ]
         )
       end
 
       def phone_numbers_params
         params.permit(
-          phone_numbers: [
-            :id,
-            :number,
-            :type
+          phone_numbers: %i[
+            id
+            number
+            type
           ]
         )
       end

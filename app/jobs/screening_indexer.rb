@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # ScreeningIndexer responsible for update the ES index
 class ScreeningIndexer
   def self.perform(screening_id)

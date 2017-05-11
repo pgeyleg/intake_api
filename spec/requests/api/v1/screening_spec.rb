@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rails_helper'
 
 describe 'Screening API', skip_auth: true do
@@ -373,7 +374,7 @@ describe 'Screening API', skip_auth: true do
 
     context 'when params contains response times' do
       it 'returns screenings matching response times' do
-        get '/api/v1/screenings', params: { screening_decision_details: %w(immediate 3_days) }
+        get '/api/v1/screenings', params: { screening_decision_details: %w[immediate 3_days] }
         assert_response :success
         body = JSON.parse(response.body)
         expect(body).to match array_including(

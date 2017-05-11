@@ -22,9 +22,9 @@ module Api
         :assignee,
         :safety_information,
         safety_alerts: [],
-        cross_reports: [
-          :agency_type,
-          :agency_name
+        cross_reports: %i[
+          agency_type
+          agency_name
         ],
         allegations: [
           :perpetrator_id,
@@ -59,7 +59,7 @@ module Api
         screenings = ScreeningsRepo.search_es_by(screening_decision_details, screening_decisions)
                                    .results
         render json: screenings.as_json(
-          include: %w(participants.addresses address participants.phone_numbers)
+          include: %w[participants.addresses address participants.phone_numbers]
         ), status: :ok
       end
 
@@ -81,7 +81,7 @@ module Api
       def submit
         screening = Screening.find(screening_params[:id])
         payload = ReferralSerializer.new(screening).as_json(
-          include: %w(participants.addresses address)
+          include: %w[participants.addresses address]
         )
         response = API.make_api_call('/api/v1/referrals', :post, payload)
         render json: response.body, status: response.status

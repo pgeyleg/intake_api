@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # PersonIndexer responsible for update the ES index
 class PersonIndexer
   def self.perform(person_id)

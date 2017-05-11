@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ParticipantSerializer < ActiveModel::Serializer # :nodoc:
   attributes :id,
     :first_name,

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class PeopleSearchQueryFormatter # :nodoc:
   attr_reader :search_term
 
@@ -72,11 +73,11 @@ class PeopleSearchQueryFormatter # :nodoc:
   end
 
   def fields
-    %w(
+    %w[
       id first_name middle_name last_name name_suffix gender date_of_birth ssn languages races
       ethnicity addresses.id addresses.street_address addresses.city addresses.state addresses.zip
       addresses.type phone_numbers.id phone_numbers.number phone_numbers.type highlight
-    )
+    ]
   end
 
   def highlight

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # gem 'rack-cors'
 # Be sure to restart your server when you modify this file.
 
@@ -12,7 +13,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins '*'
 
-    methods = [:get, :post, :put, :patch, :delete, :options, :head]
+    methods = %i[get post put patch delete options head]
     resource '*', headers: :any, methods: methods
   end
 end

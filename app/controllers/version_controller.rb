@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # Versions controller outputs the sha of the latest commit
 # in the running application instance codebase
 class VersionController < ApplicationController

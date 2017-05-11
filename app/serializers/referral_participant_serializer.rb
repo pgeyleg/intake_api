@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ReferralParticipantSerializer < ActiveModel::Serializer # :nodoc:
   attributes :id,
     :first_name,

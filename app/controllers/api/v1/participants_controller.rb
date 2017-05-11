@@ -20,7 +20,7 @@ module Api
         participant.participant_phone_numbers = update_phone_numbers(participant)
         participant.save!
         render json: ParticipantSerializer.new(participant)
-          .as_json(include: %w(addresses address phone_numbers phone_number)), status: :ok
+          .as_json(include: %w[addresses address phone_numbers phone_number]), status: :ok
       end
 
       def destroy
@@ -32,23 +32,23 @@ module Api
 
       def phone_numbers_params
         params.permit(
-          phone_numbers: [
-            :id,
-            :number,
-            :type
+          phone_numbers: %i[
+            id
+            number
+            type
           ]
         )
       end
 
       def addresses_params
         params.permit(
-          addresses: [
-            :id,
-            :street_address,
-            :city,
-            :state,
-            :zip,
-            :type
+          addresses: %i[
+            id
+            street_address
+            city
+            state
+            zip
+            type
           ]
         )
       end

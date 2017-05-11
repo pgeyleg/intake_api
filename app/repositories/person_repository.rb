@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class PersonRepository # :nodoc:
   def self.find(ids)
     ids_as_array = ids.is_a?(Array) ? ids : [ids]
@@ -29,7 +30,7 @@ class PersonRepository # :nodoc:
     end
 
     def fields
-      %w(id screenings)
+      %w[id screenings]
     end
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 gem 'active_model_serializers'
@@ -39,4 +40,4 @@ group :test do
   gem 'webmock'
 end
 
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
