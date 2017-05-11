@@ -21,6 +21,7 @@ describe ParticipantSerializer do
         races: [
           { race: 'Asian', race_detail: 'Korean' }
         ],
+        ethnicity: { hispanic_latino_origin: 'Yes', ethnicity_detail: 'Mexican' },
         roles: ['Victim']
       )
     end
@@ -56,6 +57,7 @@ describe ParticipantSerializer do
         races: [
           { 'race' => 'Asian', 'race_detail' => 'Korean' }
         ],
+        ethnicity: { 'hispanic_latino_origin' => 'Yes', 'ethnicity_detail' => 'Mexican' },
         addresses: [
           {
             id: participant.addresses.first.id,

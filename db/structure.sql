@@ -224,7 +224,8 @@ CREATE TABLE participants (
     languages character varying[] DEFAULT '{}'::character varying[],
     middle_name character varying,
     name_suffix character varying,
-    races json
+    races json,
+    ethnicity json
 );
 
 
@@ -898,6 +899,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170421230453'),
 ('20170510205736'),
 ('20170510222245'),
-('20170510231854');
+('20170510231854'),
+('20170511155800');
 
 

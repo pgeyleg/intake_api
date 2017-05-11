@@ -67,6 +67,7 @@ module Api
           :ssn,
           languages: [],
           races: %i[race race_detail],
+          ethnicity: %i[hispanic_latino_origin ethnicity_detail],
           roles: []
         )
       end

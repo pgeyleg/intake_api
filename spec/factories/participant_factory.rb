@@ -22,6 +22,15 @@ FactoryGirl.define do
         }
       end
     end
+    ethnicity do
+      hispanic_latino_origin = ['Yes', 'No', nil, nil].sample
+      ethnicity_detail = ['Mexican', 'Costa Rican', 'Mayan'].sample
+      {
+        hispanic_latino_origin: hispanic_latino_origin,
+        ethnicity_detail: hispanic_latino_origin.present? ? ethnicity_detail : nil
+      }
+    end
+
     trait :with_address do
       addresses { build_list :address, 1 }
     end
