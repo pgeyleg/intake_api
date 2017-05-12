@@ -56,11 +56,10 @@ module Api
       end
 
       def index
+        included_associations = %w[participants.addresses address participants.phone_numbers]
         screenings = ScreeningsRepo.search_es_by(screening_decision_details, screening_decisions)
                                    .results
-        render json: screenings.as_json(
-          include: %w[participants.addresses address participants.phone_numbers]
-        ), status: :ok
+        render json: screenings.as_json(include: included_associations), status: :ok
       end
 
       def history_of_involvements
@@ -79,8 +78,7 @@ module Api
           security_token: security_token
         )
         if response.status == 201
-          render json: { referral_id: response.body['legacy_id'] },
-                 status: response.status
+          render json: { referral_id: response.body['legacy_id'] }, status: response.status
         else
           render json: response.body, status: response.status
         end
@@ -116,11 +114,9 @@ module Api
       end
 
       def serialized_screening_json(screening)
-        ScreeningSerializer.new(screening).as_json(include:
-        [
-          'participants.addresses', 'participants.phone_numbers',
-          'address', 'allegations', 'cross_reports'
-        ])
+        included_associations = %w[participants.addresses participants.phone_numbers
+                                   address allegations cross_reports]
+        ScreeningSerializer.new(screening).as_json(include: included_associations)
       end
     end
   end
