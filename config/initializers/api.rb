@@ -7,6 +7,7 @@ module API
 
   def self.connection_settings(connection)
     connection.response :json, content_type: /\bjson$/
+    connection.response :logger, ::Logger.new(STDOUT), bodies: true
     connection.adapter Faraday.default_adapter
     connection
   end

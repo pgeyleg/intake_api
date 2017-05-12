@@ -11,7 +11,7 @@ gem 'paper_trail'
 gem 'pg', '~> 0.18'
 gem 'puma', '~> 3.0'
 gem 'rack-cors'
-gem 'rails', '~> 5.0.1'
+gem 'rails', '~> 5.1'
 
 group :development, :test do
   gem 'pry'
