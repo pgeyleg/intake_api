@@ -43,7 +43,7 @@ describe PersonRepository do
       }
 
       expect(API).to receive(:make_api_call)
-        .with('person_search_path', :post, query)
+        .with(nil, 'person_search_path', :post, query)
         .and_return(response)
     end
 
