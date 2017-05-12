@@ -22,7 +22,8 @@ describe ParticipantSerializer do
           { race: 'Asian', race_detail: 'Korean' }
         ],
         ethnicity: { hispanic_latino_origin: 'Yes', ethnicity_detail: 'Mexican' },
-        roles: ['Victim']
+        roles: ['Victim'],
+        relationships: [{ related_person_id: 'rel_1_id' }].to_json
       )
     end
 
@@ -75,7 +76,8 @@ describe ParticipantSerializer do
             type: 'Work'
           }
         ],
-        roles: ['Victim']
+        roles: ['Victim'],
+        relationships: [{ related_person_id: 'rel_1_id' }].to_json
       )
     end
   end

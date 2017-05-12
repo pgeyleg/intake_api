@@ -14,7 +14,8 @@ class ParticipantSerializer < ActiveModel::Serializer # :nodoc:
     :races,
     :ethnicity,
     :screening_id,
-    :roles
+    :roles,
+    :relationships
 
   has_many :addresses
   has_many :phone_numbers

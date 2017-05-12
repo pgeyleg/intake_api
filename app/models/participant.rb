@@ -5,6 +5,7 @@
 class Participant < ActiveRecord::Base
   has_paper_trail
 
+  attr_accessor :relationships
   validates :screening, presence: true
   has_many :participant_addresses, inverse_of: :participant, dependent: :destroy
   has_many :addresses, through: :participant_addresses

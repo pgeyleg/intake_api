@@ -23,4 +23,30 @@ class Screening < ActiveRecord::Base
     cross_reports.destroy_all
     super(*attrs)
   end
+
+  def people_ids
+    participants.pluck(:person_id).compact
+  end
+
+  def history_of_involvements
+    ids = people_ids
+    if ids.present?
+      PersonRepository
+        .find(ids)
+        .map { |result| result[:screenings] }
+        .flatten.compact.uniq { |screening| screening[:id] }
+    else
+      []
+    end
+  end
+
+  def participants_with_relationships
+    ids = people_ids
+    results = people_ids.present? ? PersonRepository.find(ids) : []
+    participants.each do |participant|
+      result = results.find { |r| r[:id] == participant.person_id }
+      relationships = result && result[:relationships] ? result[:relationships] : []
+      participant.relationships = relationships
+    end
+  end
 end

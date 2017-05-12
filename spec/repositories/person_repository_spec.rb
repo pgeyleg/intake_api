@@ -26,7 +26,7 @@ describe PersonRepository do
       expect(Rails.configuration).to receive(:intake_api)
         .and_return(people_search_path: 'person_search_path')
 
-      fields = %w[id screenings]
+      fields = %w[id relationships screenings]
       query = {
         query: {
           bool: {
@@ -61,7 +61,7 @@ describe PersonRepository do
     context 'searching by one id as a string' do
       let(:ids) { '123456788' }
       let(:id_query_criteria) { '123456788' }
-      let(:hits) { [{ id: '123456788' }] }
+      let(:hits) { [{ _source: { id: '123456788' } }] }
 
       it 'returns the existing person' do
         people = described_class.find(ids)
@@ -72,7 +72,7 @@ describe PersonRepository do
     context 'searching by one id in an array' do
       let(:ids) { ['123456788'] }
       let(:id_query_criteria) { '123456788' }
-      let(:hits) { [{ id: '123456788' }] }
+      let(:hits) { [{ _source: { id: '123456788' } }] }
 
       it 'returns the existing person' do
         people = described_class.find(ids)
@@ -83,7 +83,7 @@ describe PersonRepository do
     context 'searching by multiple ids' do
       let(:ids) { %w[123456788 123456780] }
       let(:id_query_criteria) { '123456788 || 123456780' }
-      let(:hits) { [{ id: '123456788' }, { id: '123456780' }] }
+      let(:hits) { [{ _source: { id: '123456788' } }, { _source: { id: '123456780' } }] }
 
       it 'returns the existing person' do
         people = described_class.find(ids)
