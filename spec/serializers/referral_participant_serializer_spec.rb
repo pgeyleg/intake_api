@@ -16,6 +16,8 @@ describe ReferralParticipantSerializer do
     it 'returns the attributes of a participant as a hash' do
       expect(described_class.new(participant).as_json).to eq(
         id: participant.id,
+        legacy_id: nil,
+        legacy_source_table: nil,
         first_name: participant.first_name,
         last_name: participant.last_name,
         gender: participant.gender,
@@ -25,6 +27,8 @@ describe ReferralParticipantSerializer do
         screening_id: participant.screening_id,
         addresses: [
           {
+            legacy_id: nil,
+            legacy_source_table: nil,
             street_address: participant.addresses.first.street_address,
             state: participant.addresses.first.state,
             city: participant.addresses.first.city,

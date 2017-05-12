@@ -14,6 +14,8 @@ describe ReferralSerializer do
         communication_method: screening.communication_method,
         ended_at: screening.ended_at,
         id: screening.id,
+        legacy_id: nil,
+        legacy_source_table: nil,
         incident_county: screening.incident_county,
         incident_date: screening.incident_date,
         location_type: screening.location_type,
@@ -26,16 +28,18 @@ describe ReferralSerializer do
       )
     end
 
-    it 'returns the referral address attribues' do
+    it "returns the referral address attribues with 'Other' as address type" do
       screening = FactoryGirl.create(:screening, :with_address)
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
         address: a_hash_including(
+          legacy_id: nil,
+          legacy_source_table: nil,
           city: screening.address.city,
           state: screening.address.state,
           street_address: screening.address.street_address,
           zip: screening.address.zip,
-          type: screening.address.type
+          type: 'Other'
         )
       )
       expect(as_json).to_not match a_hash_including(
@@ -69,11 +73,15 @@ describe ReferralSerializer do
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
         allegations: [{
+          legacy_id: nil,
+          legacy_source_table: nil,
           victim_person_id: victim.id,
           perpetrator_person_id: perpetrator.id,
           type: 'General neglect',
           county: screening.incident_county
         }, {
+          legacy_id: nil,
+          legacy_source_table: nil,
           victim_person_id: victim.id,
           perpetrator_person_id: perpetrator.id,
           type: 'Sexual abuse',
@@ -92,11 +100,15 @@ describe ReferralSerializer do
       as_json = described_class.new(screening).as_json
       expect(as_json).to match a_hash_including(
         cross_reports: [{
+          legacy_id: nil,
+          legacy_source_table: nil,
           agency_type: cross_report_one.agency_type,
           agency_name: cross_report_one.agency_name,
           method: 'Telephone Report', # This field is not currently being captured
           inform_date: '1996-01-01' # This field is not currently being captured
         }, {
+          legacy_id: nil,
+          legacy_source_table: nil,
           agency_type: cross_report_two.agency_type,
           agency_name: cross_report_two.agency_name,
           method: 'Telephone Report', # This field is not currently being captured
@@ -119,6 +131,8 @@ describe ReferralSerializer do
         participants: array_including(
           a_hash_including(
             id: participant_one.id,
+            legacy_id: nil,
+            legacy_source_table: nil,
             first_name: participant_one.first_name,
             last_name: participant_one.last_name,
             gender: participant_one.gender,
@@ -126,6 +140,8 @@ describe ReferralSerializer do
             date_of_birth: participant_one.date_of_birth,
             addresses: array_including(
               a_hash_including(
+                legacy_id: nil,
+                legacy_source_table: nil,
                 city: participant_one.addresses.first.city,
                 state: participant_one.addresses.first.state,
                 street_address: participant_one.addresses.first.street_address,
@@ -139,6 +155,8 @@ describe ReferralSerializer do
           ),
           a_hash_including(
             id: participant_two.id,
+            legacy_id: nil,
+            legacy_source_table: nil,
             first_name: participant_two.first_name,
             last_name: participant_two.last_name,
             gender: participant_two.gender,

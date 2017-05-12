@@ -503,6 +503,7 @@ describe 'Screening API', skip_auth: true do
     let(:perpetrator) do
       FactoryGirl.build(
         :participant,
+        addresses: [FactoryGirl.build(:address)],
         roles: ['Perpetrator'],
         screening: nil
       )
@@ -520,7 +521,7 @@ describe 'Screening API', skip_auth: true do
     let(:screening) do
       FactoryGirl.create(
         :screening,
-        :with_address,
+        address: FactoryGirl.build(:address, type: nil), # incident address doesnt have type
         screening_decision: 'promote_to_referral',
         screening_decision_detail: '3_days',
         participants: [victim, perpetrator],
@@ -528,20 +529,27 @@ describe 'Screening API', skip_auth: true do
         allegations: [allegation]
       )
     end
+    let(:referral_id) { FFaker::Guid.guid }
+    let(:response_body) do
+      { legacy_id: referral_id }.to_json
+    end
+    let(:auth_token) { FFaker::Guid.guid }
 
     before do
       allow(ENV).to receive(:fetch).with('SEARCH_URL')
         .and_return('http://referral_api_url')
-      stub_request(:post, /referrals/)
-        .and_return(body: { message: 'Successfully created referral' }.to_json, status: 200)
+      stub_request(:post, %r{/api/v1/referrals})
+        .and_return(body: response_body, status: 201, headers: { 'Content-Type' => 'json' })
     end
 
     it 'POSTS the transformed screening to create referral API' do
       post submit_api_v1_screening_path(screening)
       expect(
-        a_request(:post, /referrals/)
+        a_request(:post, %r{/api/v1/referrals})
         .with(body: hash_including(
           id: screening.id,
+          legacy_id: nil,
+          legacy_source_table: nil,
           ended_at: screening.ended_at.iso8601(3),
           incident_county: screening.incident_county,
           incident_date: screening.incident_date.to_s(:db),
@@ -557,25 +565,39 @@ describe 'Screening API', skip_auth: true do
           assignee: screening.assignee,
           additional_information: screening.additional_information,
           address: {
+            legacy_id: nil,
+            legacy_source_table: nil,
             city: screening.address.city,
             state: screening.address.state,
             street_address: screening.address.street_address,
             zip: screening.address.zip,
-            type: screening.address.type
+            type: 'Other' # incident address doesn't have type
           },
           participants: [{
             id: perpetrator.id,
+            legacy_id: nil,
+            legacy_source_table: nil,
             first_name: perpetrator.first_name,
             last_name: perpetrator.last_name,
             gender: perpetrator.gender,
             ssn: perpetrator.ssn,
             date_of_birth: perpetrator.date_of_birth.to_s(:db),
-            addresses: [],
+            addresses: [{
+              legacy_id: nil,
+              legacy_source_table: nil,
+              city: perpetrator.addresses.first.city,
+              state: perpetrator.addresses.first.state,
+              street_address: perpetrator.addresses.first.street_address,
+              zip: perpetrator.addresses.first.zip,
+              type: perpetrator.addresses.first.type
+            }],
             screening_id: screening.id,
             person_id: nil,
             roles: perpetrator.roles
           }, {
             id: victim.id,
+            legacy_id: nil,
+            legacy_source_table: nil,
             first_name: victim.first_name,
             last_name: victim.last_name,
             gender: victim.gender,
@@ -587,12 +609,16 @@ describe 'Screening API', skip_auth: true do
             roles: victim.roles
           }],
           cross_reports: [{
+            legacy_id: nil,
+            legacy_source_table: nil,
             agency_type: cross_report.agency_type,
             agency_name: cross_report.agency_name,
             method: 'Telephone Report', # This field is not currently being captured
             inform_date: '1996-01-01' # This field is not currently being captured
           }],
           allegations: [{
+            legacy_id: nil,
+            legacy_source_table: nil,
             victim_person_id: victim.id,
             perpetrator_person_id: perpetrator.id,
             type: allegation.allegation_types.first,
@@ -600,7 +626,16 @@ describe 'Screening API', skip_auth: true do
           }]
         ))
       ).to have_been_made
-      expect(response.status).to eq(200)
+      expect(response.status).to eq(201)
+      expect(response.body).to eq({ referral_id: referral_id }.to_json)
+    end
+
+    it 'passes the Authorization header to create referral API' do
+      post submit_api_v1_screening_path(screening), headers: { Authorization: auth_token }
+      expect(
+        a_request(:post, %r{/api/v1/referrals})
+        .with(headers: { Authorization: auth_token })
+      ).to have_been_made
     end
   end
 
@@ -610,9 +645,10 @@ describe 'Screening API', skip_auth: true do
     before do
       allow(ENV).to receive(:fetch).with('SEARCH_URL')
         .and_return('http://referral_api_url')
-      stub_request(:post, /referrals/)
+      stub_request(:post, %r{/api/v1/referrals})
         .and_return(
-          body: { message: 'Unable to validate ScreeningToReferral' }.to_json, status: 422
+          body: { message: 'Unable to validate ScreeningToReferral' }.to_json,
+          status: 422, headers: { 'Content-Type' => 'json' }
         )
     end
 

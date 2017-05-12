@@ -56,11 +56,10 @@ module Api
       end
 
       def index
+        included_associations = %w[participants.addresses address participants.phone_numbers]
         screenings = ScreeningsRepo.search_es_by(screening_decision_details, screening_decisions)
                                    .results
-        render json: screenings.as_json(
-          include: %w[participants.addresses address participants.phone_numbers]
-        ), status: :ok
+        render json: screenings.as_json(include: included_associations), status: :ok
       end
 
       def history_of_involvements
@@ -74,15 +73,22 @@ module Api
       end
 
       def submit
-        screening = Screening.find(screening_params[:id])
-        payload = ReferralSerializer.new(screening).as_json(
-          include: %w[participants.addresses address]
+        response = CreateReferral.new.call(
+          screening_id: screening_params[:id],
+          security_token: security_token
         )
-        response = API.make_api_call('/api/v1/referrals', :post, payload)
-        render json: response.body, status: response.status
+        if response.status == 201
+          render json: { referral_id: response.body['legacy_id'] }, status: response.status
+        else
+          render json: response.body, status: response.status
+        end
       end
 
       private
+
+      def security_token
+        request.headers['Authorization']
+      end
 
       def address_params
         params.require(:address).permit(:street_address, :city, :state, :zip)
@@ -108,11 +114,9 @@ module Api
       end
 
       def serialized_screening_json(screening)
-        ScreeningSerializer.new(screening).as_json(include:
-        [
-          'participants.addresses', 'participants.phone_numbers',
-          'address', 'allegations', 'cross_reports'
-        ])
+        included_associations = %w[participants.addresses participants.phone_numbers
+                                   address allegations cross_reports]
+        ScreeningSerializer.new(screening).as_json(include: included_associations)
       end
     end
   end

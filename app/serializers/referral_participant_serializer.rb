@@ -1,15 +1,25 @@
 # frozen_string_literal: true
 
 class ReferralParticipantSerializer < ActiveModel::Serializer # :nodoc:
-  attributes :id,
+  attributes :date_of_birth,
     :first_name,
-    :last_name,
     :gender,
-    :ssn,
-    :date_of_birth,
+    :id,
+    :last_name,
+    :legacy_id,
+    :legacy_source_table,
     :person_id,
+    :roles,
     :screening_id,
-    :roles
+    :ssn
 
-  has_many :addresses, serializer: ReferralAddressSerializer
+  has_many :addresses, serializer: ReferralParticipantAddressSerializer
+
+  def legacy_id
+    nil
+  end
+
+  def legacy_source_table
+    nil
+  end
 end

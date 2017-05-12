@@ -56,7 +56,7 @@ describe Api::V2::PeopleSearchController do
 
       before do
         expect(API).to receive(:make_api_call)
-          .with('person_search_path', :post, search_body)
+          .with(nil, 'person_search_path', :post, search_body)
           .and_return(search_response)
         get :index, params: { search_term: search_term }
       end

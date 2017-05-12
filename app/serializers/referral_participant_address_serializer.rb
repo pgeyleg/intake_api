@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ReferralAddressSerializer < ActiveModel::Serializer # :nodoc:
+class ReferralParticipantAddressSerializer < ActiveModel::Serializer # :nodoc:
   attributes :city,
     :legacy_id,
     :legacy_source_table,
@@ -15,9 +15,5 @@ class ReferralAddressSerializer < ActiveModel::Serializer # :nodoc:
 
   def legacy_source_table
     nil
-  end
-
-  def type
-    'Other'
   end
 end

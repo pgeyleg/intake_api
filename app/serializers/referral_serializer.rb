@@ -10,6 +10,8 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     :id,
     :incident_county,
     :incident_date,
+    :legacy_id,
+    :legacy_source_table,
     :location_type,
     :name,
     :reference,
@@ -21,11 +23,14 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
 
   has_one :address, serializer: ReferralAddressSerializer
   has_many :participants, serializer: ReferralParticipantSerializer
+  has_many :cross_reports, serializer: ReferralCrossReportSerializer
 
   def allegations
     object.allegations.map do |allegation|
       allegation.allegation_types.map do |type|
         {
+          legacy_id: nil,
+          legacy_source_table: nil,
           victim_person_id: allegation.victim.id,
           perpetrator_person_id: allegation.perpetrator.id,
           type: type,
@@ -35,18 +40,15 @@ class ReferralSerializer < ActiveModel::Serializer # :nodoc:
     end.flatten
   end
 
-  def cross_reports
-    object.cross_reports.map do |cross_report|
-      {
-        agency_type: cross_report.agency_type,
-        agency_name: cross_report.agency_name,
-        method: 'Telephone Report', # This field is not currently being captured
-        inform_date: '1996-01-01' # This field is not currently being captured
-      }
-    end
-  end
-
   def response_time
     object.screening_decision_detail
+  end
+
+  def legacy_id
+    nil
+  end
+
+  def legacy_source_table
+    nil
   end
 end
