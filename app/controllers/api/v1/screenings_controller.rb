@@ -74,7 +74,10 @@ module Api
       end
 
       def submit
-        response = CreateReferral.new.call(screening_id: screening_params[:id])
+        response = CreateReferral.new.call(
+          screening_id: screening_params[:id],
+          security_token: security_token
+        )
         if response.status == 201
           render json: { referral_id: response.body['legacy_id'] },
                  status: response.status
@@ -84,6 +87,10 @@ module Api
       end
 
       private
+
+      def security_token
+        request.headers['Authorization']
+      end
 
       def address_params
         params.require(:address).permit(:street_address, :city, :state, :zip)

@@ -533,6 +533,7 @@ describe 'Screening API', skip_auth: true do
     let(:response_body) do
       { legacy_id: referral_id }.to_json
     end
+    let(:auth_token) { FFaker::Guid.guid }
 
     before do
       allow(ENV).to receive(:fetch).with('SEARCH_URL')
@@ -627,6 +628,14 @@ describe 'Screening API', skip_auth: true do
       ).to have_been_made
       expect(response.status).to eq(201)
       expect(response.body).to eq({ referral_id: referral_id }.to_json)
+    end
+
+    it 'passes the Authorization header to create referral API' do
+      post submit_api_v1_screening_path(screening), headers: { Authorization: auth_token }
+      expect(
+        a_request(:post, %r{/api/v1/referrals})
+        .with(headers: { Authorization: auth_token })
+      ).to have_been_made
     end
   end
 

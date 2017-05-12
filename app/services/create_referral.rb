@@ -3,9 +3,10 @@
 class CreateReferral # :nodoc:
   def initialize; end
 
-  def call(screening_id:)
+  def call(screening_id:, security_token:)
     screening = Screening.find(screening_id)
     API.make_api_call(
+      security_token,
       Rails.application.routes.url_helpers.tpt_api_v1_referrals_path,
       :post,
       referral_attributes(screening)

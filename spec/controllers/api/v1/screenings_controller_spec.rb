@@ -11,7 +11,7 @@ describe Api::V1::ScreeningsController do
       service = double(:create_referral)
       allow(CreateReferral).to receive(:new).and_return(service)
       allow(service).to receive(:call)
-        .with(screening_id: screening_id)
+        .with(screening_id: screening_id, security_token: nil)
         .and_return(service_response)
     end
     let(:service_response) do
