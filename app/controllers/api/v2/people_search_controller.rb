@@ -7,9 +7,8 @@ module Api
       include AuthenticationConcern
 
       def index
-        people_search_path = Rails.configuration.intake_api[:people_search_path]
         people_search = PeopleSearchQueryFormatter.new(params[:search_term]).format_query
-        response = API.make_api_call(nil, people_search_path, :post, people_search)
+        response = API.make_api_call(security_token, people_search_path, :post, people_search)
         people = response.body['hits']['hits'].map do |document|
           person_with_highlights(document)
         end
@@ -17,6 +16,14 @@ module Api
       end
 
       private
+
+      def people_search_path
+        Rails.configuration.intake_api[:people_search_path]
+      end
+
+      def security_token
+        request.headers['Authorization']
+      end
 
       def person_with_highlights(document)
         highlight = {}
