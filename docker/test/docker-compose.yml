@@ -17,6 +17,7 @@ services:
     environment:
       AUTHENTICATION: 'false'
       AUTHENTICATION_URL: 'http://www.example.com/'
+      SEARCH_URL: 'http://www.example.com/'
       RAILS_ENV: test
       PG_HOST: postgres
       PG_USER: postgres
