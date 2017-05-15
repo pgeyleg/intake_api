@@ -25,5 +25,65 @@ describe 'People Search API', skip_auth: true do
         .with(headers: { Authorization: auth_token })
       ).to have_been_made
     end
+
+    it 'returns empty array in case of no match' do
+      db_results = { hits: { hits: [] } }
+      db_response = double(:response, body: db_results)
+
+      expect(API).to receive(:make_api_call)
+        .with(nil, '/people_search_path', :post, any_args)
+        .and_return(db_response)
+
+      get '/api/v2/people_search?search_term=Hill'
+      assert_response :success
+      expect(JSON.parse(response.body)).to be_empty
+    end
+
+    it 'returns an array of people' do
+      db_results = {
+        hits: {
+          hits: [
+            { _source: { id: 'I1dyXvW00b' } },
+            { _source: { id: 'KKN1s2b75C' } }
+          ]
+        }
+      }
+      db_response = double(:response, body: db_results)
+
+      expect(API).to receive(:make_api_call)
+        .with(nil, '/people_search_path', :post, any_args)
+        .and_return(db_response)
+
+      get '/api/v2/people_search?search_term=Hill'
+      assert_response :success
+      expect(JSON.parse(response.body)).to match array_including(
+        a_hash_including('id' => 'I1dyXvW00b'),
+        a_hash_including('id' => 'KKN1s2b75C')
+      )
+    end
+
+    it 'includes highlighting' do
+      db_results = {
+        hits: {
+          hits: [
+            {
+              _source: { id: 'I1dyXvW00b' },
+              highlight: { last_name: ['<em>Hill</em>'] }
+            }
+          ]
+        }
+      }
+      db_response = double(:response, body: db_results)
+
+      expect(API).to receive(:make_api_call)
+        .with(nil, '/people_search_path', :post, any_args)
+        .and_return(db_response)
+
+      get '/api/v2/people_search?search_term=Hill'
+      assert_response :success
+      expect(JSON.parse(response.body)).to match array_including(
+        a_hash_including('highlight' => { 'last_name' => '<em>Hill</em>' })
+      )
+    end
   end
 end
