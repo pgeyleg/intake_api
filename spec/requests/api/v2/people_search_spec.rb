@@ -27,21 +27,7 @@ describe 'People Search API', skip_auth: true do
     end
 
     it 'returns empty array in case of no match' do
-      db_results =
-        {
-          took: 1,
-          timed_out: false,
-          _shards: {
-            total: 5,
-            successful: 5,
-            failed: 0
-          },
-          hits: {
-            total: 0,
-            max_score: nil,
-            hits: []
-          }
-      }
+      db_results = { hits: { hits: [] } }
       db_response = double(:response, body: db_results)
 
       expect(API).to receive(:make_api_call)
@@ -55,57 +41,10 @@ describe 'People Search API', skip_auth: true do
 
     it 'returns an array of people' do
       db_results = {
-        took: 2,
-        timed_out: false,
-        _shards: {
-          total: 5,
-          successful: 5,
-          failed: 0
-        },
         hits: {
-          total: 2,
-          max_score: 1,
           hits: [
-            {
-              _index: 'people_drs',
-              _type: 'person',
-              _id: 'I1dyXvW00b',
-              _score: 1,
-              _source: {
-                phone_numbers: [],
-                addresses: [],
-                gender: 'male',
-                languages: [],
-                name_suffix: nil,
-                date_of_birth: '1988-03-07',
-                last_name: 'Hill',
-                id: 'I1dyXvW00b',
-                middle_name: '',
-                first_name: 'Harold',
-                ssn: ''
-              },
-              highlight: { 'last_name': ['<em>Hill</em>'] }
-            },
-            {
-              _index: 'people_drs',
-              _type: 'person',
-              _id: 'KKN1s2b75C',
-              _score: 1,
-              _source: {
-                phone_numbers: [],
-                addresses: [],
-                gender: 'female',
-                languages: ['Hawaiian'],
-                name_suffix: nil,
-                date_of_birth: '1990-03-03',
-                last_name: 'Hill',
-                id: 'KKN1s2b75C',
-                middle_name: '',
-                first_name: 'Jane',
-                ssn: ''
-              },
-              highlight: { last_name: ['<em>Hill</em>'] }
-            }
+            { _source: { id: 'I1dyXvW00b' } },
+            { _source: { id: 'KKN1s2b75C' } }
           ]
         }
       }
@@ -118,71 +57,18 @@ describe 'People Search API', skip_auth: true do
       get '/api/v2/people_search?search_term=Hill'
       assert_response :success
       expect(JSON.parse(response.body)).to match array_including(
-        {
-          'phone_numbers' => [],
-          'addresses' => [],
-          'gender' => 'male',
-          'languages' => [],
-          'name_suffix' => nil,
-          'date_of_birth' => '1988-03-07',
-          'last_name' => 'Hill',
-          'id' => 'I1dyXvW00b',
-          'middle_name' => '',
-          'first_name' => 'Harold',
-          'ssn' => '',
-          'highlight' => { 'last_name' => '<em>Hill</em>' }
-        },
-        'phone_numbers' => [],
-        'addresses' => [],
-        'gender' => 'female',
-        'languages' => ['Hawaiian'],
-        'name_suffix' => nil,
-        'date_of_birth' => '1990-03-03',
-        'last_name' => 'Hill',
-        'id' => 'KKN1s2b75C',
-        'middle_name' => '',
-        'first_name' => 'Jane',
-        'ssn' => '',
-        'highlight' => { 'last_name' => '<em>Hill</em>' }
+        a_hash_including('id' => 'I1dyXvW00b'),
+        a_hash_including('id' => 'KKN1s2b75C')
       )
     end
 
     it 'includes highlighting' do
       db_results = {
-        took: 2,
-        timed_out: false,
-        _shards: {
-          total: 5,
-          successful: 5,
-          failed: 0
-        },
         hits: {
-          total: 4,
-          max_score: 1,
           hits: [
             {
-              _index: 'people_drs',
-              _type: 'person',
-              _id: 'I1dyXvW00b',
-              _score: 1,
-              _source: {
-                phone_numbers: [],
-                addresses: [],
-                gender: 'male',
-                languages: [],
-                name_suffix: nil,
-                date_of_birth: '1988-03-07',
-                last_name: 'Hill',
-                id: 'I1dyXvW00b',
-                middle_name: '',
-                first_name: 'Harold',
-                ssn: ''
-              },
-              highlight: {
-                last_name: [
-                  '<em>Hill</em>'
-                ]
-              }
+              _source: { id: 'I1dyXvW00b' },
+              highlight: { last_name: ['<em>Hill</em>'] }
             }
           ]
         }
