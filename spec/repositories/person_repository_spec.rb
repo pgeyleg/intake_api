@@ -42,7 +42,7 @@ describe PersonRepository do
         _source: fields
       }
 
-      expect(API).to receive(:make_api_call)
+      expect(TPT).to receive(:make_api_call)
         .with(nil, 'person_search_path', :post, query)
         .and_return(response)
     end

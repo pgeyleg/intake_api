@@ -2,17 +2,19 @@
 
 require 'rails_helper'
 
-describe API do
+describe TPT do
   let(:security_token) { FFaker::Guid.guid }
-  before do
-    allow(ENV).to receive(:fetch).with('SEARCH_URL')
-      .and_return('http://search_api_url')
+  around do |example|
+    original_connection = TPT.connection
+    TPT.connection = Faraday.new(url: 'http://api_url')
+    example.run
+    TPT.connection = original_connection
   end
 
   describe '.make_api_call' do
-    it 'sends search requests to the API' do
+    it 'sends search requests to the TPT' do
       stub_request(:get, %r{/api/v1/dora/people/_search})
-      API.make_api_call(security_token, '/api/v1/dora/people/_search', :get)
+      TPT.make_api_call(security_token, '/api/v1/dora/people/_search', :get)
       expect(
         a_request(:get, %r{/api/v1/dora/people/_search})
       ).to have_been_made
@@ -23,9 +25,8 @@ describe API do
     end
 
     it 'includes Authorization header' do
-      security_token = FFaker::Guid.guid
       stub_request(:get, %r{/api/v1/dora/people/_search})
-      API.make_api_call(security_token, '/api/v1/dora/people/_search', :get)
+      TPT.make_api_call(security_token, '/api/v1/dora/people/_search', :get)
       expect(
         a_request(:get, %r{/api/v1/dora/people/_search})
           .with(headers: { 'Authorization' => security_token })
@@ -34,7 +35,7 @@ describe API do
 
     it 'includes CONTENT_TYPE unless a get' do
       stub_request(:post, %r{/api/v1/dora/people/_search})
-      API.make_api_call(security_token, '/api/v1/dora/people/_search', :post)
+      TPT.make_api_call(security_token, '/api/v1/dora/people/_search', :post)
       expect(
         a_request(:post, %r{/api/v1/dora/people/_search})
         .with(headers: { 'Content-Type' => 'application/json' })
@@ -43,7 +44,7 @@ describe API do
 
     it 'includes the specified payload' do
       stub_request(:post, %r{/api/v1/dora/people/_search})
-      API.make_api_call(security_token, '/api/v1/dora/people/_search', :post, {})
+      TPT.make_api_call(security_token, '/api/v1/dora/people/_search', :post, {})
       expect(
         a_request(:post, %r{/api/v1/dora/people/_search})
         .with(body: {})

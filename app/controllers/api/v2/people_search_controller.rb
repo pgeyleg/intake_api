@@ -8,7 +8,7 @@ module Api
 
       def index
         people_search = PeopleSearchQueryFormatter.new(params[:search_term]).format_query
-        response = API.make_api_call(security_token, people_search_path, :post, people_search)
+        response = TPT.make_api_call(security_token, people_search_path, :post, people_search)
         people = response.body.deep_stringify_keys['hits']['hits'].map do |document|
           person_with_highlights(document)
         end

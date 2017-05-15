@@ -30,7 +30,7 @@ describe 'People Search API', skip_auth: true do
       db_results = { hits: { hits: [] } }
       db_response = double(:response, body: db_results)
 
-      expect(API).to receive(:make_api_call)
+      expect(TPT).to receive(:make_api_call)
         .with(nil, '/people_search_path', :post, any_args)
         .and_return(db_response)
 
@@ -50,7 +50,7 @@ describe 'People Search API', skip_auth: true do
       }
       db_response = double(:response, body: db_results)
 
-      expect(API).to receive(:make_api_call)
+      expect(TPT).to receive(:make_api_call)
         .with(nil, '/people_search_path', :post, any_args)
         .and_return(db_response)
 
@@ -75,7 +75,7 @@ describe 'People Search API', skip_auth: true do
       }
       db_response = double(:response, body: db_results)
 
-      expect(API).to receive(:make_api_call)
+      expect(TPT).to receive(:make_api_call)
         .with(nil, '/people_search_path', :post, any_args)
         .and_return(db_response)
 
