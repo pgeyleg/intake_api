@@ -35,6 +35,7 @@ class Screening < ActiveRecord::Base
         .find(ids)
         .map { |result| result[:screenings] }
         .flatten.compact.uniq { |screening| screening[:id] }
+        .reject { |screening| screening[:id] == id }
     else
       []
     end

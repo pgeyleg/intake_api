@@ -125,6 +125,23 @@ describe Screening do
           expect(history).to eq(screenings)
         end
       end
+
+      context 'one of the historical screenings is the current screening' do
+        let(:screenings) { [{ id: '123456789' }, { id: screening.id }] }
+        let(:person_repository_response) do
+          [
+            {
+              id: participant.id,
+              screenings: screenings
+            }
+          ]
+        end
+
+        it 'should not include the current screening in the results' do
+          history = screening.history_of_involvements
+          expect(history).to eq([{ id: '123456789' }])
+        end
+      end
     end
 
     context 'two participants exist on the screening' do
