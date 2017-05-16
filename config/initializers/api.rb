@@ -13,7 +13,7 @@ module API
   end
 
   def self.tpt_connection
-    @connection ||= Faraday.new(url: ENV.fetch('SEARCH_URL', 'http://tptsearch')) do |connection|
+    @connection ||= Faraday.new(url: ENV.fetch('SEARCH_URL')) do |connection|
       ::API.connection_settings connection
     end
   end
