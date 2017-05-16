@@ -88,6 +88,42 @@ describe Api::V2::PeopleSearchController do
       end
     end
 
+    context 'when search returns ssn' do
+      let(:search_term) { 'blah' }
+      let(:search_response) { double(:search_response, body: results) }
+      let(:results) do
+        {
+          'hits' => {
+            'hits' => [
+              {
+                '_source' => {
+                  'last_name' => 'Hillshire',
+                  'first_name' => 'Phillip',
+                  'ssn' => '111225555'
+                }
+              }
+            ]
+          }
+        }
+      end
+
+      before do
+        expect(TPT).to receive(:make_api_call)
+          .and_return(search_response)
+        get :index, params: { search_term: search_term }
+      end
+
+      it 'removes all but last four digits of ssn' do
+        expect(JSON.parse(response.body)).to match array_including(
+          a_hash_including(
+            'last_name' => 'Hillshire',
+            'first_name' => 'Phillip',
+            'ssn' => '5555'
+          )
+        )
+      end
+    end
+
     context 'when search returns highlighted results' do
       let(:search_term) { 'blah' }
       let(:search_response) { double(:search_response, body: results) }
@@ -98,8 +134,8 @@ describe Api::V2::PeopleSearchController do
               {
                 '_source' => {},
                 'highlight' => {
-                  'last_name' => ['<em>Hill</em>'],
-                  'first_name' => ['<em>Phil</em>'],
+                  'last_name' => ['<em>Hillshire</em>'],
+                  'first_name' => ['<em>Phillip</em>'],
                   'ssn' => ['<em>111225555</em>']
                 }
               }
@@ -118,9 +154,9 @@ describe Api::V2::PeopleSearchController do
         expect(JSON.parse(response.body)).to match array_including(
           a_hash_including(
             'highlight' => a_hash_including(
-              'last_name' => '<em>Hill</em>',
-              'first_name' => '<em>Phil</em>',
-              'ssn' => '<em>111225555</em>'
+              'last_name' => '<em>Hillshire</em>',
+              'first_name' => '<em>Phillip</em>',
+              'ssn' => '<em>5555</em>'
             )
           )
         )
