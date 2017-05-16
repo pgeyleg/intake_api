@@ -536,8 +536,6 @@ describe 'Screening API', skip_auth: true do
     let(:auth_token) { FFaker::Guid.guid }
 
     before do
-      allow(ENV).to receive(:fetch).with('SEARCH_URL')
-        .and_return('http://referral_api_url')
       stub_request(:post, %r{/api/v1/referrals})
         .and_return(body: response_body, status: 201, headers: { 'Content-Type' => 'json' })
     end
@@ -643,8 +641,6 @@ describe 'Screening API', skip_auth: true do
     let(:screening) { FactoryGirl.create(:screening) }
 
     before do
-      allow(ENV).to receive(:fetch).with('SEARCH_URL')
-        .and_return('http://referral_api_url')
       stub_request(:post, %r{/api/v1/referrals})
         .and_return(
           body: { message: 'Unable to validate ScreeningToReferral' }.to_json,

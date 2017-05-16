@@ -55,7 +55,7 @@ describe Api::V2::PeopleSearchController do
       end
 
       before do
-        expect(API).to receive(:make_api_call)
+        expect(TPT).to receive(:make_api_call)
           .with(nil, 'person_search_path', :post, search_body)
           .and_return(search_response)
         get :index, params: { search_term: search_term }
@@ -109,7 +109,7 @@ describe Api::V2::PeopleSearchController do
       end
 
       before do
-        expect(API).to receive(:make_api_call)
+        expect(TPT).to receive(:make_api_call)
           .and_return(search_response)
         get :index, params: { search_term: search_term }
       end
