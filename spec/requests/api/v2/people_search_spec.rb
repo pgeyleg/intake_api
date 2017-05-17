@@ -115,5 +115,35 @@ describe 'People Search API', skip_auth: true do
         )
       )
     end
+
+    it 'show full ssn if it is less than 4 characters' do
+      db_results = {
+        hits: {
+          hits: [
+            {
+              _source: {
+                id: 'I1dyXvW00b',
+                ssn: '123'
+              },
+              highlight: { ssn: ['<em>123</em>'] }
+            }
+          ]
+        }
+      }
+      db_response = double(:response, body: db_results)
+
+      expect(TPT).to receive(:make_api_call)
+        .with(nil, '/people_search_path', :post, any_args)
+        .and_return(db_response)
+
+      get '/api/v2/people_search?search_term=123'
+      assert_response :success
+      expect(JSON.parse(response.body)).to match array_including(
+        a_hash_including(
+          'ssn' => '123',
+          'highlight' => { 'ssn' => '<em>123</em>' }
+        )
+      )
+    end
   end
 end
