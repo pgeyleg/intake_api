@@ -85,5 +85,65 @@ describe 'People Search API', skip_auth: true do
         a_hash_including('highlight' => { 'last_name' => '<em>Hill</em>' })
       )
     end
+
+    it 'removes all but last four digits of ssn' do
+      db_results = {
+        hits: {
+          hits: [
+            {
+              _source: {
+                id: 'I1dyXvW00b',
+                ssn: '1234445555'
+              },
+              highlight: { ssn: ['<em>1234445555</em>'] }
+            }
+          ]
+        }
+      }
+      db_response = double(:response, body: db_results)
+
+      expect(TPT).to receive(:make_api_call)
+        .with(nil, '/people_search_path', :post, any_args)
+        .and_return(db_response)
+
+      get '/api/v2/people_search?search_term=123445555'
+      assert_response :success
+      expect(JSON.parse(response.body)).to match array_including(
+        a_hash_including(
+          'ssn' => '5555',
+          'highlight' => { 'ssn' => '<em>5555</em>' }
+        )
+      )
+    end
+
+    it 'show full ssn if it is less than 4 characters' do
+      db_results = {
+        hits: {
+          hits: [
+            {
+              _source: {
+                id: 'I1dyXvW00b',
+                ssn: '123'
+              },
+              highlight: { ssn: ['<em>123</em>'] }
+            }
+          ]
+        }
+      }
+      db_response = double(:response, body: db_results)
+
+      expect(TPT).to receive(:make_api_call)
+        .with(nil, '/people_search_path', :post, any_args)
+        .and_return(db_response)
+
+      get '/api/v2/people_search?search_term=123'
+      assert_response :success
+      expect(JSON.parse(response.body)).to match array_including(
+        a_hash_including(
+          'ssn' => '123',
+          'highlight' => { 'ssn' => '<em>123</em>' }
+        )
+      )
+    end
   end
 end
