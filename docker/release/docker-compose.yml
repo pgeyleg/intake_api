@@ -23,6 +23,8 @@ services:
       - webroot:/intake_api_prototype/public
       - tmp:/tmp
     environment:
+      AUTHENTICATION_URL: 'http://www.example.com/'
+      AUTHENTICATION: 'false'
       SECRET_KEY_BASE: bmcE7qdwemQrhf6NJR6OUlq05iqYH/fSXd1NT/aIdBI=
       RAILS_ENV: production
       PG_HOST: postgres
