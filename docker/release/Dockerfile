@@ -1,4 +1,5 @@
-FROM 429614120872.dkr.ecr.us-west-2.amazonaws.com/cwds/intake-base
+FROM 429614120872.dkr.ecr.us-west-2.amazonaws.com/casecommons/ruby
+HEALTHCHECK --interval=3s --retries=20 CMD ${HEALTHCHECK:-curl -fs localhost:${HTTP_PORT:-3000}}
 
 ENV APP_HOME /intake_api_prototype
 RUN mkdir $APP_HOME
