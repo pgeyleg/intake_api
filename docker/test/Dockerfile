@@ -1,4 +1,4 @@
-FROM ruby:2.4.0
+FROM 429614120872.dkr.ecr.us-west-2.amazonaws.com/casecommons/ruby
 LABEL application=intake_api_prototype
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev postgresql-client
 
