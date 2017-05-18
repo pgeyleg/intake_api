@@ -38,7 +38,7 @@ services:
       - -b
       - unix:///tmp/app.sock
   nginx:
-    image: 429614120872.dkr.ecr.us-west-2.amazonaws.com/cwds/nginx
+    image: 429614120872.dkr.ecr.us-west-2.amazonaws.com/casecommons/nginx
     ports:
       - "${HTTP_PORT}"
     environment:

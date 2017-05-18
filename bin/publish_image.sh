@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DOCKER_ORGANIZATION="cwds"
+DOCKER_ORGANIZATION="casecommons"
 DOCKER_REPO="intake_api_prototype"
 SHA=$(git rev-parse --short HEAD)
 

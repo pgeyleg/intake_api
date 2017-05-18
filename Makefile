@@ -1,6 +1,6 @@
 # Variables
 PROJECT_NAME ?= intake_api_prototype
-ORG_NAME ?= cwds
+ORG_NAME ?= casecommons
 REPO_NAME ?= intake-api
 DOCKER_REGISTRY ?= 429614120872.dkr.ecr.us-west-2.amazonaws.com
 AWS_ACCOUNT_ID ?= 429614120872
