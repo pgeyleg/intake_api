@@ -1,9 +1,11 @@
 # Variables
+export AWS_DEFAULT_REGION=us-east-1
+
 PROJECT_NAME ?= intake_api_prototype
 ORG_NAME ?= casecommons
 REPO_NAME ?= intake-api
-DOCKER_REGISTRY ?= 429614120872.dkr.ecr.us-west-2.amazonaws.com
-AWS_ACCOUNT_ID ?= 429614120872
+DOCKER_REGISTRY ?= 334274607422.dkr.ecr.us-east-1.amazonaws.com
+AWS_ACCOUNT_ID ?= 334274607422
 DOCKER_LOGIN_EXPRESSION := eval $$(aws ecr get-login --registry-ids $(AWS_ACCOUNT_ID))
 
 export HTTP_PORT ?= 80
