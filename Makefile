@@ -1,44 +1,111 @@
 # Variables
+export AWS_DEFAULT_REGION=us-east-1
+
 PROJECT_NAME ?= intake_api_prototype
-TEST_PROJECT := api_prototype_test
-TEST_COMPOSE_FILE := docker/test/docker-compose.yml
+ORG_NAME ?= casecommons
+REPO_NAME ?= intake-api
+DOCKER_REGISTRY ?= 334274607422.dkr.ecr.us-east-1.amazonaws.com
+AWS_ACCOUNT_ID ?= 334274607422
+DOCKER_LOGIN_EXPRESSION := eval $$(aws ecr get-login --registry-ids $(AWS_ACCOUNT_ID))
 
-.PHONY: test clean
+export HTTP_PORT ?= 80
 
-# Check and Inspect Logic
-INSPECT := $$(docker-compose -p $$1 -f $$2 ps -q $$3 | xargs -I ARGS docker inspect -f "{{ .State.ExitCode }}" ARGS)
-CHECK := @bash -c '\
-  if [[ $(INSPECT) -ne 0 ]]; \
-  then exit $(INSPECT); fi' VALUE
+include Makefile.settings
+
+.PHONY: all version test build clean release tag publish login logout
+
+all: clean login test build release tag publish clean logout
+
+version:
+	@ echo $(APP_VERSION)
 
 test:
 	${INFO} "Pulling latest images..."
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) pull
+	@ $(if $(NOPULL_ARG),,docker-compose $(TEST_ARGS) pull)
 	${INFO} "Building images..."
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) build --pull postgres
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) build --pull elasticsearch
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) build --pull rspec_test
+	@ docker-compose $(TEST_ARGS) build $(NOPULL_FLAG)
+	${INFO} "Starting services..."
+	@ docker-compose $(TEST_ARGS) up -d postgres
+	@ $(call check_service_health,$(TEST_ARGS),postgres)
+	@ docker-compose $(TEST_ARGS) up -d elasticsearch
+	@ $(call check_service_health,$(TEST_ARGS),elasticsearch)
 	${INFO} "Running tests..."
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) up -d postgres
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) up -d elasticsearch
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) up rspec_test
-	@ docker cp $$(docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) ps -q rspec_test):/reports/. reports
-	${CHECK} $(TEST_PROJECT) $(TEST_COMPOSE_FILE) rspec_test
+	@ docker-compose $(TEST_ARGS) up rspec_test
+	@ docker cp $$(docker-compose $(TEST_ARGS) ps -q rspec_test):/reports/. reports
+	@ $(call check_exit_code,$(TEST_ARGS),rspec_test)
 	${INFO} "Testing complete"
 
+build:
+	${INFO} "Building images..."
+	@ docker-compose $(TEST_ARGS) build builder
+	${INFO} "Removing existing artifacts..."
+	@ rm -rf release
+	${INFO} "Building application artifacts..."
+	@ docker-compose $(TEST_ARGS) up builder
+	@ $(call check_exit_code,$(TEST_ARGS),builder)
+	${INFO} "Copying application artifacts..."
+	@ docker cp $$(docker-compose $(TEST_ARGS) ps -q builder):/build_artefacts/. release
+	${INFO} "Build complete"
+
+release:
+	${INFO} "Pulling latest images..."
+	@ $(if $(NOPULL_ARG),,docker-compose $(RELEASE_ARGS) pull)
+	${INFO} "Building images..."
+	@ docker-compose $(RELEASE_ARGS) build app
+	@ docker-compose $(RELEASE_ARGS) build $(NOPULL_FLAG) nginx postgres elasticsearch
+	${INFO} "Release image build complete..."
+	${INFO} "Starting databases..."
+	@ docker-compose $(RELEASE_ARGS) up -d postgres
+	@ docker-compose $(RELEASE_ARGS) up -d elasticsearch
+	@ $(call check_service_health,$(RELEASE_ARGS),postgres)
+	@ $(call check_service_health,$(RELEASE_ARGS),elasticsearch)
+	${INFO} "Running database migrations..."
+	@ docker-compose $(RELEASE_ARGS) run app bundle exec rake db:create
+	@ docker-compose $(RELEASE_ARGS) run app bundle exec rake db:migrate
+	@ docker-compose $(RELEASE_ARGS) run app bundle exec rake search:migrate
+	@ docker-compose $(RELEASE_ARGS) run app bundle exec rake search:reindex
+	${INFO} "Starting application..."
+	@ docker-compose $(RELEASE_ARGS) up -d app
+	${INFO} "Starting nginx..."
+	@ docker-compose $(RELEASE_ARGS) up -d nginx
+	@ $(call check_service_health,$(RELEASE_ARGS),nginx)
+	${INFO} "Application is running at http://$(DOCKER_HOST_IP):$(call get_port_mapping,$(RELEASE_ARGS),nginx,$(HTTP_PORT))/api/v1/screenings"
+
 clean:
-	${INFO} "Destroying test environment..."
-	@ docker-compose -p $(TEST_PROJECT) -f $(TEST_COMPOSE_FILE) down --volumes
-	${INFO} "Removing local images..."
-	@ docker images -q -f label=application=${PROJECT_NAME} | sort -u | xargs -I ARGS docker rmi -f ARGS
+	${INFO} "Destroying development environment..."
+	@ docker-compose $(TEST_ARGS) down --volumes || true
+	${INFO} "Destroying release environment..."
+	@ docker-compose $(RELEASE_ARGS) down --volumes || true
+	${INFO} "Removing dangling images..."
+	@ $(call clean_dangling_images,$(PROJECT_NAME))
 	${INFO} "Clean complete"
 
-# Cosmetics
-YELLOW := "\e[1;33m"
-NC := "\e[0m"
+# 'make tag [<tag>...]' tags development and/or release image with default tags or specified tag(s)
+tag: TAGS ?= $(if $(ARGS),$(ARGS),latest $(APP_VERSION) $(COMMIT_ID) $(COMMIT_TAG))
+tag:
+	${INFO} "Tagging release image with tags $(TAGS)..."
+	@ $(foreach tag,$(TAGS),$(call tag_image,$(RELEASE_ARGS),app,$(DOCKER_REGISTRY)/$(ORG_NAME)/$(REPO_NAME):$(tag));)
+	${INFO} "Tagging complete"
 
-# Shell Functions
-INFO := @bash -c '\
-  printf $(YELLOW); \
-  echo "=> $$1"; \
-  printf $(NC)' SOME_VALUE
+# Login to Docker registry
+login:
+	${INFO} "Logging in to Docker registry $$DOCKER_REGISTRY..."
+	@ $(if $(AWS_ROLE),$(call assume_role,$(AWS_ROLE)),)
+	@ $(DOCKER_LOGIN_EXPRESSION)
+	${INFO} "Logged in to Docker registry $$DOCKER_REGISTRY"
+
+# Logout of Docker registry
+logout:
+	${INFO} "Logging out of Docker registry $$DOCKER_REGISTRY..."
+	@ docker logout
+	${INFO} "Logged out of Docker registry $$DOCKER_REGISTRY"
+
+# Publishes image(s) tagged using make tag commands
+publish:
+	${INFO} "Publishing release image to $(DOCKER_REGISTRY)/$(ORG_NAME)/$(REPO_NAME)..."
+	@ $(call publish_image,$(RELEASE_ARGS),app,$(DOCKER_REGISTRY)/$(ORG_NAME)/$(REPO_NAME))
+	${INFO} "Publish complete"
+
+# IMPORTANT - ensures arguments are not interpreted as make targets
+%:
+	@:
